@@ -268,8 +268,12 @@ export function getBuildingDimensions(properties: Properties) {
 export function getBuildingLight(state: LightingState) {
   const night = clamp(state.nightAmount, 0, 1), warmth = clamp((18 - state.sunElevation) / 18, 0, 1) * (1 - night) ** 2;
   const mix = (a: number, b: number) => Math.round(a + (b - a) * warmth);
-  const sunColor = `rgb(255,${mix(246, 191)},${mix(226, 130)})`;
-  return { sunColor, ambientColor: '#e8e8e2', ambientIntensity: 0.88 + clamp(state.brightness, 0, 1) * 0.52, sunIntensity: state.sunElevation > -2 ? 0.12 + state.brightness * 2.25 : 0.04, legacyIntensity: 0.18 + state.brightness * 0.36, nightAmount: night, warmWindows: night * 0.68 };
+  // A warm direct sun is balanced by the neutral Three.js ambient light.
+  // MapLibre has only one global tint (also applied to roof patterns), so it
+  // needs a much more neutral colour instead of reusing the direct sun RGB.
+  const sunColor = `rgb(255,${mix(249, 230)},${mix(241, 205)})`;
+  const legacyColor = `rgb(255,${mix(253, 248)},${mix(249, 238)})`;
+  return { sunColor, legacyColor, ambientColor: '#e8e8e2', ambientIntensity: 0.88 + clamp(state.brightness, 0, 1) * 0.52, sunIntensity: state.sunElevation > -2 ? 0.12 + state.brightness * 2.25 : 0.04, legacyIntensity: 0.18 + state.brightness * 0.36, nightAmount: night, warmWindows: night * 0.68 };
 }
 
 /** UV v=integer is always an actual floor boundary, irrespective of map zoom or wall length. */

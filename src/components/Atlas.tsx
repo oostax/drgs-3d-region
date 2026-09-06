@@ -68,7 +68,7 @@ import {signalMarker,signalStatusPresentation,categoryIcon,signalGroup,SIGNAL_GR
 import {signalPriority} from '@/lib/signal-priority';
 import {isResidentReport, signalMatchesFlow, signalVisibleInView, stateForSignalPeriod, type SignalFlow} from "@/lib/signal-view";
 import type { MeetingPlan } from "@/lib/planning-types";
-import {nextMapMode} from "@/lib/map-camera-mode";
+import {DEFAULT_MAP_3D, nextMapMode} from "@/lib/map-camera-mode";
 import {territoryScopeIds} from '@/lib/map-camera-scope';
 const AtlasMap = dynamic(() => import("./AtlasMap"), {
   ssr: false,
@@ -195,7 +195,7 @@ export default function Atlas({
     [view, setView] = useState<View>("overview"),
     [selection, setSelection] = useState<Selection>(null),
     [focus, setFocus] = useState<Focus | null>(null),
-    [is3D, set3D] = useState(true),
+    [is3D, set3D] = useState(DEFAULT_MAP_3D),
     [mapStatus, setMapStatus] = useState<{
       zoom: number;
       networkError: boolean;
@@ -793,7 +793,6 @@ export default function Atlas({
       </>
     );
   }
-  const visible3D=is3D&&(mapStatus.pitch??0)>5;
   const toggleMapMode=()=>{
     const next=nextMapMode(is3D,mapStatus.pitch??0,mapStatus.zoom);
     set3D(next.next3D);
@@ -1672,10 +1671,12 @@ export default function Atlas({
           <Compass size={19} />
         </IconButton>
         <IconButton
-          label={visible3D ? "Перейти в 2D" : "Перейти в 3D"}
+          label={is3D ? "Перейти в 2D" : "Перейти в 3D"}
+          aria-pressed={is3D}
+          data-map-mode={is3D ? "3d" : "2d"}
           onClick={toggleMapMode}
         >
-          <b>{visible3D ? "3D" : "2D"}</b>
+          <b>{is3D ? "3D" : "2D"}</b>
         </IconButton>
         <IconButton
           label="Вернуться к Татарстану"
