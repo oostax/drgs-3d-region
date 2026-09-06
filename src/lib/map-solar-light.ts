@@ -15,7 +15,7 @@ const fragmentSource = `#version 300 es
 precision highp float;
 in vec2 v_mercator;
 uniform vec3 u_sun;
-uniform float u_spatial;
+uniform vec2 u_overlay;
 out vec4 fragColor;
 void main() {
   float longitude = (v_mercator.x * 2.0 - 1.0) * 3.14159265359;
@@ -25,9 +25,9 @@ void main() {
   float night = 1.0 - smoothstep(-8.0, 6.0, elevation);
   float lowSun = smoothstep(-12.0, -2.0, elevation) * (1.0 - smoothstep(5.0, 22.0, elevation));
   float morning = smoothstep(-0.15, 0.15, dot(vec3(-sin(longitude), cos(longitude), 0.0), u_sun));
-  vec3 warmColor = mix(vec3(0.91, 0.43, 0.20), vec3(1.0, 0.73, 0.49), morning);
-  float warmAlpha = lowSun * (0.16 + 0.17 * u_spatial);
-  float nightAlpha = night * 0.76 * u_spatial;
+  vec3 warmColor = mix(vec3(0.98, 0.92, 0.83), vec3(1.0, 0.95, 0.88), morning);
+  float warmAlpha = lowSun * u_overlay.x;
+  float nightAlpha = night * u_overlay.y;
   vec3 nightColor = vec3(0.045, 0.10, 0.18);
   float alpha = warmAlpha + nightAlpha * (1.0 - warmAlpha);
   vec3 premultiplied = warmColor * warmAlpha + nightColor * nightAlpha * (1.0 - warmAlpha);
@@ -40,6 +40,14 @@ export function spatialLightingAmount(zoom: number) {
   return 1 - t * t * (3 - 2 * t);
 }
 
+/** Local material lighting already provides sunset. A second full-screen wash
+ * made roofs, ground and water orange. Keep only a subtle regional atmosphere
+ * and the geographic night terminator; both fade out completely by zoom 9. */
+export function solarOverlayStrength(zoom: number) {
+  const spatial = spatialLightingAmount(zoom);
+  return { warmth: spatial * 0.04, night: spatial * 0.76 };
+}
+
 /** One GPU pass, two triangles; no per-region color steps or continuously running timer. */
 export class SolarLightLayer implements CustomLayerInterface {
   readonly id = 'atlas-solar-light';
@@ -48,7 +56,7 @@ export class SolarLightLayer implements CustomLayerInterface {
   private program: WebGLProgram | null = null;
   private buffer: WebGLBuffer | null = null;
   private vao: WebGLVertexArrayObject | null = null;
-  private uniforms: { matrix: WebGLUniformLocation | null; sun: WebGLUniformLocation | null; spatial: WebGLUniformLocation | null } | null = null;
+  private uniforms: { matrix: WebGLUniformLocation | null; sun: WebGLUniformLocation | null; overlay: WebGLUniformLocation | null } | null = null;
   private map: LibreMap | null = null;
   private sun: [number, number, number] = [1, 0, 0];
 
@@ -69,7 +77,7 @@ export class SolarLightLayer implements CustomLayerInterface {
       for (const shader of shaders) gl.attachShader(this.program, shader);
       gl.linkProgram(this.program);
       if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(this.program) || 'Solar shader link failed');
-      this.uniforms = { matrix: gl.getUniformLocation(this.program, 'u_matrix'), sun: gl.getUniformLocation(this.program, 'u_sun'), spatial: gl.getUniformLocation(this.program, 'u_spatial') };
+      this.uniforms = { matrix: gl.getUniformLocation(this.program, 'u_matrix'), sun: gl.getUniformLocation(this.program, 'u_sun'), overlay: gl.getUniformLocation(this.program, 'u_overlay') };
       this.buffer = gl.createBuffer(); this.vao = gl.createVertexArray();
       gl.bindVertexArray(this.vao); gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
       // Include the unwrapped eastern edge of Russia across the antimeridian.
@@ -83,10 +91,12 @@ export class SolarLightLayer implements CustomLayerInterface {
 
   render(gl: WebGL2RenderingContext, args: CustomRenderMethodInput) {
     if (!this.program || !this.uniforms || !this.map) return;
+    const strength = solarOverlayStrength(this.map.getZoom());
+    if (strength.warmth === 0 && strength.night === 0) return;
     gl.useProgram(this.program); gl.bindVertexArray(this.vao);
     gl.uniformMatrix4fv(this.uniforms.matrix, false, args.defaultProjectionData.mainMatrix);
     gl.uniform3fv(this.uniforms.sun, this.sun);
-    gl.uniform1f(this.uniforms.spatial, spatialLightingAmount(this.map.getZoom()));
+    gl.uniform2f(this.uniforms.overlay, strength.warmth, strength.night);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
     gl.bindVertexArray(null);
   }
