@@ -64,7 +64,7 @@ export function applyMapLighting(map: LibreMap, state: LightingState, geographic
     cache.roofBucket = bucket; for (const id of surfaces) cache.surfaceLayers.set(id, map.getLayer(id)); changed = true;
   }
   const light = getBuildingLight(state);
-  const lightKey = `${bucket}:${Math.round(state.sunAzimuth * 2)}:${Math.round(state.sunElevation * 2)}:${Math.round(state.brightness * 40)}`;
+  const lightKey = `${bucket}:${light.legacyColor}:${Math.round(state.sunAzimuth * 2)}:${Math.round(state.sunElevation * 2)}:${Math.round(state.brightness * 40)}`;
   if (cache.lightKey !== lightKey) {
     // This is architectural fill at night, not an underground sun: MapLibre's
     // polar angle >90 degrees illuminates the underside and hides roof form.
@@ -72,7 +72,7 @@ export function applyMapLighting(map: LibreMap, state: LightingState, geographic
     const localNight = Math.max(0, Math.min(1, state.nightAmount));
     const fill = localNight * localNight * (3 - 2 * localNight);
     const elevation = Math.max(0, state.sunElevation) * (1 - fill) + Math.max(32, state.sunElevation) * fill;
-    map.setLight({ anchor: 'map', color: light.mapColor, intensity: light.legacyIntensity, position: [1.5, state.sunAzimuth, Math.max(0, Math.min(90, 90 - elevation))] }); cache.lightKey = lightKey; changed = true;
+    map.setLight({ anchor: 'map', color: light.legacyColor, intensity: light.legacyIntensity, position: [1.5, state.sunAzimuth, Math.max(0, Math.min(90, 90 - elevation))] }); cache.lightKey = lightKey; changed = true;
   }
   if (changed) map.triggerRepaint();
 }

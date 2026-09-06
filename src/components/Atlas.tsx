@@ -794,7 +794,7 @@ export default function Atlas({
     );
   }
   const toggleMapMode=()=>{
-    const next=nextMapMode(is3D,mapStatus.zoom);
+    const next=nextMapMode(is3D,mapStatus.pitch??0,mapStatus.zoom);
     set3D(next.next3D);
     setFocus(previous=>({
       coordinates:mapStatus.center||previous?.coordinates||[51,55.35],
@@ -807,7 +807,6 @@ export default function Atlas({
   return (
     <main
       data-camera-territory={territoryId}
-      data-map-mode={is3D ? "3d" : "2d"}
       data-map-zoom={mapStatus.zoom}
       data-map-center={mapStatus.center?.join(",")}
       data-map-bbox={mapStatus.bbox?.join(",")}
@@ -1674,6 +1673,7 @@ export default function Atlas({
         <IconButton
           label={is3D ? "Перейти в 2D" : "Перейти в 3D"}
           aria-pressed={is3D}
+          data-map-mode={is3D ? "3d" : "2d"}
           onClick={toggleMapMode}
         >
           <b>{is3D ? "3D" : "2D"}</b>
@@ -1693,7 +1693,7 @@ export default function Atlas({
             ? "Число сигналов · агрегат территории"
             : mapStatus.zoom < 16
               ? "Темы территории · точные объекты банков"
-              : is3D ? "Объекты · объёмная архитектура" : "Объекты · контуры зданий"}
+              : "Объекты · объёмная архитектура"}
         </span>
         <button
           onClick={() => setShowSources(true)}
@@ -1702,7 +1702,7 @@ export default function Atlas({
           <SlidersHorizontal size={13} />
         </button>
       </div>
-      {is3D && appearance.life && (
+      {appearance.life && (
         <button
           className="life-status"
           onClick={() => setAppearance((a) => ({ ...a, life: false }))}

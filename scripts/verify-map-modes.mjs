@@ -1,6 +1,6 @@
-/** Optional browser regression: run against a built local atlas with Playwright.
- * Uses explicit synthetic map data: no private SQLite or remote tiles required.
- * PLAYWRIGHT_MODULE may point to an isolated Playwright installation.
+/** Browser regression against the actual built Atlas UI.
+ * Explicit synthetic buildings; no private SQLite or remote tiles required.
+ * PLAYWRIGHT_MODULE can point to an isolated Playwright installation.
  */
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
@@ -18,8 +18,8 @@ for (let row = 0; row < 4; row++) for (let column = 0; column < 5; column++) {
     { class: ['apartments','office','warehouse','house','yes'][column], height: [18,14,8,6,8][column], num_floors: [6,4,2,2,0][column] }));
 }
 const data = { type:'FeatureCollection', features };
-// A valid empty PMTiles archive allows the real source lifecycle to complete.
-// Buildings for this test are supplied explicitly below, not claimed as real OSM.
+// A valid empty PMTiles archive lets the production source lifecycle complete.
+// The test buildings below are synthetic, not purported OSM observations.
 const metadata = Buffer.from(JSON.stringify({vector_layers:[{id:'building',fields:{}},{id:'building_part',fields:{}}]}));
 const archive = Buffer.alloc(128 + metadata.length);
 archive.write('PMTiles',0); archive[7]=3;
@@ -29,7 +29,7 @@ archive[96]=1;archive[97]=1;archive[98]=1;archive[99]=1;archive[100]=10;archive[
 archive.writeInt32LE(-1800000000,102);archive.writeInt32LE(-850000000,106);archive.writeInt32LE(1800000000,110);archive.writeInt32LE(850000000,114);
 archive[118]=13;metadata.copy(archive,128);
 const browser = await chromium.launch({ headless:true, args:['--enable-webgl','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader'] });
-const report = { fixture:'synthetic buildings; actual Atlas React UI, MapLibre and Three.js', snapshots:[], pageErrors:[], mapErrors:[] };
+const report = { fixture:'20 synthetic buildings; actual Atlas React UI, MapLibre and Three.js', snapshots:[], pageErrors:[], mapErrors:[] };
 try {
   const context = await browser.newContext({ viewport:{width:1440,height:900}, reducedMotion:'reduce' });
   await context.addInitScript(() => {
@@ -70,7 +70,7 @@ try {
     await settle();
     const state=await page.evaluate(()=>{
       const map=window.__atlasMap,ids=['atlas-building-flat','atlas-building-3d','atlas-building-parts-3d','atlas-building-roofs','atlas-building-part-roofs'];
-      return {mode:document.querySelector('main.atlas').dataset.mapMode,pitch:map.getPitch(),maxPitch:map.getMaxPitch(),touchPitch:map.touchPitch.isEnabled(),
+      return {mode:document.querySelector('button[data-map-mode]').dataset.mapMode,pitch:map.getPitch(),maxPitch:map.getMaxPitch(),touchPitch:map.touchPitch.isEnabled(),
         layers:Object.fromEntries(ids.map(id=>[id,map.getLayoutProperty(id,'visibility')])),
         pattern:map.getPaintProperty('atlas-building-3d','fill-extrusion-pattern'),light:map.getLight(),details:map.getCanvas().dataset.buildingDetails};
     });
@@ -109,6 +109,7 @@ try {
   assert.deepEqual(report.pageErrors,[]);
   assert.deepEqual(report.mapErrors,[]);
   report.result='passed';
+  console.log('Browser mode regression passed: initial 2D, three mode cycles, top-down 3D, mobile and desktop.');
 } catch(error) {
   report.result='failed';report.failure=String(error);throw error;
 } finally {
