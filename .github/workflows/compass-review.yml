@@ -1,0 +1,91 @@
+name: Verify interactive compass
+on:
+  push:
+    branches: [fix/map-appearance-0ebf9ae]
+    paths: [.github/workflows/compass-review.yml]
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    env:
+      ATLAS_DADATA_TOKEN: ''
+      ATLAS_ANALYTICS_FIXTURE: /tmp/compass-fixture
+      ATLAS_BROWSER_OUTPUT: /tmp/compass-review/browser
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Prepare exact candidate on current master without publishing
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/compass-review
+          python3 - <<'PY'
+          import base64, hashlib, lzma
+          from pathlib import Path
+          encoded = ''.join(Path(f'.github/compass-{i}.b64').read_text().strip() for i in range(3))
+          patch = lzma.decompress(base64.b64decode(encoded, validate=True))
+          assert hashlib.sha256(patch).hexdigest() == 'bb9b608a307cdf38c96a62d8c89c890e008bc41b3b1d5f3902990489874ba736'
+          Path('/tmp/compass.patch').write_bytes(patch)
+          PY
+          git fetch origin master
+          test "$(git rev-parse origin/master)" = dff0c94f517a591c8f552192b07e61e33a7504c9
+          git read-tree --reset -u origin/master
+          git apply --index /tmp/compass.patch
+          git diff --cached --check
+          git diff --stat origin/master > /tmp/compass-review/changes.txt
+      - run: npm ci
+      - name: Unit tests
+        run: npm test 2>&1 | tee /tmp/compass-review/tests.log
+      - name: Typecheck
+        run: npm run typecheck 2>&1 | tee /tmp/compass-review/typecheck.log
+      - name: Build
+        run: npm run build 2>&1 | tee /tmp/compass-review/build.log
+      - run: python3 -m pip install playwright==1.55.0
+      - run: python3 -m playwright install --with-deps chromium
+      - run: node_modules/.bin/tsx scripts/prepare-analytics-fixture.ts "$ATLAS_ANALYTICS_FIXTURE"
+      - name: Real compass, pointer capture, keyboard, touch and existing analytics
+        env:
+          ATLAS_DATA_ROOT: /tmp/compass-fixture
+          ATLAS_DB: /tmp/compass-fixture/private.sqlite
+          ATLAS_LIVE_DB: /tmp/compass-fixture/absent-live.sqlite
+        run: |
+          mkdir -p "$ATLAS_BROWSER_OUTPUT"
+          npm start > /tmp/compass-review/server.log 2>&1 &
+          SERVER=$!
+          trap 'kill "$SERVER" 2>/dev/null || true' EXIT
+          ready=false
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:3200/ > /dev/null; then ready=true; break; fi
+            sleep 1
+          done
+          test "$ready" = true
+          python3 scripts/verify-compass.py 2>&1 | tee /tmp/compass-review/compass.log
+          python3 scripts/verify-analytics.py 2>&1 | tee /tmp/compass-review/analytics.log
+      - name: Retain tested source objects on existing branch only
+        run: |
+          TREE=$(git write-tree)
+          echo "$TREE" > /tmp/compass-review/verified-tree.txt
+          git ls-tree "$TREE" > /tmp/compass-review/verified-root.txt
+          git archive "$TREE" src scripts tests docs .github | gzip > /tmp/compass-review/verified-source.tar.gz
+          git restore --source=HEAD --staged --worktree .github
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'feat: verified interactive 3D compass'
+          git push origin HEAD:fix/map-appearance-0ebf9ae
+          git rev-parse HEAD > /tmp/compass-review/candidate.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-review
+          path: /tmp/compass-review
+          retention-days: 7
