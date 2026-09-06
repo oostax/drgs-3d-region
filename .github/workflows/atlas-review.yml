@@ -1,0 +1,35 @@
+name: Prepare analytics verification
+on:
+  push:
+    branches: [fix/map-appearance-0ebf9ae]
+    paths: [.github/workflows/atlas-review.yml]
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 9ee506a757842d9c0ec5807e6f608b6a69cfe7be
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Package public source and isolated runtime
+        shell: bash
+        run: |
+          mkdir -p /tmp/atlas-review/runtime
+          git archive HEAD | tar -x -C /tmp/atlas-review
+          cp -a node_modules /tmp/atlas-review/
+          cp "$(command -v node)" /tmp/atlas-review/runtime/node
+          git rev-parse HEAD > /tmp/atlas-review/verified-source.txt
+          tar -czf /tmp/atlas-review.tar.gz -C /tmp/atlas-review .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: atlas-development-environment
+          path: /tmp/atlas-review.tar.gz
+          retention-days: 1
