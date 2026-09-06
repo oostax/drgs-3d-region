@@ -6,6 +6,7 @@ import { buildingWallUV, getBuildingRenderCap, type BuildingProfile } from './bu
 import { makeBuildingRoofGeometry } from './building-roof-geometry';
 import { makeBuildingWallRelief } from './building-wall-relief';
 import { makeBuildingSignageGeometry } from './building-signage';
+import { BUILDING_TERRAIN_SKIRT } from './building-terrain';
 type XY = [number, number];
 // The base map's opaque roof cap ends at height + 0.05 m.
 const ROOF_DETAIL_OFFSET = 0.08;
@@ -18,17 +19,20 @@ export function buildingGeometryArea(geometry: Geometry) {
 }
 
 /** Full wall UV rows match source floors; every coordinate remains in real metres. */
-export function makeBuildingDetailGeometry(polygon: Position[][], profile: BuildingProfile, detailLevel: 0 | 1 | 2 = 0) {
+export function makeBuildingDetailGeometry(polygon: Position[][], profile: BuildingProfile, detailLevel: 0 | 1 | 2 = 0, terrain = false) {
   const first = polygon[0][0], origin = MercatorCoordinate.fromLngLat([first[0], first[1]]);
   const rings = polygon.map((ring, i) => { let points = ring.map((point) => local(point, origin)); if (points.length > 2 && Math.hypot(points[0][0] - points.at(-1)![0], points[0][1] - points.at(-1)![1]) < 0.01) points = points.slice(0, -1); if ((signedArea(points) > 0) !== (i === 0)) points.reverse(); return points; });
   const positions: number[] = [], uvs: number[] = [], edges: number[] = [];
+  // Same terrain basement as MapLibre; above-ground floor UVs do not stretch.
+  const bottom = profile.base - (terrain && profile.base === 0 ? BUILDING_TERRAIN_SKIRT : 0);
+  const lowerV = (bottom - profile.base) / profile.floorHeight / 4;
   for (const ring of rings) for (let i = 0; i < ring.length; i++) {
     const a = ring[i], b = ring[(i + 1) % ring.length], dx = b[0] - a[0], dy = b[1] - a[1], length = Math.hypot(dx, dy); if (length < 0.1) continue;
     const nx = dy / length * 0.035, ny = -dx / length * 0.035, uv = buildingWallUV(length, profile), ax = a[0] + nx, ay = a[1] + ny, bx = b[0] + nx, by = b[1] + ny;
-    positions.push(ax, ay, profile.base, bx, by, profile.base, bx, by, profile.eaves, ax, ay, profile.base, bx, by, profile.eaves, ax, ay, profile.eaves);
+    positions.push(ax, ay, bottom, bx, by, bottom, bx, by, profile.eaves, ax, ay, bottom, bx, by, profile.eaves, ax, ay, profile.eaves);
     // One atlas tile is four physical floors by four window bays, not a zoom-dependent repeat.
     const shift = (profile.facadeVariant ?? 0) / 4;
-    uvs.push(shift, 0, shift + uv.columns / 4, 0, shift + uv.columns / 4, uv.rows / 4, shift, 0, shift + uv.columns / 4, uv.rows / 4, shift, uv.rows / 4);
+    uvs.push(shift, lowerV, shift + uv.columns / 4, lowerV, shift + uv.columns / 4, uv.rows / 4, shift, lowerV, shift + uv.columns / 4, uv.rows / 4, shift, uv.rows / 4);
     edges.push(a[0], a[1], getBuildingRenderCap(profile) + ROOF_EDGE_OFFSET, b[0], b[1], getBuildingRenderCap(profile) + ROOF_EDGE_OFFSET);
   }
   const walls = new THREE.BufferGeometry(); walls.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3)); walls.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2)); walls.computeVertexNormals();
@@ -64,7 +68,7 @@ function merged(geometries: THREE.BufferGeometry[], disposeParts = true) {
   return geometry;
 }
 
-export type BuildingGeometryInput = { key: string; polygons: Position[][][]; profile: BuildingProfile; detailLevel: 0 | 1 | 2; altitudes: number[]; origin: [number, number, number] };
+export type BuildingGeometryInput = { key: string; polygons: Position[][][]; profile: BuildingProfile; detailLevel: 0 | 1 | 2; altitudes: number[]; terrain?: boolean; origin: [number, number, number] };
 export type BuildingGeometry = { walls: THREE.BufferGeometry[]; roofs: THREE.BufferGeometry[]; edges: THREE.BufferGeometry[]; reliefs: THREE.BufferGeometry[]; signs: THREE.BufferGeometry[]; cost: number; roofKind: string };
 export const GEOMETRY_PARTS = ['walls', 'roofs', 'edges', 'reliefs', 'signs'] as const;
 
@@ -74,8 +78,9 @@ export function buildBuildingGeometry(input: BuildingGeometryInput): BuildingGeo
   const origin = new MercatorCoordinate(...input.origin), unit = origin.meterInMercatorCoordinateUnits();
   const result: BuildingGeometry = { walls: [], roofs: [], edges: [], reliefs: [], signs: [], cost: 0, roofKind: 'flat' };
   input.polygons.forEach((polygon, index) => {
-    const geometry = makeBuildingDetailGeometry(polygon, profile, detailLevel), latitudeScale = geometry.origin.meterInMercatorCoordinateUnits() / unit;
-    const transform = new THREE.Matrix4().makeTranslation((geometry.origin.x - origin.x) / unit, -(geometry.origin.y - origin.y) / unit, altitudes[index] * latitudeScale).scale(new THREE.Vector3(latitudeScale, latitudeScale, latitudeScale));
+    const geometry = makeBuildingDetailGeometry(polygon, profile, detailLevel, input.terrain), latitudeScale = geometry.origin.meterInMercatorCoordinateUnits() / unit;
+    const altitude = Number.isFinite(altitudes[index]) ? altitudes[index] : 0;
+    const transform = new THREE.Matrix4().makeTranslation((geometry.origin.x - origin.x) / unit, -(geometry.origin.y - origin.y) / unit, altitude * latitudeScale).scale(new THREE.Vector3(latitudeScale, latitudeScale, latitudeScale));
     result.walls.push(coloredGeometry(geometry.walls, transform, profile.facadeColor));
     result.roofs.push(coloredGeometry(geometry.roof, transform, profile.roofColor));
     geometry.edge.applyMatrix4(transform); result.edges.push(geometry.edge);
