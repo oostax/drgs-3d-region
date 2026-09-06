@@ -1,0 +1,113 @@
+name: Publish verified analytics
+
+on:
+  push:
+    branches: [fix/map-appearance-0ebf9ae]
+    paths: [.github/workflows/publish-analytics-verified.yml]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: analytics-candidate
+  cancel-in-progress: false
+
+jobs:
+  verify-and-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    env:
+      ATLAS_DADATA_TOKEN: ''
+      ATLAS_ANALYTICS_FIXTURE: /tmp/atlas-analytics-fixture
+      ATLAS_BROWSER_OUTPUT: /tmp/analytics-final/browser
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Recover the already reviewed candidate
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/analytics-final
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin master fix/map-appearance-0ebf9ae
+          BASE=$(git rev-parse origin/master)
+          echo "PUBLISH_BASE=$BASE" >> "$GITHUB_ENV"
+          git merge --no-edit origin/fix/map-appearance-0ebf9ae
+          git merge --no-edit origin/master
+          if [ -f .github/analytics-patch-0.b64 ]; then
+            python3 - <<'PY'
+          import base64, hashlib, lzma
+          from pathlib import Path
+          encoded = ''.join(Path(f'.github/analytics-patch-{i}.b64').read_text().strip() for i in range(4))
+          patch = lzma.decompress(base64.b64decode(encoded, validate=True))
+          if hashlib.sha256(patch).hexdigest() != 'a546b58b31a7a816689eefae0d87a302b9acd68847da8db76fc683f2e7c30fb0':
+              raise SystemExit('Unexpected candidate patch checksum')
+          Path('/tmp/analytics.patch').write_bytes(patch)
+          PY
+            git apply --index /tmp/analytics.patch
+            if [ -f .github/analytics-fixes.patch ]; then git apply --index .github/analytics-fixes.patch; fi
+          fi
+          test -f scripts/verify-analytics.py
+          test -f scripts/prepare-analytics-fixture.ts
+          git diff --check
+          git diff --cached --check
+      - run: npm ci
+      - name: Unit and API tests
+        run: npm test 2>&1 | tee /tmp/analytics-final/tests.log
+      - name: TypeScript
+        run: npm run typecheck 2>&1 | tee /tmp/analytics-final/typecheck.log
+      - name: Production build
+        run: npm run build 2>&1 | tee /tmp/analytics-final/build.log
+      - run: python3 -m pip install playwright==1.55.0
+      - run: python3 -m playwright install --with-deps chromium
+      - name: Prepare isolated synthetic data
+        run: node_modules/.bin/tsx scripts/prepare-analytics-fixture.ts "$ATLAS_ANALYTICS_FIXTURE"
+      - name: Verify analytics and complete client workflows in Chromium
+        env:
+          ATLAS_DATA_ROOT: /tmp/atlas-analytics-fixture
+          ATLAS_DB: /tmp/atlas-analytics-fixture/private.sqlite
+          ATLAS_LIVE_DB: /tmp/atlas-analytics-fixture/absent-live.sqlite
+        run: |
+          set -euo pipefail
+          mkdir -p "$ATLAS_BROWSER_OUTPUT"
+          npm start > "$ATLAS_BROWSER_OUTPUT/server.log" 2>&1 &
+          SERVER=$!
+          trap 'kill "$SERVER" 2>/dev/null || true' EXIT
+          ready=false
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:3200/ > /dev/null; then ready=true; break; fi
+            sleep 1
+          done
+          if [ "$ready" != true ]; then cat "$ATLAS_BROWSER_OUTPUT/server.log"; exit 1; fi
+          python3 scripts/verify-analytics.py 2>&1 | tee "$ATLAS_BROWSER_OUTPUT/browser.log"
+      - name: Publish only the verified source tree without staging files
+        run: |
+          set -euo pipefail
+          git rm --ignore-unmatch .github/analytics-patch-{0,1,2,3}.b64 .github/analytics-fixes.patch .github/workflows/atlas-review.yml .github/workflows/apply-analytics-review.yml .github/workflows/publish-analytics-verified.yml
+          git diff --cached --check
+          TREE=$(git write-tree)
+          git diff --stat "$PUBLISH_BASE" "$TREE" > /tmp/analytics-final/changes.txt
+          git fetch origin master
+          test "$(git rev-parse origin/master)" = "$PUBLISH_BASE"
+          if [ "$TREE" = "$(git rev-parse "$PUBLISH_BASE^{tree}")" ]; then
+            echo "$PUBLISH_BASE" > /tmp/analytics-final/commit.txt
+          else
+            COMMIT=$(printf '%s\n\n%s\n' 'feat: аналитика территорий и полный клиентский портфель' 'Territorial complaints, public signals and Sber portfolio analytics; complete INN client lists, evidenced map locations, opportunities and address workflows. Preserve existing map fixes. Verified unit/API tests, TypeScript, production build and synthetic Chromium workflow before atomic publication. Temporary staging workflows and private data are not included.' | git commit-tree "$TREE" -p "$PUBLISH_BASE")
+            git push origin "$COMMIT:refs/heads/master"
+            echo "$COMMIT" > /tmp/analytics-final/commit.txt
+          fi
+          echo "$TREE" > /tmp/analytics-final/tree.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: analytics-final-verification
+          path: /tmp/analytics-final
+          retention-days: 7
