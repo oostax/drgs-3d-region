@@ -117,7 +117,7 @@ test('late terrain data rebuilds altitude-dependent geometry before another came
   context.mock.timers.tick(250);
   assert.equal(state.dirty, true, 'the terrain tile must invalidate building elevations even while adjacent DEM tiles load');
   state.rebuild(); const walls = (state.content.children[0] as THREE.Mesh).geometry;
-  assert.ok(Math.abs(range(walls).low - 125) < 0.01, 'custom facade follows the same ground altitude as the opaque map body');
+  assert.ok(Math.abs(range(walls).low - 115) < 0.01, 'custom facade includes the same 10 m terrain basement as the opaque map body');
   assert.equal(layer.getDiagnostics().cacheHits, 0);
   layer.onRemove();
 });

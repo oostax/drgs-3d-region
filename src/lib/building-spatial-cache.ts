@@ -14,9 +14,10 @@ export function buildingSpatialCell(lng: number, lat: number) {
 export class BuildingSpatialCache {
   private items = new Map<string, CachedBatch>();
   hits = 0; misses = 0;
-  constructor(private readonly maxBytes: number, private readonly maxEntries = 256) {}
+  constructor(private maxBytes: number, private readonly maxEntries = 256) {}
   get bytes() { let bytes = 0; for (const item of this.items.values()) bytes += item.bytes; return bytes; }
   get size() { return this.items.size; }
+  setMaxBytes(maxBytes: number) { this.maxBytes = maxBytes; }
   acquire(cellAndMaterial: string, parts: THREE.BufferGeometry[], material: THREE.Material, lines = false): BatchObject | null {
     if (!parts.length) return null;
     // Order is canonical so ranking changes within an unchanged cell do not upload it again.

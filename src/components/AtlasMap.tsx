@@ -555,6 +555,7 @@ export default function AtlasMap(props: AtlasMapProps) {
       if (cancelled || mapRef.current !== map) return;
       map.resize();
       const bounds = containerRef.current?.getBoundingClientRect();
+      if (bounds) detailsRef.current?.setMobile(bounds.width <= 760 || window.matchMedia('(pointer: coarse)').matches);
       if (bounds && !map.isMoving()) {
         const compact = bounds.width <= 760;
         const padding = { top: 0, right: !compact && latest.current.panelOpen ? Math.min(340, bounds.width * 0.28) : 0, bottom: compact && latest.current.panelOpen ? Math.min(220, bounds.height * 0.32) : 0, left: 0 };

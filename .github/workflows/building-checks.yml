@@ -1,0 +1,40 @@
+name: Building checks
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Tests
+        run: npm test 2>&1 | tee /tmp/building-tests.log
+      - name: Typecheck
+        if: success() || failure()
+        run: npm run typecheck 2>&1 | tee /tmp/building-typecheck.log
+      - name: Build
+        if: success() || failure()
+        run: npm run build 2>&1 | tee /tmp/building-build.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: building-checks
+          path: /tmp/building-*.log
+          retention-days: 7
