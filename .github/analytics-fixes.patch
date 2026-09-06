@@ -1,3 +1,72 @@
+--- a/src/components/Atlas.tsx
++++ b/src/components/Atlas.tsx
+@@ -68,6 +68,7 @@
+ import {isResidentReport, signalMatchesFlow, signalVisibleInView, stateForSignalPeriod, type SignalFlow} from "@/lib/signal-view";
+ import type { MeetingPlan } from "@/lib/planning-types";
+ import {DEFAULT_MAP_3D, nextMapMode} from "@/lib/map-camera-mode";
++import { clientViewLayers } from "@/lib/client-map-visibility";
+ import {territoryScopeIds} from '@/lib/map-camera-scope';
+ const AtlasMap = dynamic(() => import("./AtlasMap"), {
+   ssr: false,
+@@ -223,6 +224,7 @@
+     [bankLimit, setBankLimit] = useState(40),
+     [category, setCategory] = useState("Все"),
+     [bank, setBank] = useState("Все банки");
++  const mapLayers = useMemo(() => clientViewLayers(layers, mode === 'work' && view === 'organizations'), [layers, mode, view]);
+   type Overlay = 'map' | 'search' | 'sources' | 'planning' | 'dossiers' | 'incidents' | 'analytics';
+   const [overlay, setOverlay] = useState<Overlay | null>(null);
+   const showSources = overlay === 'sources', exploreOpen = overlay === 'map', showPlanning = overlay === 'planning',
+@@ -839,7 +841,7 @@
+           offices={otherRegion ? [] : mapOffices}
+           territoryId={territoryId}
+           focus={focus}
+-          layers={layers}
++          layers={mapLayers}
+           is3D={is3D}
+           appearance={appearance}
+           panelOpen={contextVisible}
+--- a/src/components/ClientPortfolio.tsx
++++ b/src/components/ClientPortfolio.tsx
+@@ -70,7 +70,7 @@
+       <label>Стадия<select aria-label="Стадия предложения" value={stage} onChange={e => setStage(e.target.value)}><option value="">Все стадии</option>{(data?.filters.stages || (stage ? [stage] : [])).map(p => <option key={p}>{p}</option>)}</select></label>
+     </div>
+     <div className={styles.checks}><label><input type="checkbox" checked={all} onChange={e => setAll(e.target.checked)}/>Весь справочник, включая без сделок</label><label><input type="checkbox" checked={local} onChange={e => setLocal(e.target.checked)}/>Только {territoryName}</label></div>
+-    <p className={styles.caption}>Фильтры действуют и на список, и на карту. Все подтверждённые точки, а не только текущая страница. Без адреса не означает «нет клиента».</p>
++    <p className={styles.caption}>Фильтры действуют и на список, и на карту. Все подтверждённые точки, а не только текущая страница. Без адреса не означает «нет клиента». В этом разделе банковские и событийные маркеры временно скрыты, чтобы не перекрывать клиентов; они вернутся при смене раздела.</p>
+     {error && <div role="alert" className={styles.notice}>{error}<button onClick={onSources}>Открыть источники</button><button onClick={() => setVersion(v => v + 1)}>Повторить</button></div>}
+     {!error && !data && <p role="status" className={styles.caption}>Сопоставляем портфель и географию…</p>}
+     {data && <>
+--- a/docs/ANALYTICS-AND-CLIENTS.md
++++ b/docs/ANALYTICS-AND-CLIENTS.md
+@@ -61,7 +61,10 @@
+ Поиск по ИНН, названию, ГОСБ и КМ; фильтры географии, продукта, стадии,
+ подтверждённого адреса и повода. Список по 40 записей, карта — все точки
+ фильтрованного набора, а не только текущая страница. Совпадающие адреса и
+-кластеры раскрывают всех участников с подгрузкой списка.
++кластеры раскрывают всех участников с подгрузкой списка. В клиентском разделе
++банковские, событийные маркеры и достопримечательности временно скрыты:
++DOM-маркер банка не может перехватить нажатие на клиента по тому же адресу.
++Сохранённые настройки слоёв не меняются и возвращаются в других разделах.
+ 
+ Поводы — не автоматические продажи: длительная стадия из поля источника,
+ предложения без зафиксированных контактов, рост зарплатных выплат, публичное
+--- a/tests/analytics-portfolio.test.ts
++++ b/tests/analytics-portfolio.test.ts
+@@ -109,3 +109,14 @@
+     assert.ok(rows.some(r=>r.id==='page-1024'));
+   } finally { fs.writeFileSync(file,original); }
+ });
++
++
++test('client view hides overlapping analytic pins without changing saved map preferences', async () => {
++  const { clientViewLayers } = await import('../src/lib/client-map-visibility');
++  const layers = { banks: true, signals: true, landmarks: true, buildings: true, boundaries: false, terrain: true };
++  assert.equal(clientViewLayers(layers, false), layers);
++  const focused = clientViewLayers(layers, true);
++  assert.deepEqual(focused, { ...layers, banks: false, signals: false, landmarks: false });
++  assert.equal(layers.banks, true); assert.equal(layers.signals, true); assert.equal(layers.landmarks, true);
++  assert.equal(clientViewLayers(layers, false), layers, 'leaving client view restores the original preferences');
++});
 --- a/scripts/verify-analytics.py
 +++ b/scripts/verify-analytics.py
 @@ -79,7 +79,7 @@
@@ -9,3 +78,20 @@
          page.screenshot(path=str(OUT/'missing-address.png'))
          page.get_by_text('Разместить клиентов · адреса и проверка',exact=True).click()
          page.get_by_text('Поиск юридических адресов по ИНН',exact=True).click()
+@@ -99,6 +99,7 @@
+         search=page.get_by_role('textbox',name='Поиск клиентов по ИНН, названию, ГОСБ или КМ');search.fill('');expect(cards).to_have_count(40)
+         page.evaluate('window.__atlasMap.jumpTo({center:[49.2,55.8],zoom:15,pitch:0})')
+         page.wait_for_function('window.__atlasMap.queryRenderedFeatures({layers:["atlas-client-groups"]}).some(f=>f.properties.point_count>=80)',timeout=20000)
++        expect(page.locator('.map-dom-bank-marker, .map-dom-signal-marker')).to_have_count(0)
+         point=page.evaluate('window.__atlasMap.project([49.2,55.8])');page.mouse.click(point['x'],point['y']-12)
+         group=page.get_by_role('region',name='Клиенты в группе');expect(group).to_be_visible(timeout=15000)
+         expect(group.get_by_text('Клиенты в этой группе · 80',exact=True)).to_be_visible()
+--- /dev/null
++++ b/src/lib/client-map-visibility.ts
+@@ -0,0 +1,6 @@
++/** Focused client browsing must not put DOM bank/signal pins over client hits.
++ * This is a view projection, never a mutation of the saved layer preferences.
++ */
++export function clientViewLayers<T extends { banks: boolean; signals: boolean; landmarks: boolean }>(layers: T, focused: boolean): T {
++  return focused ? { ...layers, banks: false, signals: false, landmarks: false } : layers;
++}
