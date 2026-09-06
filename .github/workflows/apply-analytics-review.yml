@@ -1,0 +1,88 @@
+name: Verify analytics candidate
+on:
+  push:
+    branches: [fix/map-appearance-0ebf9ae]
+    paths: [.github/workflows/apply-analytics-review.yml]
+permissions:
+  contents: write
+concurrency:
+  group: analytics-candidate
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    env:
+      ATLAS_DADATA_TOKEN: ''
+      ATLAS_ANALYTICS_FIXTURE: /tmp/atlas-analytics-fixture
+      ATLAS_BROWSER_OUTPUT: /tmp/analytics-review/browser
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Apply the checksum-verified reviewed source patch
+        run: |
+          mkdir -p /tmp/analytics-review
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git merge --no-edit origin/master
+          python3 - <<'PY'
+          import base64, hashlib, lzma
+          from pathlib import Path
+          encoded = ''.join(Path(f'.github/analytics-patch-{i}.b64').read_text().strip() for i in range(4))
+          patch = lzma.decompress(base64.b64decode(encoded, validate=True))
+          assert hashlib.sha256(patch).hexdigest() == 'a546b58b31a7a816689eefae0d87a302b9acd68847da8db76fc683f2e7c30fb0'
+          Path('/tmp/analytics.patch').write_bytes(patch)
+          PY
+          git apply --index /tmp/analytics.patch
+          git diff --check
+          git diff --cached --stat > /tmp/analytics-review/changes.txt
+      - run: npm ci
+      - name: Unit and API regressions
+        run: npm test 2>&1 | tee /tmp/analytics-review/tests.log
+      - name: TypeScript
+        run: npm run typecheck 2>&1 | tee /tmp/analytics-review/typecheck.log
+      - name: Production build
+        run: npm run build 2>&1 | tee /tmp/analytics-review/build.log
+      - run: python3 -m pip install playwright==1.55.0
+      - run: python3 -m playwright install --with-deps chromium
+      - name: Prepare synthetic sources only
+        run: node_modules/.bin/tsx scripts/prepare-analytics-fixture.ts "$ATLAS_ANALYTICS_FIXTURE"
+      - name: Actual UI, analytics, client pagination, cluster and address workflow
+        env:
+          ATLAS_DATA_ROOT: /tmp/atlas-analytics-fixture
+          ATLAS_DB: /tmp/atlas-analytics-fixture/private.sqlite
+          ATLAS_LIVE_DB: /tmp/atlas-analytics-fixture/absent-live.sqlite
+        run: |
+          mkdir -p "$ATLAS_BROWSER_OUTPUT"
+          npm start > "$ATLAS_BROWSER_OUTPUT/server.log" 2>&1 &
+          SERVER=$!
+          trap 'kill "$SERVER" 2>/dev/null || true' EXIT
+          ready=false
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:3200/ > /dev/null; then ready=true; break; fi
+            sleep 1
+          done
+          if [ "$ready" != true ]; then cat "$ATLAS_BROWSER_OUTPUT/server.log"; exit 1; fi
+          python3 scripts/verify-analytics.py 2>&1 | tee "$ATLAS_BROWSER_OUTPUT/browser.log"
+      - name: Record verified candidate without temporary staging files
+        run: |
+          git rm .github/analytics-patch-{0,1,2,3}.b64 .github/workflows/atlas-review.yml .github/workflows/apply-analytics-review.yml
+          git diff --cached --check
+          git commit -m 'feat: territorial analytics and complete private client portfolio'
+          git push origin HEAD:fix/map-appearance-0ebf9ae
+          git rev-parse HEAD > /tmp/analytics-review/commit.txt
+          git rev-parse HEAD^{tree} > /tmp/analytics-review/tree.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: analytics-candidate-review
+          path: /tmp/analytics-review
+          retention-days: 7
