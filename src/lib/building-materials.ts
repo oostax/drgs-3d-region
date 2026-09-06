@@ -51,7 +51,7 @@ function sourceColor(properties: Properties, keys: string[], roof: boolean) {
   return { raw, color: categorical ? namedPigments.get(parsed.toString())?.[roof ? 1 : 0] ?? pigment(parsed, roof) : toHex(parsed) };
 }
 const palette: Record<BuildingProfileKind, { facade: string; roof: string; surface: BuildingSurface; fallback: number; floor: number; spacing: number; windows: BuildingProfile['windows'] }> = {
-  neutral: { facade: '#d8d3c5', roof: '#92958e', surface: 'plaster', fallback: 2.8, floor: 3, spacing: 3.4, windows: 'none' },
+  neutral: { facade: '#d8d3c5', roof: '#92958e', surface: 'plaster', fallback: 8, floor: 3, spacing: 3.4, windows: 'none' },
   apartments: { facade: '#d4d1c6', roof: '#8e928c', surface: 'plaster', fallback: 9, floor: 3, spacing: 3.2, windows: 'regular' },
   panel: { facade: '#c9cbc4', roof: '#858b87', surface: 'panel', fallback: 9, floor: 3, spacing: 3.2, windows: 'regular' },
   brick: { facade: '#ad8670', roof: '#858781', surface: 'brick', fallback: 9, floor: 3, spacing: 3.3, windows: 'regular' },
@@ -206,7 +206,9 @@ function fallbackPigmentExpression(field: 'facade' | 'roof'): ExpressionSpecific
 }
 export const BUILDING_BASE: ExpressionSpecification = ['max', 0, ['to-number', ['get', 'min_height'], 0]];
 const SOURCE_HEIGHT: ExpressionSpecification = ['to-number', ['get', 'height'], 0];
-const SOURCE_FLOORS: ExpressionSpecification = ['to-number', ['get', 'num_floors'], ['get', 'building:levels'], 0];
+// Null/zero num_floors must not mask a valid building:levels value.
+const PRIMARY_FLOORS: ExpressionSpecification = ['to-number', ['get', 'num_floors'], 0];
+const SOURCE_FLOORS: ExpressionSpecification = ['case', ['>', PRIMARY_FLOORS, 0], PRIMARY_FLOORS, ['to-number', ['get', 'building:levels'], 0]];
 export const BUILDING_HEIGHT: ExpressionSpecification = ['max', ['+', BUILDING_BASE, 0.5], ['case', ['>', SOURCE_HEIGHT, 0], SOURCE_HEIGHT, ['>', SOURCE_FLOORS, 0], ['*', SOURCE_FLOORS, 3], profileExpression('fallback')]];
 const PITCHED_ROOFS = ['gabled', 'gable', 'hipped', 'hip', 'pyramidal', 'skillion', 'shed', 'sawtooth', 'barrel', 'round'];
 const BUILDING_ROOF_HEIGHT: ExpressionSpecification = ['min', ['max', 0, ['-', ['-', BUILDING_HEIGHT, BUILDING_BASE], 1]], ['max', 0, ['to-number', ['get', 'roof_height'], ['get', 'roof:height'], 0]]];
