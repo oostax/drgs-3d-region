@@ -36,10 +36,12 @@ jobs:
           assert hashlib.sha256(patch).hexdigest() == 'bb9b608a307cdf38c96a62d8c89c890e008bc41b3b1d5f3902990489874ba736'
           Path('/tmp/compass.patch').write_bytes(patch)
           PY
+          cp .github/compass-fixes.patch /tmp/compass-fixes.patch
           git fetch origin master
           test "$(git rev-parse origin/master)" = dff0c94f517a591c8f552192b07e61e33a7504c9
           git read-tree --reset -u origin/master
           git apply --index /tmp/compass.patch
+          git apply --index /tmp/compass-fixes.patch
           git diff --cached --check
           git diff --stat origin/master > /tmp/compass-review/changes.txt
       - run: npm ci
