@@ -1,0 +1,50 @@
+name: Map modes WebGL fixture verification
+on:
+  push:
+    branches: [fix/map-modes-sunset]
+    paths: [.github/workflows/check-map-visual-retry.yml]
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: python3 -m pip install playwright==1.55.0 Pillow==11.3.0 PyYAML==6.0.2
+      - run: python3 -m playwright install --with-deps chromium
+      - name: Replay the reviewed fixture with a valid optional filter
+        run: |
+          python3 - <<'PY'
+          import subprocess, yaml
+          from pathlib import Path
+          workflow = yaml.safe_load(Path('.github/workflows/check-map-visual.yml').read_text())
+          steps = workflow['jobs']['browser']['steps']
+          prepare = next(step['run'] for step in steps if step.get('name') == 'Prepare isolated fixture with production map modules')
+          old = "filter:empty?['==',['get','id'],'not-a-building']:undefined"
+          assert prepare.count(old) == 1
+          # MapLibre rejects an explicitly present undefined filter; this fixes
+          # the synthetic test fixture only, not the production map layers.
+          prepare = prepare.replace(old, "filter:empty?['==',['get','id'],'not-a-building']:['==',1,1]")
+          subprocess.run(['bash','-e','-o','pipefail','-c',prepare],check=True)
+          check = next(step['run'] for step in steps if step.get('name') == 'Check actual WebGL frames and responsive round trips')
+          check = check.replace("three=page.evaluate('window.snapshot()');assert", "three=page.evaluate('window.snapshot()');print('3D state',three,'errors',page.evaluate('window.renderErrors'),flush=True);assert")
+          subprocess.run(['bash','-e','-o','pipefail','-c',check],check=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: map-visual-verification
+          path: /tmp/map-visual/evidence
+          retention-days: 3
