@@ -114,16 +114,6 @@ export default function SceneClock({
             </button>
           ))}
         </div>
-        <label className="switch-row">
-          <span>Жизнь города</span>
-          <input
-            type="checkbox"
-            checked={appearance.life}
-            onChange={(e) =>
-              onChange({ ...appearance, life: e.target.checked })
-            }
-          />
-        </label>
         <p className="caption">
           Рассвет и закат следуют солнцу по всей России. Время указано по Москве.
           Движение транспорта и техники —

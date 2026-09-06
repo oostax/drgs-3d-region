@@ -67,6 +67,7 @@ export type AtlasMapProps = {
   clients?: ClientMapPoint[];
   clientsVisible?: boolean;
   onClient?: (id:string)=>void;
+  onClientStack?: (ids:string[])=>void;
   focusedOrganization?: { id: string; name: string; coordinates: [number, number]; addressKind: string } | null;
 };
 export type { SceneAppearance };
@@ -408,8 +409,8 @@ export default function AtlasMap(props: AtlasMapProps) {
     }
     const createGpuLayers = () => {
       const landmarks = new LandmarkMapLayer({ mobile, visible: () => latest.current.layers.landmarks && latest.current.is3D && !latest.current.bankFocus, lighting: () => lightingRef.current!, onError: (error) => { console.warn('Atlas landmark layer error', error); setMapError(String(error)); errors.current.add('landmarks'); refreshLandmarkMasks(map, latest.current, false); report(); } });
-      const life = new MapLifeLayer({ mobile, reducedMotion, enabled: () => latest.current.is3D, animate: () => (latest.current.appearance ?? DEFAULT_APPEARANCE).life, offices: () => latest.current.offices, bankFocus: () => Boolean(latest.current.bankFocus), banksVisible: () => latest.current.layers.banks, lighting: () => lightingRef.current!, onError: (error) => { console.warn('Atlas city life layer error', error); setMapError(String(error)); } });
-      const scenes = new SignalSceneLayer({mobile, reducedMotion, scenes: () => eventScenesRef.current, enabled: () => latest.current.is3D && latest.current.layers.signals && !latest.current.bankFocus, animate: () => (latest.current.appearance ?? DEFAULT_APPEARANCE).life, lighting: () => lightingRef.current!, onError: error => { console.warn('Atlas event scene error', error); setMapError(String(error)); }});
+      const life = new MapLifeLayer({ mobile, reducedMotion, enabled: () => latest.current.is3D, animate: () => true, offices: () => latest.current.offices, bankFocus: () => Boolean(latest.current.bankFocus), banksVisible: () => latest.current.layers.banks, lighting: () => lightingRef.current!, onError: (error) => { console.warn('Atlas city life layer error', error); setMapError(String(error)); } });
+      const scenes = new SignalSceneLayer({mobile, reducedMotion, scenes: () => eventScenesRef.current, enabled: () => latest.current.is3D && latest.current.layers.signals && !latest.current.bankFocus, animate: () => true, lighting: () => lightingRef.current!, onError: error => { console.warn('Atlas event scene error', error); setMapError(String(error)); }});
       const details = new BuildingDetailsLayer({mobile, enabled: () => latest.current.is3D && latest.current.layers.buildings && !latest.current.bankFocus, lighting: () => lightingRef.current!, excludeIds: () => latest.current.layers.landmarks && !errors.current.has('landmarks') ? new Set(Object.values(LANDMARK_BUILDING_IDS).flat()) : new Set<string>(), onError: error => console.warn('Building details layer',error)});
       const solar = new SolarLightLayer(), initialSun = worldLightingRef.current!.sunDirection;
       solar.setSun([initialSun[2], initialSun[0], initialSun[1]]);
@@ -423,8 +424,18 @@ export default function AtlasMap(props: AtlasMapProps) {
       const features = map.queryRenderedFeatures(event.point, { layers: layerIds });
       const first = (id: string) => features.find((feature) => feature.layer.id === id);
       const head=first('atlas-head-offices');if(head){latest.current.onOffice(String(head.properties.id));return;}
-      const client=first('atlas-client-points');if(client){latest.current.onClient?.(String(client.properties.id));return;}
-      const clientGroup=first('atlas-client-groups');if(clientGroup?.geometry.type==='Point'){const source=map.getSource('atlas-clients') as GeoJSONSource;void source.getClusterExpansionZoom(Number(clientGroup.properties.cluster_id)).then(zoom=>{if(!cancelled)map.easeTo({center:clientGroup.geometry.type==='Point'?clientGroup.geometry.coordinates as [number,number]:undefined,zoom:zoom+.5,duration:reducedMotion?0:500});}).catch(()=>{});return;}
+      const clients = [...new Set(features.filter(f => f.layer.id === 'atlas-client-points').map(f => String(f.properties.id)))];
+      if (clients.length) { if (clients.length > 1 && latest.current.onClientStack) latest.current.onClientStack(clients); else latest.current.onClient?.(clients[0]); return; }
+      const clientGroup = first('atlas-client-groups');
+      if (clientGroup?.geometry.type === 'Point') {
+        const source = map.getSource('atlas-clients') as GeoJSONSource, clusterId = Number(clientGroup.properties.cluster_id);
+        if (latest.current.onClientStack) {
+          void source.getClusterLeaves(clusterId, Number(clientGroup.properties.point_count), 0).then(items => {
+            if (!cancelled) latest.current.onClientStack?.([...new Set(items.map(item => String(item.properties?.id)).filter(Boolean))]);
+          }).catch(() => { if (!cancelled) setMapError('Не удалось раскрыть группу клиентов. Обновите клиентский слой.'); });
+        } else void source.getClusterExpansionZoom(clusterId).then(zoom => { if (!cancelled) map.easeTo({ center: clientGroup.geometry.type === 'Point' ? clientGroup.geometry.coordinates as [number, number] : undefined, zoom: zoom + .5, duration: reducedMotion ? 0 : 500 }); }).catch(() => {});
+        return;
+      }
       for (const [layer, source] of [['atlas-signal-clusters', 'atlas-signal-points'], ['atlas-signal-point-clusters','atlas-signal-points'], ['atlas-bank-clusters', 'atlas-offices']]) {
         const cluster = first(layer);
         if (cluster?.geometry.type === 'Point') {
@@ -486,7 +497,6 @@ export default function AtlasMap(props: AtlasMapProps) {
         if (!loaded.current) {
           map.setProjection({ type: 'mercator' });
           addAtlasLayers(map, lightingRef.current!);
-          map.addControl(new maplibregl.ScaleControl({ maxWidth: 110, unit: 'metric' }), 'bottom-left');
           map.getCanvas().setAttribute('aria-label', 'Интерактивная карта России: регионы, муниципалитеты, сигналы, офисы и здания');
         } else {
           // Context restoration retains vector sources/layers, but never the
@@ -694,7 +704,7 @@ export default function AtlasMap(props: AtlasMapProps) {
     let disposed = false;
     const pulse = () => {
       if (disposed || !loaded.current || mapRef.current !== map || !map.getLayer('atlas-region-line')) return;
-      const active = (latest.current.appearance ?? DEFAULT_APPEARANCE).life && latest.current.layers.signals && !reduced && !document.hidden;
+      const active = latest.current.layers.signals && !reduced && !document.hidden;
       const cycle=performance.now()%2200;
       const flash=(center:number)=>Math.max(0,1-Math.abs(cycle-center)/150);
       const pulseOpacity=active?1-Math.max(flash(180),flash(540))*.62:1;
@@ -707,7 +717,7 @@ export default function AtlasMap(props: AtlasMapProps) {
       if (timer) { clearInterval(timer); timer = null; }
       if (disposed || !loaded.current || mapRef.current !== map || !map.getLayer('atlas-region-line')) return;
       pulse();
-      if ((latest.current.appearance ?? DEFAULT_APPEARANCE).life && latest.current.layers.signals && !reduced && !document.hidden) timer = setInterval(pulse, window.matchMedia('(max-width:760px)').matches ? 120 : 90);
+      if (latest.current.layers.signals && !reduced && !document.hidden) timer = setInterval(pulse, window.matchMedia('(max-width:760px)').matches ? 120 : 90);
     };
     sync(); document.addEventListener('visibilitychange', sync);
     return () => { disposed = true; if (timer) clearInterval(timer); document.removeEventListener('visibilitychange', sync); };

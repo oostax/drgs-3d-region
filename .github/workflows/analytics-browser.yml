@@ -1,0 +1,65 @@
+name: Analytics and client browser regression
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: analytics-browser-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    env:
+      ATLAS_DADATA_TOKEN: ''
+      ATLAS_ANALYTICS_FIXTURE: /tmp/atlas-analytics-fixture
+      ATLAS_BROWSER_OUTPUT: /tmp/atlas-analytics-browser
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: mkdir -p "$ATLAS_BROWSER_OUTPUT"
+      - run: npm ci
+      - name: Build actual application
+        run: npm run build 2>&1 | tee "$ATLAS_BROWSER_OUTPUT/build.log"
+      - run: python3 -m pip install playwright==1.55.0
+      - run: python3 -m playwright install --with-deps chromium
+      - name: Prepare synthetic data outside the repository
+        run: node_modules/.bin/tsx scripts/prepare-analytics-fixture.ts "$ATLAS_ANALYTICS_FIXTURE"
+      - name: Verify analytics, client groups and address workflows
+        env:
+          ATLAS_DATA_ROOT: /tmp/atlas-analytics-fixture
+          ATLAS_DB: /tmp/atlas-analytics-fixture/private.sqlite
+          ATLAS_LIVE_DB: /tmp/atlas-analytics-fixture/absent-live.sqlite
+        run: |
+          set -euo pipefail
+          npm start > "$ATLAS_BROWSER_OUTPUT/server.log" 2>&1 &
+          SERVER=$!
+          trap 'kill "$SERVER" 2>/dev/null || true' EXIT
+          ready=false
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:3200/ > /dev/null; then ready=true; break; fi
+            sleep 1
+          done
+          if [ "$ready" != true ]; then cat "$ATLAS_BROWSER_OUTPUT/server.log"; exit 1; fi
+          python3 scripts/verify-analytics.py 2>&1 | tee "$ATLAS_BROWSER_OUTPUT/browser.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: analytics-browser
+          path: /tmp/atlas-analytics-browser
+          retention-days: 7

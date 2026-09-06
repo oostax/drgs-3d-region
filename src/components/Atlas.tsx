@@ -18,7 +18,7 @@ import {
   Landmark,
   FileText,
   Play,
-  Pause,
+  BarChart3,
   X,
   Check,
   Database,
@@ -50,7 +50,6 @@ import IncidentRecords from "./IncidentRecords";
 import type { AtlasMapBuilding } from "./AtlasMap";
 import MapMenu from "./MapMenu";
 import BankPriorities from "./BankPriorities";
-import ClientAddressImport from './ClientAddressImport';
 import SberWorkspace from './SberWorkspace';
 import {SBER_HEAD_OFFICES,sberOfficeRole} from '@/lib/sber-structure';
 import type {ClientMapPayload} from '@/lib/client-map-types';
@@ -69,6 +68,7 @@ import {signalPriority} from '@/lib/signal-priority';
 import {isResidentReport, signalMatchesFlow, signalVisibleInView, stateForSignalPeriod, type SignalFlow} from "@/lib/signal-view";
 import type { MeetingPlan } from "@/lib/planning-types";
 import {DEFAULT_MAP_3D, nextMapMode} from "@/lib/map-camera-mode";
+import { clientViewLayers } from "@/lib/client-map-visibility";
 import {territoryScopeIds} from '@/lib/map-camera-scope';
 const AtlasMap = dynamic(() => import("./AtlasMap"), {
   ssr: false,
@@ -81,6 +81,8 @@ const AtlasMap = dynamic(() => import("./AtlasMap"), {
 });
 const SourcesPanel = dynamic(() => import("./SourcesPanel"), { ssr: false });
 const PlanningPanel = dynamic(() => import("./PlanningPanel"), { ssr: false });
+const TerritoryAnalytics = dynamic(() => import("./TerritoryAnalytics"), { ssr: false });
+const ClientPortfolio = dynamic(() => import("./ClientPortfolio"), { ssr: false });
 const categories = [
   "Все",
   "ЖКХ",
@@ -222,7 +224,8 @@ export default function Atlas({
     [bankLimit, setBankLimit] = useState(40),
     [category, setCategory] = useState("Все"),
     [bank, setBank] = useState("Все банки");
-  type Overlay = 'map' | 'search' | 'sources' | 'planning' | 'dossiers' | 'incidents';
+  const mapLayers = useMemo(() => clientViewLayers(layers, mode === 'work' && view === 'organizations'), [layers, mode, view]);
+  type Overlay = 'map' | 'search' | 'sources' | 'planning' | 'dossiers' | 'incidents' | 'analytics';
   const [overlay, setOverlay] = useState<Overlay | null>(null);
   const showSources = overlay === 'sources', exploreOpen = overlay === 'map', showPlanning = overlay === 'planning',
     showDossiers = overlay === 'dossiers', showIncidents = overlay === 'incidents', showSearch = overlay === 'search';
@@ -237,7 +240,23 @@ export default function Atlas({
   const [perspective,setPerspective]=useState<'region'|'sber'>('region');
   const [clientMapData,setClientMapData]=useState<ClientMapPayload|null>(null);
   const clientInns=useMemo(()=>new Set(clientMapData?.portfolioInns||[]),[clientMapData]);
-  useEffect(()=>{if(mode!=='work'){setClientMapData(null);return;}const controller=new AbortController();fetch('/api/client-map?mode=work',{signal:controller.signal}).then(async response=>{if(!response.ok)throw new Error('Адреса клиентов недоступны');return response.json();}).then(setClientMapData).catch(()=>{});return()=>controller.abort();},[mode,refresh]);
+  const [portfolioFilter, setPortfolioFilter] = useState('scope=deals');
+  const [clientMapError, setClientMapError] = useState('');
+  const [clientStackIds, setClientStackIds] = useState<string[]>([]), [clientStackLimit, setClientStackLimit] = useState(40);
+  const activePortfolioFilter = view === 'organizations' ? portfolioFilter : 'scope=deals';
+  useEffect(() => {
+    setClientMapData(null); setClientMapError('');
+    if (mode !== 'work') { setClientStackIds([]); return; }
+    const controller = new AbortController();
+    fetch(`/api/portfolio?mode=work&map=true&snapshot=${snapshot}&${activePortfolioFilter}`, { signal: controller.signal, cache: 'no-store' })
+      .then(async response => { const result = await response.json(); if (!response.ok) throw new Error(result.error || 'Адреса клиентов недоступны'); if (!controller.signal.aborted) setClientMapData(result); })
+      .catch(e => { if (!controller.signal.aborted) setClientMapError(e instanceof Error ? e.message : 'Адреса клиентов недоступны'); });
+    return () => controller.abort();
+  }, [mode, refresh, snapshot, activePortfolioFilter]);
+  const refreshClients = useCallback(() => setRefresh(value => value + 1), []);
+  const openClient = (id: string) => { setClientStackIds([]); setSelection({ type: 'organization', id }); setView('organizations'); setPanelOpen(true); setOverlay(null); };
+  const planClient = (id: string) => { setPlanningOrgId(id); setOverlay('planning'); };
+
   const [liveDays,setLiveDays]=useState<LiveWindowDays>(45),[liveOngoing,setLiveOngoing]=useState(false),[signalStackIds,setSignalStackIds]=useState<string[]>([]),[newBatchIds,setNewBatchIds]=useState<string[]>([]);
   const [appearance, setAppearance] = useState<{
     timeMode: "auto" | "manual";
@@ -364,8 +383,6 @@ export default function Atlas({
   }, [search]);
   useEffect(() => {
     if (
-      view !== "organizations" &&
-      selection?.type !== "organization" &&
       !showSearch
     )
       return;
@@ -824,14 +841,15 @@ export default function Atlas({
           offices={otherRegion ? [] : mapOffices}
           territoryId={territoryId}
           focus={focus}
-          layers={layers}
+          layers={mapLayers}
           is3D={is3D}
           appearance={appearance}
           panelOpen={contextVisible}
           bankFocus={contextVisible && view === "banks" && perspective!=="sber"}
           clients={mode==='work'?clientMapData?.items:[]}
           clientsVisible={mode==='work'&&(perspective==='sber'||view==='organizations')}
-          onClient={id=>{setSelection({type:'organization',id});setView('organizations');setPanelOpen(true);setOverlay(null);}}
+          onClient={openClient}
+          onClientStack={ids => { setClientStackIds(ids); setClientStackLimit(40); setSelection(null); setView('organizations'); setPanelOpen(true); setOverlay(null); }}
           route={routeFeatures}
           focusedOrganization={focusedOrganization}
           cameraScopeEnabled={!otherRegion}
@@ -904,7 +922,7 @@ export default function Atlas({
           <kbd>⌘ K</kbd>
         </button>
         <div className="top-actions">
-          <SceneClock appearance={appearance} onChange={setAppearance} />
+          <SceneClock appearance={appearance} onChange={value => setAppearance({ ...value, life: true })} />
           <IconButton
             label="Источники и импорт"
             onClick={() => setShowSources(true)}
@@ -931,7 +949,7 @@ export default function Atlas({
           <Globe2 size={13} />
           Россия <ChevronRight size={12} />
         </button>
-        <button className="place-name" onClick={() => setShowSearch(true)}>
+        <button className="place-name" aria-label="Аналитика текущей территории" onClick={() => setOverlay("analytics")}>
           {otherRegion?.name ||
             (atRegion ? "Татарстан" : territory?.name || "Татарстан")}
           <ChevronDown size={18} />
@@ -1451,70 +1469,16 @@ export default function Atlas({
                     </Empty>
                   ) : (
                     <>
-                      <label className="inline-search">
-                        <Search size={16} />
-                        <input
-                          placeholder="Название или ИНН"
-                          aria-label="Поиск организации"
-                          value={orgQuery}
-                          onChange={(e) => {
-                            setOrgQuery(e.target.value);
-                            setOffset(0);
-                          }}
-                        />
-                      </label>
-                      <p className="notice">
-                        {clientMapData?`${number(clientMapData.located)} клиентов на карте · ${number(clientMapData.unlocated)} без точного адреса.`:`${number(orgTotal)} организаций в портфеле.`} Юридический адрес отмечается отдельно от офиса и места встречи.
-                      </p>
-                      <ClientAddressImport onImported={()=>setRefresh(n=>n+1)}/>
-                      <p className="caption">{scopeNote}</p>
-                      {orgLoading ? (
-                        <div className="loading-row">Ищем организации…</div>
-                      ) : organizations.length ? (
-                        organizations.map((o) => (
-                          <button
-                            className="organization-row"
-                            key={o.id}
-                            onClick={() =>
-                              setSelection({ type: "organization", id: o.id })
-                            }
-                          >
-                            <span className="org-icon">
-                              <Building2 size={18} />
-                            </span>
-                            <span>
-                              <strong>{o.name}</strong>
-                              <small>ИНН {o.inn}</small>
-                              <em>
-                                {o.offerCount} предложений · ОД{" "}
-                                {money(o.expectedIncome)}
-                              </em>
-                            </span>
-                            <ChevronRight size={15} />
-                          </button>
-                        ))
-                      ) : (
-                        <Empty>Организации не найдены</Empty>
-                      )}
-                      <div className="pagination">
-                        <button
-                          className="secondary"
-                          disabled={!offset}
-                          onClick={() => setOffset(Math.max(0, offset - 40))}
-                        >
-                          Назад
-                        </button>
-                        <span>
-                          {offset + 1}–{Math.min(offset + 40, orgTotal)}
-                        </span>
-                        <button
-                          className="secondary"
-                          disabled={offset + 40 >= orgTotal}
-                          onClick={() => setOffset(offset + 40)}
-                        >
-                          Далее
-                        </button>
-                      </div>
+                      {clientMapError && <p role="alert" className="notice">{clientMapError}</p>}
+                      {clientStackIds.length > 0 && <section className="live-signal-stack" aria-label="Клиенты в группе">
+                        <div><strong>Клиенты в этой группе · {clientStackIds.length}</strong><button onClick={() => setClientStackIds([])}>Закрыть группу</button></div>
+                        <p className="caption">Совпадающие адреса не объединяют клиентов. Каждая карточка доступна отдельно.</p>
+                        {clientStackIds.slice(0, clientStackLimit).map(id => <button className="organization-row" key={id} onClick={() => openClient(id)}><span><strong>{clientMapData?.items.find(p => p.id === id)?.name || id}</strong><small>{clientMapData?.items.find(p => p.id === id)?.inn}</small></span><ChevronRight size={16}/></button>)}
+                        {clientStackLimit < clientStackIds.length && <button className="secondary" onClick={() => setClientStackLimit(n => n + 40)}>Показать ещё</button>}
+                      </section>}
+                      <ClientPortfolio snapshot={snapshot} territoryId={territoryId} territoryName={territory?.name || 'Татарстан'} refresh={refresh}
+                        onOpen={openClient} onPlan={planClient} onMap={point => { openClient(point.id); fly(point.coordinates, 16.4, is3D ? 58 : 0); }}
+                        onImported={refreshClients} onFilter={setPortfolioFilter} onSources={() => setShowSources(true)} onSignal={chooseSignal}/>
                     </>
                   )
                 ) : view === "banks" ? (
@@ -1685,7 +1649,7 @@ export default function Atlas({
           <LocateFixed size={19} />
         </IconButton>
       </div>
-      {!otherRegion&&!(contextVisible&&view==='signals')&&<LiveSignalStatus worker={liveFeed.worker} error={liveFeed.error} loading={liveFeed.loading} newCount={visibleUnreadIds.length} onNew={openNewestUnread} onRetry={liveFeed.reconnect}/>} 
+      {!otherRegion&&!(contextVisible&&view==='signals')&&<LiveSignalStatus worker={liveFeed.worker} error={liveFeed.error} loading={liveFeed.loading} newCount={visibleUnreadIds.length} onNew={openNewestUnread} onRetry={liveFeed.reconnect}/>}
       <div className="map-legend glass">
         <span className="legend-signal">●</span>
         <span>
@@ -1702,15 +1666,6 @@ export default function Atlas({
           <SlidersHorizontal size={13} />
         </button>
       </div>
-      {appearance.life && (
-        <button
-          className="life-status"
-          onClick={() => setAppearance((a) => ({ ...a, life: false }))}
-          title="Приостановить симуляцию городской жизни"
-        >
-          <Pause size={12} /> Симуляция города
-        </button>
-      )}
       {exploreOpen && <MapMenu layers={layers} perspective={perspective} onPerspective={setPerspective} onSources={()=>setShowSources(true)} pitch={Math.round(mapStatus.pitch??30)} onClose={()=>setExploreOpen(false)} onToggle={(key,value)=>{setLayers(l=>({...l,[key]:value}));setView('overview');setPanelOpen(false);}} onFocus={v=>{setLayers(l=>({...l,signals:v==='signals',banks:v==='banks',landmarks:v==='places'}));changeView(v);}} onAll={()=>{setLayers(l=>({...l,signals:true,banks:true,landmarks:true}));setView('overview');setSelection(null);setPanelOpen(false);setExploreOpen(false);}} onPitch={pitch=>{set3D(true);fly(mapStatus.center||[51,55.35],mapStatus.zoom,pitch,mapStatus.bearing??0);}} onTour={startTour}/>}
       <nav className="bottom-dock glass" aria-label="Главная навигация">
         <button
@@ -1721,6 +1676,9 @@ export default function Atlas({
           <Map size={19} />
           <span>Карта</span>
           <ChevronUp size={13} />
+        </button>
+        <button aria-pressed={overlay === 'analytics'} onClick={() => setOverlay('analytics')}>
+          <BarChart3 size={19}/><span>Аналитика</span>
         </button>
         <button onClick={() => setShowPlanning(true)}>
           <Route size={19} />
@@ -1769,6 +1727,9 @@ export default function Atlas({
           {toast}
         </div>
       )}
+      {overlay === 'analytics' && <TerritoryAnalytics key={mode} mode={mode} initialTerritory={otherRegion?.id || territoryId} initialTab={perspective === 'sber' ? 'sber' : 'territory'}
+        onClose={() => setOverlay(null)} onMap={chooseTerritory} onOrganization={openClient} onPlan={planClient} onSignal={chooseSignal}
+        onSources={() => setShowSources(true)} onClients={() => { setOverlay(null); setOtherRegion(null); setSelection(null); setView('organizations'); setPanelOpen(true); setPerspective('sber'); }}/>}
       {showSearch && (
         <Modal title="Найти на карте" onClose={() => setShowSearch(false)} wide>
           <label className="command-search">

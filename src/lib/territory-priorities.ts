@@ -37,7 +37,7 @@ export type TerritoryPriorityOptions = {
 const DAY = 86_400_000;
 const PROJECT_CATEGORIES = new Set(['construction', 'investment', 'infrastructure', 'planning']);
 const normalize = (value: string) => value.normalize('NFKC').toLocaleLowerCase('ru-RU').replace(/ё/g, 'е').trim();
-const bankKey = (bank: string) => {
+export const bankKey = (bank: string) => {
   const value = normalize(bank).replace(/[«»"']/g, '').replace(/\s+/g, ' ');
   if (/^(?:пао\s+)?(?:сбер(?:банк)?(?:\s+россии)?|sber(?:bank)?)$/.test(value)) return 'sber';
   if (/^(?:банк\s+)?(?:втб|vtb)(?:\s+пао)?$/.test(value)) return 'vtb';
