@@ -34,7 +34,7 @@ import { spreadCoincidentMarkers, MARKER_SPREAD_ZOOM } from '../lib/map-marker-l
 import {addClientLayers,refreshClientLayers} from '../lib/map-client-layer';
 import {sberOfficeRole} from '../lib/sber-structure';
 import type {ClientMapPoint} from '../lib/client-map-types';
-import {naturalMapPitch} from '../lib/map-camera-mode';
+import {applyMapViewMode, naturalMapPitch} from '../lib/map-camera-mode';
 import { signalHasVerifiedMapLocation } from '../lib/signal-location';
 import { activeSignalHighlightIds } from '../lib/map-signal-selection';
 
@@ -192,11 +192,11 @@ function refreshVisibility(map: LibreMap, props: AtlasMapProps, modelsAvailable 
   const layers = {...props.layers, signals: props.layers.signals && !props.bankFocus, landmarks: props.layers.landmarks && !props.bankFocus};
   setVisibility(map, ['atlas-signal-marker-links','atlas-signal-objects-line','atlas-signal-object-focus','atlas-signal-streets-line', 'atlas-signal-area-fill', 'atlas-signal-clusters', 'atlas-signal-cluster-count', 'atlas-signal-areas-circle', 'atlas-signal-area-fallback', 'atlas-signal-areas-label', 'atlas-signal-areas-card', 'atlas-signal-topics', 'atlas-signal-point-clusters', 'atlas-signal-point-cluster-count', 'atlas-signal-point-highlight', 'atlas-signal-point-contrast', 'atlas-signal-points-circle', 'atlas-signal-confidence', 'atlas-signal-priority-badge'], layers.signals);
   setVisibility(map, ['atlas-bank-clusters', 'atlas-bank-cluster-count', 'atlas-banks-circle', 'atlas-bank-label','atlas-head-offices','atlas-head-office-names'], layers.banks);
-  setVisibility(map, ['atlas-building-3d', 'atlas-building-parts-3d', 'atlas-building-roofs', 'atlas-building-part-roofs'], layers.buildings && props.is3D);
-  setVisibility(map, ['atlas-building-flat'], layers.buildings && !props.is3D);
+  applyMapViewMode(map, props.is3D, {
+    buildings: layers.buildings, bankFocus: Boolean(props.bankFocus),
+    maxPitch: map.getCanvas().clientWidth <= 760 || window.matchMedia('(pointer: coarse)').matches ? 60 : 75,
+  });
   setVisibility(map, ['atlas-building-purpose'], layers.buildings && !props.bankFocus);
-  for (const id of ['atlas-building-3d', 'atlas-building-parts-3d', 'atlas-building-roofs', 'atlas-building-part-roofs']) if(map.getLayer(id)) map.setPaintProperty(id,'fill-extrusion-opacity',props.bankFocus ? 0.18 : 1);
-  if(map.getLayer('atlas-building-flat')) map.setPaintProperty('atlas-building-flat','fill-opacity',props.bankFocus ? 0.16 : 0.9);
   setVisibility(map, ['building'], layers.buildings); // Basemap footprints fill the gap below z13.
   setVisibility(map, ['atlas-district-hit', 'atlas-district-hover', 'atlas-district-lines', 'atlas-settlement-lines', 'atlas-region-line', 'atlas-russia-lines',], layers.boundaries);
   setVisibility(map, ['atlas-landmark-label', 'atlas-landmark-dot'], layers.landmarks);
@@ -395,7 +395,7 @@ export default function AtlasMap(props: AtlasMapProps) {
       // predev/prebuild copy both package files into this same public directory.
       maplibregl.setWorkerUrl('/maplibre/maplibre-gl-worker.mjs');
       registerTiles();
-      map = new maplibregl.Map({ container: containerRef.current!, style: '/api/map/style', center: INITIAL_CENTER, zoom: mobile ? 5.1 : INITIAL_ZOOM, pitch: 0, maxPitch: mobile ? 60 : 75, minZoom: 2, maxZoom: 20, attributionControl: { compact: true }, canvasContextAttributes: { antialias: !mobile, preserveDrawingBuffer: false }, pixelRatio: Math.min(window.devicePixelRatio || 1, mobile ? 1.4 : 2), maxTileCacheSize: mobile ? 80 : 160, fadeDuration: reducedMotion ? 0 : 180, touchPitch: true });
+      map = new maplibregl.Map({ container: containerRef.current!, style: '/api/map/style', center: INITIAL_CENTER, zoom: mobile ? 5.1 : INITIAL_ZOOM, pitch: 0, maxPitch: latest.current.is3D ? mobile ? 60 : 75 : 0, minZoom: 2, maxZoom: 20, attributionControl: { compact: true }, canvasContextAttributes: { antialias: !mobile, preserveDrawingBuffer: false }, pixelRatio: Math.min(window.devicePixelRatio || 1, mobile ? 1.4 : 2), maxTileCacheSize: mobile ? 80 : 160, fadeDuration: reducedMotion ? 0 : 180, touchPitch: latest.current.is3D });
       mapRef.current = map;
       configureRussiaMap(map);
       const bounds = containerRef.current!.getBoundingClientRect();
@@ -555,7 +555,13 @@ export default function AtlasMap(props: AtlasMapProps) {
       if (cancelled || mapRef.current !== map) return;
       map.resize();
       const bounds = containerRef.current?.getBoundingClientRect();
-      if (bounds) detailsRef.current?.setMobile(bounds.width <= 760 || window.matchMedia('(pointer: coarse)').matches);
+      if (bounds) {
+        const compact = bounds.width <= 760 || window.matchMedia('(pointer: coarse)').matches;
+        detailsRef.current?.setMobile(compact);
+        if (loaded.current) applyMapViewMode(map, latest.current.is3D, {
+          buildings: latest.current.layers.buildings, bankFocus: Boolean(latest.current.bankFocus), maxPitch: compact ? 60 : 75,
+        });
+      }
       if (bounds && !map.isMoving()) {
         const compact = bounds.width <= 760;
         const padding = { top: 0, right: !compact && latest.current.panelOpen ? Math.min(340, bounds.width * 0.28) : 0, bottom: compact && latest.current.panelOpen ? Math.min(220, bounds.height * 0.32) : 0, left: 0 };

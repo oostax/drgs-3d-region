@@ -268,8 +268,13 @@ export function getBuildingDimensions(properties: Properties) {
 export function getBuildingLight(state: LightingState) {
   const night = clamp(state.nightAmount, 0, 1), warmth = clamp((18 - state.sunElevation) / 18, 0, 1) * (1 - night) ** 2;
   const mix = (a: number, b: number) => Math.round(a + (b - a) * warmth);
-  const sunColor = `rgb(255,${mix(246, 191)},${mix(226, 130)})`;
-  return { sunColor, ambientColor: '#e8e8e2', ambientIntensity: 0.88 + clamp(state.brightness, 0, 1) * 0.52, sunIntensity: state.sunElevation > -2 ? 0.12 + state.brightness * 2.25 : 0.04, legacyIntensity: 0.18 + state.brightness * 0.36, nightAmount: night, warmWindows: night * 0.68 };
+  // A warm directional highlight, not orange albedo. Neutral ambient fill
+  // preserves white plaster, grey roofs and the source material distinctions.
+  const sunColor = `rgb(255,${mix(251, 237)},${mix(246, 216)})`;
+  // MapLibre has one global light rather than Three's separate sun/ambient.
+  // Its tint affects even shaded faces, so use a softer mixed-light colour.
+  const mapColor = `rgb(255,${mix(253, 246)},${mix(249, 237)})`;
+  return { sunColor, mapColor, ambientColor: '#e8e8e2', ambientIntensity: 0.88 + clamp(state.brightness, 0, 1) * 0.52, sunIntensity: state.sunElevation > -2 ? 0.12 + state.brightness * 2.25 : 0.04, legacyIntensity: 0.18 + state.brightness * 0.36, nightAmount: night, warmWindows: night * 0.68 };
 }
 
 /** UV v=integer is always an actual floor boundary, irrespective of map zoom or wall length. */

@@ -72,7 +72,7 @@ export function applyMapLighting(map: LibreMap, state: LightingState, geographic
     const localNight = Math.max(0, Math.min(1, state.nightAmount));
     const fill = localNight * localNight * (3 - 2 * localNight);
     const elevation = Math.max(0, state.sunElevation) * (1 - fill) + Math.max(32, state.sunElevation) * fill;
-    map.setLight({ anchor: 'map', color: light.sunColor, intensity: light.legacyIntensity, position: [1.5, state.sunAzimuth, Math.max(0, Math.min(90, 90 - elevation))] }); cache.lightKey = lightKey; changed = true;
+    map.setLight({ anchor: 'map', color: light.mapColor, intensity: light.legacyIntensity, position: [1.5, state.sunAzimuth, Math.max(0, Math.min(90, 90 - elevation))] }); cache.lightKey = lightKey; changed = true;
   }
   if (changed) map.triggerRepaint();
 }

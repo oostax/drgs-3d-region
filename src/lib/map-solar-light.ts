@@ -1,5 +1,8 @@
 import type { CustomLayerInterface, CustomRenderMethodInput, Map as LibreMap } from 'maplibre-gl';
 
+// Geographic twilight is a subtle atmosphere, never a city-wide orange filter.
+export const SOLAR_TWILIGHT_OPACITY = 0.04;
+
 const vertexSource = `#version 300 es
 in vec2 a_position;
 uniform mat4 u_matrix;
@@ -24,9 +27,8 @@ void main() {
   float elevation = degrees(asin(clamp(dot(ground, normalize(u_sun)), -1.0, 1.0)));
   float night = 1.0 - smoothstep(-8.0, 6.0, elevation);
   float lowSun = smoothstep(-12.0, -2.0, elevation) * (1.0 - smoothstep(5.0, 22.0, elevation));
-  float morning = smoothstep(-0.15, 0.15, dot(vec3(-sin(longitude), cos(longitude), 0.0), u_sun));
-  vec3 warmColor = mix(vec3(0.91, 0.43, 0.20), vec3(1.0, 0.73, 0.49), morning);
-  float warmAlpha = lowSun * (0.16 + 0.17 * u_spatial);
+  vec3 warmColor = vec3(1.0, 0.91, 0.82);
+  float warmAlpha = lowSun * u_spatial * ${SOLAR_TWILIGHT_OPACITY.toFixed(2)};
   float nightAlpha = night * 0.76 * u_spatial;
   vec3 nightColor = vec3(0.045, 0.10, 0.18);
   float alpha = warmAlpha + nightAlpha * (1.0 - warmAlpha);
@@ -83,10 +85,14 @@ export class SolarLightLayer implements CustomLayerInterface {
 
   render(gl: WebGL2RenderingContext, args: CustomRenderMethodInput) {
     if (!this.program || !this.uniforms || !this.map) return;
+    const spatial = spatialLightingAmount(this.map.getZoom());
+    // City lighting is entirely material + sun + ambient. Do not composite a
+    // second tint over roofs, water and roads (including the flat 2D view).
+    if (spatial === 0) return;
     gl.useProgram(this.program); gl.bindVertexArray(this.vao);
     gl.uniformMatrix4fv(this.uniforms.matrix, false, args.defaultProjectionData.mainMatrix);
     gl.uniform3fv(this.uniforms.sun, this.sun);
-    gl.uniform1f(this.uniforms.spatial, spatialLightingAmount(this.map.getZoom()));
+    gl.uniform1f(this.uniforms.spatial, spatial);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
     gl.bindVertexArray(null);
   }

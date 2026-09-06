@@ -3,6 +3,7 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 import { MercatorCoordinate, type CustomLayerInterface, type CustomRenderMethodInput, type Map as LibreMap } from 'maplibre-gl';
 import type { Feature, Geometry, Position } from 'geojson';
 import type { LightingState } from './solar';
+import { getBuildingLight } from './building-materials';
 import { SimulationClock, stableHash, drivableRoad } from './map-life-stability';
 import type { Signal } from './types';
 import type { SignalGroup } from './signal-markers';
@@ -1363,7 +1364,9 @@ export class SignalSceneLayer implements CustomLayerInterface {
       for (const entry of visibleEntries) {
         visible++;
         entry.model.root.scale.setScalar(1); entry.model.root.position.set(0, 0, 0); entry.model.root.rotation.set(0, 0, 0); entry.model.detail.visible = zoom >= (entry.event.selected ? 15.6 : 16.5) && !this.options.mobile; entry.model.update(time + entry.phase);
-        entry.sky.intensity = 0.65 + lighting.brightness * 1.7; entry.sky.color.set(lighting.nightAmount > 0.5 ? '#9aaec5' : '#edf4e5'); entry.sun.intensity = 0.2 + lighting.brightness * 2.5; entry.sun.color.set(lighting.sunElevation < 15 ? '#ffc997' : '#fff1db'); const d = lighting.sunDirection; entry.sun.position.set(d[0] * 140, d[1] * 140, Math.max(18, d[2] * 140)); entry.fill.intensity = 0.25 + lighting.nightAmount * 0.8;
+        const light = getBuildingLight(lighting);
+        entry.sky.intensity = 0.65 + lighting.brightness * 1.7; entry.sky.color.set(light.ambientColor); entry.sun.intensity = 0.2 + lighting.brightness * 2.5; entry.sun.color.set(light.sunColor); const d = lighting.sunDirection; entry.sun.position.set(d[0] * 140, d[1] * 140, Math.max(18, d[2] * 140)); entry.fill.intensity = 0.25 + lighting.nightAmount * 0.8;
+        entry.fill.color.set(light.ambientColor);
         const coordinate = entry.coordinate, metre = coordinate.meterInMercatorCoordinateUnits(), transform = this.renderTransform.makeTranslation(coordinate.x, coordinate.y, coordinate.z).multiply(this.renderScale.makeScale(metre, -metre, metre));
         this.camera.projectionMatrix.copy(projection).multiply(transform); this.camera.projectionMatrixInverse.copy(this.camera.projectionMatrix).invert(); (entry.projection ??= new THREE.Matrix4()).copy(this.camera.projectionMatrix); renderer.render(entry.scene, this.camera);
       }

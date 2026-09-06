@@ -3,6 +3,7 @@ import { MercatorCoordinate, type CustomLayerInterface, type CustomRenderMethodI
 import { LANDMARKS, type Landmark } from './landmarks';
 import { createLandmarkModel, disposeLandmarkModel, type LandmarkDetail } from './landmark-models';
 import type { LightingState } from './solar';
+import { getBuildingLight } from './building-materials';
 
 /** Exact OSM-record matches in Overture; provenance: public/data/landmark-buildings.json.
  * Only these 8 parent buildings and their 29 linked parts are substituted.
@@ -92,11 +93,12 @@ export class LandmarkMapLayer implements CustomLayerInterface {
         entry.current = model;
         const lighting = this.options.lighting?.();
         if (lighting && entry.lighting !== lighting) {
+          const light = getBuildingLight(lighting);
           const sky = entry.scene.children[0] as THREE.HemisphereLight, sun = entry.scene.children[1] as THREE.DirectionalLight, fill = entry.scene.children[2] as THREE.DirectionalLight;
-          sky.intensity = 0.45 + lighting.brightness * 1.7; sky.color.set(lighting.nightAmount > 0.5 ? '#7893b3' : '#eff7e8');
-          sun.intensity = 0.15 + lighting.brightness * 2.9; sun.color.set(lighting.sunElevation < 15 ? '#ffd0a0' : '#fff1d9');
+          sky.intensity = 0.45 + lighting.brightness * 1.7; sky.color.set(light.ambientColor);
+          sun.intensity = 0.15 + lighting.brightness * 2.9; sun.color.set(light.sunColor);
           const d = lighting.sunDirection; sun.position.set(d[0] * 150, d[1] * 150, Math.max(18, d[2] * 150));
-          fill.intensity = 0.75 + lighting.nightAmount * 1.1; fill.color.set('#ffd5a2'); fill.position.set(20, -80, 20);
+          fill.intensity = 0.75 + lighting.nightAmount * 1.1; fill.color.set(light.ambientColor); fill.position.set(20, -80, 20);
           for (const candidate of Object.values(entry.models)) candidate.traverse((object) => { if (object instanceof THREE.Mesh && object.material instanceof THREE.MeshStandardMaterial && object.material.color.getHex() === 0x366c73) { object.material.emissive.set('#ffd6a0'); object.material.emissiveIntensity = lighting.nightAmount * 0.85; } });
           entry.lighting = lighting;
         }
