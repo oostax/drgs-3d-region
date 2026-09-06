@@ -1,0 +1,145 @@
+name: Verify map modes and sunset fix
+on:
+  push:
+    branches: [fix/map-modes-sunset]
+    paths: [.github/workflows/apply-map-modes-sunset.yml]
+permissions:
+  contents: write
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/fix/map-modes-sunset'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Read installed client component guidance
+        run: find node_modules/next/dist/docs -iname '*use-client*' -exec cat {} \;
+      - name: Confirm regressions on the original code
+        run: |
+          if npx tsx --test tests/map-mode-regression.test.ts tests/sunset-rendering.test.ts > /tmp/map-modes-before.log 2>&1; then
+            echo 'Expected the unpatched code to fail the new regressions'; exit 1
+          fi
+      - name: Apply exact reviewed source replacements
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          ROOT = Path('.')
+          def replace(path, old, new):
+              target = ROOT / path
+              text = target.read_text()
+              assert text.count(old) == 1, f'{path}: expected one replacement, found {text.count(old)}'
+              target.write_text(text.replace(old, new))
+          (ROOT / 'src/lib/map-camera-mode.ts').write_text('''import type { Map as LibreMap } from 'maplibre-gl';
+
+          /** One source of truth: 2D is a clean plan; 3D has textured volumes. */
+          export const DEFAULT_MAP_3D = false;
+
+          export function naturalMapPitch(zoom: number): number {
+            return zoom >= 13 ? 58 : zoom >= 10 ? 45 : 0;
+          }
+
+          /** Pitch is camera geometry, not a third presentation mode. An overview or an
+           * unfinished animation must never make the mode button disagree with layers. */
+          export function nextMapMode(is3D: boolean, _pitch: number, zoom: number) {
+            const next3D = !is3D;
+            return { next3D, pitch: next3D ? naturalMapPitch(zoom) : 0 };
+          }
+
+          type ModeMap = Pick<LibreMap, 'getLayer' | 'getLayoutProperty' | 'setLayoutProperty' | 'getMaxPitch' | 'setMaxPitch' | 'touchPitch'>;
+
+          /** Apply after style load, mode changes and resize. Never remove textures or
+           * rebuild sources: returning to 3D reuses exactly the same surface materials. */
+          export function applyMapMode(map: ModeMap, is3D: boolean, buildings = true, mobile = false) {
+            for (const id of ['atlas-building-3d', 'atlas-building-parts-3d', 'atlas-building-roofs', 'atlas-building-part-roofs', 'atlas-building-flat']) {
+              const visible = buildings && (id === 'atlas-building-flat' ? !is3D : is3D);
+              const visibility = visible ? 'visible' : 'none';
+              if (map.getLayer(id) && map.getLayoutProperty(id, 'visibility') !== visibility) map.setLayoutProperty(id, 'visibility', visibility);
+            }
+            const maxPitch = is3D ? mobile ? 60 : 75 : 0;
+            if (map.getMaxPitch() !== maxPitch) map.setMaxPitch(maxPitch);
+            if (is3D && !map.touchPitch.isEnabled()) map.touchPitch.enable();
+            else if (!is3D && map.touchPitch.isEnabled()) map.touchPitch.disable();
+          }
+          ''')
+          replace('src/components/Atlas.tsx', 'import {nextMapMode} from "@/lib/map-camera-mode";', 'import {DEFAULT_MAP_3D, nextMapMode} from "@/lib/map-camera-mode";')
+          replace('src/components/Atlas.tsx', '[is3D, set3D] = useState(true)', '[is3D, set3D] = useState(DEFAULT_MAP_3D)')
+          replace('src/components/Atlas.tsx', '  const visible3D=is3D&&(mapStatus.pitch??0)>5;\n', '')
+          replace('src/components/Atlas.tsx', '''          label={visible3D ? "Перейти в 2D" : "Перейти в 3D"}
+                    onClick={toggleMapMode}
+                  >
+                    <b>{visible3D ? "3D" : "2D"}</b>''', '''          label={is3D ? "Перейти в 2D" : "Перейти в 3D"}
+                    aria-pressed={is3D}
+                    data-map-mode={is3D ? "3d" : "2d"}
+                    onClick={toggleMapMode}
+                  >
+                    <b>{is3D ? "3D" : "2D"}</b>''')
+          replace('src/components/AtlasMap.tsx', "import {naturalMapPitch} from '../lib/map-camera-mode';", "import {applyMapMode, naturalMapPitch} from '../lib/map-camera-mode';")
+          replace('src/components/AtlasMap.tsx', "  setVisibility(map, ['atlas-building-3d', 'atlas-building-parts-3d', 'atlas-building-roofs', 'atlas-building-part-roofs'], layers.buildings && props.is3D);\n  setVisibility(map, ['atlas-building-flat'], layers.buildings && !props.is3D);", "  applyMapMode(map, props.is3D, layers.buildings, map.getCanvas().clientWidth <= 760 || window.matchMedia('(pointer: coarse)').matches);")
+          replace('src/components/AtlasMap.tsx', 'pitch: 0, maxPitch: mobile ? 60 : 75,', 'pitch: 0, maxPitch: latest.current.is3D ? (mobile ? 60 : 75) : 0,')
+          replace('src/components/AtlasMap.tsx', 'touchPitch: true });', 'touchPitch: latest.current.is3D });')
+          replace('src/components/AtlasMap.tsx', "      if (bounds) detailsRef.current?.setMobile(bounds.width <= 760 || window.matchMedia('(pointer: coarse)').matches);", """      if (bounds) {
+                  const compact = bounds.width <= 760 || window.matchMedia('(pointer: coarse)').matches;
+                  detailsRef.current?.setMobile(compact);
+                  if (loaded.current) applyMapMode(map, latest.current.is3D, latest.current.layers.buildings, compact);
+                }""")
+          replace('src/lib/building-materials.ts', "  const sunColor = `rgb(255,${mix(246, 191)},${mix(226, 130)})`;", """  // A warm direct sun is balanced by the neutral Three.js ambient light.
+            // MapLibre has only one global tint (also applied to roof patterns), so it
+            // needs a much more neutral colour instead of reusing the direct sun RGB.
+            const sunColor = `rgb(255,${mix(249, 230)},${mix(241, 205)})`;
+            const legacyColor = `rgb(255,${mix(253, 248)},${mix(249, 238)})`;""")
+          replace('src/lib/building-materials.ts', 'return { sunColor, ambientColor:', 'return { sunColor, legacyColor, ambientColor:')
+          replace('src/lib/map-appearance.ts', 'const lightKey = `${bucket}:${Math.round(state.sunAzimuth * 2)}:', 'const lightKey = `${bucket}:${light.legacyColor}:${Math.round(state.sunAzimuth * 2)}:')
+          replace('src/lib/map-appearance.ts', "map.setLight({ anchor: 'map', color: light.sunColor,", "map.setLight({ anchor: 'map', color: light.legacyColor,")
+          replace('src/lib/map-solar-light.ts', 'uniform float u_spatial;', 'uniform vec2 u_overlay;')
+          replace('src/lib/map-solar-light.ts', '''  vec3 warmColor = mix(vec3(0.91, 0.43, 0.20), vec3(1.0, 0.73, 0.49), morning);
+            float warmAlpha = lowSun * (0.16 + 0.17 * u_spatial);
+            float nightAlpha = night * 0.76 * u_spatial;''', '''  vec3 warmColor = mix(vec3(0.98, 0.92, 0.83), vec3(1.0, 0.95, 0.88), morning);
+            float warmAlpha = lowSun * u_overlay.x;
+            float nightAlpha = night * u_overlay.y;''')
+          replace('src/lib/map-solar-light.ts', '/** One GPU pass, two triangles; no per-region color steps or continuously running timer. */', '''/** Local material lighting already provides sunset. A second full-screen wash
+           * made roofs, ground and water orange. Keep only a subtle regional atmosphere
+           * and the geographic night terminator; both fade out completely by zoom 9. */
+          export function solarOverlayStrength(zoom: number) {
+            const spatial = spatialLightingAmount(zoom);
+            return { warmth: spatial * 0.04, night: spatial * 0.76 };
+          }
+
+          /** One GPU pass, two triangles; no per-region color steps or continuously running timer. */''')
+          replace('src/lib/map-solar-light.ts', 'spatial: WebGLUniformLocation | null', 'overlay: WebGLUniformLocation | null')
+          replace('src/lib/map-solar-light.ts', "spatial: gl.getUniformLocation(this.program, 'u_spatial')", "overlay: gl.getUniformLocation(this.program, 'u_overlay')")
+          replace('src/lib/map-solar-light.ts', '    if (!this.program || !this.uniforms || !this.map) return;\n    gl.useProgram', '    if (!this.program || !this.uniforms || !this.map) return;\n    const strength = solarOverlayStrength(this.map.getZoom());\n    if (strength.warmth === 0 && strength.night === 0) return;\n    gl.useProgram')
+          replace('src/lib/map-solar-light.ts', 'gl.uniform1f(this.uniforms.spatial, spatialLightingAmount(this.map.getZoom()));', 'gl.uniform2f(this.uniforms.overlay, strength.warmth, strength.night);')
+          replace('tests/map-camera-mode.test.ts', "test('camera mode needs one click when the 3D flag is stale but the camera is flat',()=>{\n  assert.deepEqual(nextMapMode(true,0,11.5),{next3D:true,pitch:45});", "test('camera mode needs one click even when an active 3D camera is top-down',()=>{\n  assert.deepEqual(nextMapMode(true,0,11.5),{next3D:false,pitch:0});")
+          PY
+      - name: All unit tests
+        run: npm test 2>&1 | tee /tmp/map-modes-tests.log
+      - name: Typecheck
+        run: npm run typecheck 2>&1 | tee /tmp/map-modes-typecheck.log
+      - name: Production build
+        run: npm run build 2>&1 | tee /tmp/map-modes-build.log
+      - name: Commit verified source changes to this review branch only
+        run: |
+          git diff --check
+          git diff > /tmp/map-modes-changes.patch
+          git add src/components/Atlas.tsx src/components/AtlasMap.tsx src/lib/building-materials.ts src/lib/map-appearance.ts src/lib/map-camera-mode.ts src/lib/map-solar-light.ts tests/map-camera-mode.test.ts
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'fix: make 2D/3D deterministic and preserve building colours at sunset'
+          git push origin HEAD:refs/heads/fix/map-modes-sunset
+          git rev-parse HEAD | tee /tmp/map-modes-commit.log
+          git archive HEAD src tests package.json package-lock.json tsconfig.json next.config.ts next-env.d.ts .nvmrc .node-version AGENTS.md > /tmp/map-modes-source.tar
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: map-modes-sunset-verification
+          path: /tmp/map-modes-*
+          retention-days: 3
