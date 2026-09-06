@@ -1,0 +1,11 @@
+--- a/scripts/verify-analytics.py
++++ b/scripts/verify-analytics.py
+@@ -79,7 +79,7 @@
+         page.get_by_role('navigation',name='Страницы клиентов').get_by_role('button',name='Далее',exact=True).click();expect(cards).to_have_count(5)
+         check('All 85 clients accessible through 40/40/5 pagination')
+         search=page.get_by_role('textbox',name='Поиск клиентов по ИНН, названию, ГОСБ или КМ');search.fill('1650000084');expect(cards).to_have_count(1)
+-        expect(cards.first.get_by_text('Нет адреса с подтверждёнными координатами. ИНН и ГОСБ не задают точку.',exact=True)).to_be_visible()
++        expect(cards.first.get_by_text('Нет адреса с подтверждёнными координатами. ИНН и ГОСБ не задают точку.',exact=True).first).to_be_visible()
+         page.screenshot(path=str(OUT/'missing-address.png'))
+         page.get_by_text('Разместить клиентов · адреса и проверка',exact=True).click()
+         page.get_by_text('Поиск юридических адресов по ИНН',exact=True).click()
