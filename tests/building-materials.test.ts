@@ -36,7 +36,7 @@ test('concrete is not proof of panel construction, and office is not proof of gl
 
 test('religious, tiny and ancillary objects never receive residential window grids', () => {
   for (const c of ['church', 'mosque', 'garage', 'shed', 'service']) assert.equal(classifyBuilding({ class: c, num_floors: 3 }).windows, 'none');
-  const tiny = classifyBuilding({}, 9); assert.equal(tiny.height, 2.8); assert.equal(tiny.windows, 'none');
+  const tiny = classifyBuilding({}, 9); assert.equal(tiny.height, 8); assert.equal(tiny.windows, 'none');
   assert.equal(classifyBuilding({ class: 'apartments', num_floors: 9 }, 12).windows, 'none');
   assert.equal(classifyBuilding({ class: 'church', facade_material: 'glass' }).surface, 'plaster');
   assert.equal(classifyBuilding({ height: 22 }, 9).height, 22, 'explicit height remains evidence even for a small footprint');
@@ -53,7 +53,7 @@ test('source facade and roof colors are independent and override cautious defaul
 
 test('height expressions retain measured values, floor estimates and safe neutral defaults', () => {
   const expression = createExpression(BUILDING_HEIGHT, 'height'); assert.equal(expression.result, 'success'); if (expression.result !== 'success') return;
-  for (const [properties, height] of [[{}, 2.8], [{ class: 'garage' }, 2.8], [{ num_floors: 5 }, 15], [{ height: 18, num_floors: 3 }, 18], [{ class: 'office' }, 7.2]] as [Record<string, unknown>, number][]) assert.equal(expression.value.evaluate({ zoom: 17 }, { type: 'Polygon', properties }), height);
+  for (const [properties, height] of [[{}, 8], [{ class: 'garage' }, 2.8], [{ num_floors: 5 }, 15], [{ height: 18, num_floors: 3 }, 18], [{ class: 'office' }, 7.2]] as [Record<string, unknown>, number][]) assert.equal(expression.value.evaluate({ zoom: 17 }, { type: 'Polygon', properties }), height);
   for (const expr of [BUILDING_BASE, BUILDING_FACADE_COLOR, BUILDING_ROOF_COLOR]) assert.equal(createExpression(expr, 'building').result, 'success');
   assert.equal(classifyBuilding({ num_floors: 5 }).heightEstimated, true); assert.equal(classifyBuilding({ height: 18 }).heightEstimated, false);
 });
@@ -130,7 +130,7 @@ test('loaded parent appearance cannot raise a part or leak parent floors into it
   state.rebuild();
   const unknown = state.entries.find(entry => entry.id === 'unknown-height-part')!;
   assert.equal(unknown.profile.kind, 'office'); assert.equal(unknown.profile.facadeColor, '#804020');
-  assert.equal(unknown.profile.height, 2.8); assert.equal(unknown.profile.base, 0); assert.equal(unknown.profile.floors, 1);
+  assert.equal(unknown.profile.height, 8); assert.equal(unknown.profile.base, 0); assert.equal(unknown.profile.floors, 2);
   const measured = state.entries.find(entry => entry.id === 'measured-part')!;
   assert.equal(measured.profile.height, 9); assert.equal(measured.profile.base, 3); assert.equal(measured.profile.floors, 2);
   const detail = makeBuildingDetailGeometry(rectangle(20, 12).coordinates, measured.profile), walls = detail.walls;
