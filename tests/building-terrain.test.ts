@@ -6,6 +6,7 @@ import type { Feature, Geometry, Polygon } from 'geojson';
 import { BUILDING_BASE, BUILDING_BODY_HEIGHT, BUILDING_HEIGHT, classifyBuilding } from '../src/lib/building-materials';
 import { buildingTerrainAnchor, sampleBuildingTerrain, buildingTerrainAltitudes, buildingTerrainRevision, installBuildingTerrain, terrainBuildingBase, terrainBuildingHeight } from '../src/lib/building-terrain';
 import { BuildingDetailsLayer } from '../src/lib/map-building-details';
+import { configureBuildingTileLod } from '../src/lib/building-lod';
 import { getLightingState } from '../src/lib/solar';
 import { readFileSync } from 'node:fs';
 
@@ -152,12 +153,49 @@ test('detail layer skips unknown DEM and rebuilds the same building when terrain
   }
 });
 
+test('native source setup retains tile metadata and lifts every body and roof exactly once', t => {
+  const h = harness(t); h.setTerrain(null);
+  const api = h.map as unknown as Record<string, any>;
+  let specification = { type: 'vector', url: 'pmtiles://local-buildings', minzoom: 10, maxzoom: 15, attribution: 'source evidence' } as Record<string, unknown>;
+  let replacements = 0, writes = 0, lodCalls = 0;
+  const layers = new Map<string, { id: string; type: string; source: string }>();
+  const paint = new Map<string, Record<string, unknown>>();
+  api.getSource = () => ({ serialize: () => specification });
+  api.removeSource = () => { replacements++; };
+  api.addSource = (_id: string, next: Record<string, unknown>) => { specification = next; };
+  api.getStyle = () => ({ layers: [...layers.values()] });
+  api.getLayer = (id: string) => layers.get(id);
+  api.getPaintProperty = (id: string, name: string) => paint.get(id)![name];
+  api.setPaintProperty = (id: string, name: string, value: unknown) => { paint.get(id)![name] = value; writes++; h.emit('styledata'); };
+  api.setSourceTileLodParams = () => { lodCalls++; };
+  configureBuildingTileLod(h.map); h.flush();
+  assert.equal(replacements, 1); assert.equal(lodCalls, 1);
+  assert.deepEqual(specification, { type: 'vector', url: 'pmtiles://local-buildings', minzoom: 10, maxzoom: 15, attribution: 'source evidence', promoteId: 'id' });
+  for (const id of ['atlas-building-3d', 'atlas-building-parts-3d', 'atlas-building-roofs', 'atlas-building-part-roofs']) {
+    layers.set(id, { id, type: 'fill-extrusion', source: 'atlas-buildings' });
+    const roof = id.includes('roof');
+    paint.set(id, { 'fill-extrusion-height': roof ? ['+', BUILDING_BODY_HEIGHT, 0.05] : BUILDING_BODY_HEIGHT, 'fill-extrusion-base': roof ? BUILDING_BODY_HEIGHT : BUILDING_BASE });
+  }
+  h.emit('styledata'); assert.equal(writes, 8);
+  for (const [id, values] of paint) {
+    const roof = id.includes('roof');
+    for (const [property, expected] of [['fill-extrusion-height', roof ? 13.05 : 13], ['fill-extrusion-base', roof ? 13 : 0]] as const) {
+      const expression = createExpression(values[property] as any, property);
+      assert.equal(expression.result, 'success');
+      if (expression.result === 'success') close(Number(expression.value.evaluate({ zoom: 17 }, { type: 'Polygon', properties: {} }, { atlasTerrainLift: 5 })), expected, 1e-6);
+    }
+  }
+  h.emit('styledata'); assert.equal(writes, 8, 'style events must not accumulate terrain lift');
+  h.emit('remove'); assert.equal(h.frames.size, 0);
+  for (const listeners of h.handlers.values()) assert.equal(listeners.size, 0);
+});
+
 test('both the native map and detail worker input use shared terrain placement', () => {
-  const atlas = readFileSync(new URL('../src/components/AtlasMap.tsx', import.meta.url), 'utf8');
+  const grounding = readFileSync(new URL('../src/lib/map-building-grounding.ts', import.meta.url), 'utf8');
   const details = readFileSync(new URL('../src/lib/map-building-details.ts', import.meta.url), 'utf8');
-  assert.ok(atlas.includes('terrainBuildingHeight(BUILDING_BODY_HEIGHT)'));
-  assert.ok(atlas.includes('terrainBuildingBase(BUILDING_BASE)'));
-  assert.ok(atlas.includes('installBuildingTerrain(map)'));
+  assert.ok(grounding.includes('terrainBuildingHeight(height)'));
+  assert.ok(grounding.includes('terrainBuildingBase(base)'));
+  assert.ok(grounding.includes('installBuildingTerrain(map)'));
   assert.ok(details.includes('buildingTerrainAltitudes('));
   assert.ok(!details.includes('queryTerrainElevation([polygon[0][0][0]'));
   assert.ok(details.includes('buildingTerrainRevision(map)'));
