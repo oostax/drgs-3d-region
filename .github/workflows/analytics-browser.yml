@@ -57,6 +57,7 @@ jobs:
           done
           if [ "$ready" != true ]; then cat "$ATLAS_BROWSER_OUTPUT/server.log"; exit 1; fi
           python3 scripts/verify-analytics.py 2>&1 | tee "$ATLAS_BROWSER_OUTPUT/browser.log"
+          python3 scripts/verify-compass.py 2>&1 | tee "$ATLAS_BROWSER_OUTPUT/compass.log"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
