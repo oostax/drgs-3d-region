@@ -6,9 +6,13 @@ permissions:
   contents: write
 jobs:
   verify:
-    if: github.event.head_commit.message == 'ci: verify map modes and sunset candidate'
+    if: >-
+      github.event.head_commit.message == 'ci: verify map modes and sunset candidate'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
