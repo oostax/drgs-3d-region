@@ -1,3 +1,4 @@
+import { buildingTerrainAltitudes, buildingTerrainRevision } from './building-terrain';
 import { buildingGeometryArea, buildBuildingGeometry, unpackBuildingGeometry, type BuildingGeometryInput, type PackedBuildingGeometry } from './building-detail-geometry';
 import { BuildingGeometryWorkerClient } from './building-geometry-worker-client';
 import { BuildingSpatialCache, buildingSpatialCell } from './building-spatial-cache';
@@ -41,7 +42,8 @@ function* collectBuildingCandidates(features: Feature<Geometry>[], excludes: Rea
     if(++work%64===0)yield;
     const id = String(feature.properties?.id ?? feature.id ?? ''), parent = String(feature.properties?.building_id ?? '');
     if (!id || excludes.has(id) || excludes.has(parent)) continue;
-    let candidate = selected.get(id);
+    const selectionKey = `${(feature as Feature<Geometry> & { sourceLayer?: string }).sourceLayer ?? 'building'}:${id}`;
+    let candidate = selected.get(selectionKey);
     for (const polygon of polygons(feature.geometry)) {
       if (!polygon.length || polygon.some(ring => ring.length < 4 || ring.some(point => !Number.isFinite(point[0]) || !Number.isFinite(point[1])))) continue;
       const points = polygon.reduce((sum, ring) => sum + ring.length, 0);
@@ -50,7 +52,7 @@ function* collectBuildingCandidates(features: Feature<Geometry>[], excludes: Rea
       if (candidate?.fragments.has(key)) continue;
       const area = buildingGeometryArea({ type: 'Polygon', coordinates: polygon });
       if (area < 1 || !Number.isFinite(area)) continue;
-      if (!candidate) { candidate = { feature, fragments: new Map(), area: 0, points: 0 }; selected.set(id, candidate); }
+      if (!candidate) { candidate = { feature, fragments: new Map(), area: 0, points: 0 }; selected.set(selectionKey, candidate); }
       candidate.fragments.set(key, polygon); candidate.area += area; candidate.points += points;
     }
   }
@@ -97,6 +99,7 @@ export class BuildingDetailsLayer implements CustomLayerInterface {
   private originReady = false; private geometryCache = new Map<string, CachedGeometry>(); private profileCache = new Map<string, BuildingProfile>();
   private sourceDirty = true; private sourceRevision = 0; private sourceCandidates: PreparedCandidate[] = []; private sourceExcludes = '';
   private renderSignature = ''; private geometrySerial = 0;
+  private terrainRevision = -1;
   private lastBuildMs = 0; private lastBuildChunkMs = 0; private lastBuildSlices = 0; private rebuilds = 0; private cacheHits = 0;
   private buildPhase = 'idle';
   private diagnosticsVersion = '';
@@ -175,7 +178,7 @@ export class BuildingDetailsLayer implements CustomLayerInterface {
     if (this.signageResources) textureBytes += 1024 * 1024 * 4;
     return { worker: this.geometryWorker.available ? 'available' : 'fallback', workerCompleted: this.geometryWorker.completed, workerFailure: this.geometryWorker.failure, workerPending: this.geometryWorker.busy, spatialCacheBytes: this.spatialCache.bytes, spatialCacheEntries: this.spatialCache.size, spatialCacheHits: this.spatialCache.hits, spatialCacheMisses: this.spatialCache.misses, prefetched: this.prefetched, artworkTextures: [...uniqueTextures].filter(texture => texture.userData.facadeArtworkKey).length / 3, buildings: this.entries.length, modeledBuildings: this.entries.filter(entry => entry.detailLevel > 0).length, detailedBuildings: this.entries.filter(entry => entry.detailLevel === 2).length, roofs: this.entries.reduce<Record<string, number>>((counts, entry) => { counts[entry.roofKind] = (counts[entry.roofKind] ?? 0) + 1; return counts; }, {}), drawCalls: this.content.children.length, vertices, geometryBytes, textureBytes, textureSets: this.textures.size, geometryCacheEntries: this.geometryCache.size, cacheHits: this.cacheHits, buildMs: this.lastBuildMs, buildChunkMs: this.lastBuildChunkMs, buildSlices: this.lastBuildSlices, buildPending: Boolean(this.pendingBuild), buildPhase: this.buildPhase, rebuilds: this.rebuilds };
   }
-  private query(layer: string): Feature<Geometry>[] { if (!this.map?.getSource('atlas-buildings')) return []; try { return this.map.querySourceFeatures('atlas-buildings', { sourceLayer: layer }); } catch { return []; } }
+  private query(layer: string): Feature<Geometry>[] { if (!this.map?.getSource('atlas-buildings')) return []; try { return this.map.querySourceFeatures('atlas-buildings', { sourceLayer: layer }).map(feature => ({ ...feature, type: 'Feature' as const, id: feature.id, geometry: feature.geometry, properties: feature.properties, sourceLayer: layer })); } catch { return []; } }
   private clear(disposeTextures = true) {
     this.content.clear(); this.spatialCache.clear(); this.entries = []; this.batches = [];
     if (disposeTextures) { for(const material of this.wallMaterials.values())material.dispose();this.wallMaterials.clear();for (const texture of this.textures.values()) disposeFacadeTextures(texture); this.textures.clear(); for (const geometry of this.geometryCache.values()) disposeCachedGeometry(geometry); this.geometryCache.clear(); this.profileCache.clear(); }
@@ -184,9 +187,10 @@ export class BuildingDetailsLayer implements CustomLayerInterface {
   /** Synchronous drain retained for deterministic geometry checks. Production
    * resumes the same generator between frames and commits a complete scene. */
   private rebuild() { this.cancelBuild(); for (const _ of this.rebuildSteps()) { /* drain */ } }
-  private geometryInput(candidate: PreparedCandidate, detailLevel: 0 | 1 | 2, origin: MercatorCoordinate): BuildingGeometryInput {
+  private geometryInput(candidate: PreparedCandidate, detailLevel: 0 | 1 | 2, origin: MercatorCoordinate): BuildingGeometryInput | null {
     const fragments = polygons(candidate.feature.geometry);
-    const altitudes = fragments.map(polygon => this.map?.getTerrain() ? this.map.queryTerrainElevation([polygon[0][0][0], polygon[0][0][1]]) ?? 0 : 0);
+    const altitudes = this.map ? buildingTerrainAltitudes(this.map, candidate.feature) : null;
+    if (!altitudes) return null; // Unknown DEM is not altitude zero.
     const altitudeKey = `${altitudes.join(',')}|${detailLevel}`;
     let key = candidate.geometryKeys.get(altitudeKey);
     if (!key) { key = `${candidate.cachePrefix}|${altitudeKey}`; candidate.geometryKeys.set(altitudeKey, key); }
@@ -208,7 +212,7 @@ export class BuildingDetailsLayer implements CustomLayerInterface {
       const run = async () => {
         // A short batch bounds how long speculative work can precede a new viewport.
         for (let offset = 0; offset < candidates.length && valid(); offset += 8) {
-          const inputs = candidates.slice(offset, offset + 8).map(candidate => this.geometryInput(candidate, buildingArchitectureLevel(candidate.pixels, zoom, this.options.mobile, 0), origin)).filter(input => !this.geometryCache.has(input.key));
+          const inputs = candidates.slice(offset, offset + 8).map(candidate => this.geometryInput(candidate, buildingArchitectureLevel(candidate.pixels, zoom, this.options.mobile, 0), origin)).filter((input): input is BuildingGeometryInput => input !== null && !this.geometryCache.has(input.key));
           if (!inputs.length) continue;
           const packed = await this.geometryWorker.build(inputs);
           if (!valid()) return;
@@ -228,6 +232,7 @@ export class BuildingDetailsLayer implements CustomLayerInterface {
   }
   private *rebuildSteps(prepareTextures = false): Generator<void | Promise<void>, void, unknown> {
     const map = this.map; if (!map) return;
+    const buildTerrainRevision = buildingTerrainRevision(map);
     let sliceStarted = performance.now(), cpuMs = 0, maxChunkMs = 0, slices = 1, committed = false;
     const checkpoint = function* (force = false): Generator<void, void, unknown> {
       const elapsed = performance.now() - sliceStarted;
@@ -323,10 +328,9 @@ export class BuildingDetailsLayer implements CustomLayerInterface {
       const batchKey = `${cell}:${key}`;
       let batch = wallGroups.get(batchKey); if (!batch) { batch = { profile, geometries: [] }; wallGroups.set(batchKey, batch); }
       let parts = cells.get(cell); if (!parts) { parts = { roofs: [], edges: [], reliefs: [], signs: [] }; cells.set(cell, parts); }
-      const fragments = polygons(feature.geometry), altitudes = fragments.map(polygon => map.getTerrain() ? map.queryTerrainElevation([polygon[0][0][0], polygon[0][0][1]]) ?? 0 : 0);
-      const altitudeKey = `${altitudes.join(',')}|${detailLevel}`;
-      let geometryKey = candidate.geometryKeys.get(altitudeKey);
-      if (!geometryKey) { geometryKey = `${candidate.cachePrefix}|${altitudeKey}`; candidate.geometryKeys.set(altitudeKey, geometryKey); }
+      const input = this.geometryInput(candidate, detailLevel, buildOrigin);
+      if (!input) continue;
+      const { key: geometryKey, polygons: fragments, altitudes } = input;
       let cached = this.geometryCache.get(geometryKey);
       if (cached) this.cacheHits++;
       else {
@@ -338,7 +342,7 @@ export class BuildingDetailsLayer implements CustomLayerInterface {
           for (const [offset, upcoming] of candidates.slice(candidateIndex, candidateIndex + 64).entries()) {
             const level = offset === 0 ? detailLevel : buildingArchitectureLevel(upcoming.pixels, zoom, this.options.mobile, detailedCount + offset);
             const input = this.geometryInput(upcoming, level, buildOrigin);
-            if (!this.geometryCache.has(input.key)) inputs.push(input);
+            if (input && !this.geometryCache.has(input.key)) inputs.push(input);
           }
           let packed: PackedBuildingGeometry[] = [];
           const waiting = this.geometryWorker.build(inputs).then(items => { packed = items; }, () => { /* Time-sliced identical fallback below. */ });
@@ -382,10 +386,12 @@ export class BuildingDetailsLayer implements CustomLayerInterface {
     };
     const finish = () => {
       const elapsed = performance.now() - sliceStarted;
+      this.content.visible = true;
       this.dirty = false; this.lastBuildAt = performance.now(); this.lastBuildMs = cpuMs + elapsed;
       this.lastBuildChunkMs = Math.max(maxChunkMs, elapsed); this.lastBuildSlices = slices; this.rebuilds++; committed = true;
       this.schedulePrefetch(projected.filter(candidate => !candidate.visible && candidate.nearby).slice(0, this.options.mobile ? 24 : 64), buildOrigin, zoom);
     };
+    if (buildingTerrainRevision(map) !== buildTerrainRevision) { this.dirty = true; return; }
     if (this.renderSignature === renderSignature && this.entries.length) {
       commitTextures(); this.entries = nextEntries; finish();
       return;
@@ -415,6 +421,8 @@ export class BuildingDetailsLayer implements CustomLayerInterface {
       }
       yield* checkpoint();
     }
+    // A terrain revision may have arrived while geometry/texture work yielded.
+    if (buildingTerrainRevision(map) !== buildTerrainRevision) { this.dirty = true; return; }
     // Reparent only at commit: a cached live mesh is never stolen by staging.
     this.content.clear();
     if (nextObjects.length) this.content.add(...nextObjects);
@@ -473,7 +481,12 @@ export class BuildingDetailsLayer implements CustomLayerInterface {
 
   render(_gl: WebGL2RenderingContext, args: CustomRenderMethodInput) {
     const map = this.map, renderer = this.renderer; if (!map || !renderer || this.failed || this.removed || !this.options.enabled() || map.getZoom() < buildingDetailBudget(this.options.mobile).minZoom) return;
-    try { if (this.dirty) this.beginBuild();
+    try {
+      const terrainRevision = buildingTerrainRevision(map);
+      if (terrainRevision !== this.terrainRevision) {
+        this.terrainRevision = terrainRevision; this.content.visible = false; this.refresh();
+      }
+      if (this.dirty) this.beginBuild();
       const diagnosticsVersion = `${this.rebuilds}:${Boolean(this.pendingBuild)}:${this.prefetched}:${this.geometryWorker.completed}`;
       if (this.diagnosticsEnabled && diagnosticsVersion !== this.diagnosticsVersion && map.getCanvas().dataset) { map.getCanvas().dataset.buildingDetails = JSON.stringify({ ...this.getDiagnostics(), zoom: map.getZoom(), pitch: map.getPitch(), center: map.getCenter() }); this.diagnosticsVersion = diagnosticsVersion; }
       if (!this.entries.length) return; this.light(this.options.lighting());
