@@ -1,0 +1,19 @@
+--- a/scripts/verify-compass.py
++++ b/scripts/verify-compass.py
+@@ -127,10 +127,14 @@
+         dialog=page.get_by_role('dialog',name='3D-компас',exact=True);expect(dialog).to_be_visible()
+         box=dialog.bounding_box();assert box and box['x']>=0 and box['y']>=0 and box['x']+box['width']<=390 and box['y']+box['height']<=844,box
+         expect(page.get_by_role('button',name='Перейти в 2D',exact=True)).to_be_visible()
+-        page.locator('[data-compass-tilt]').press('End');settle(page);assert state(page)['pitch']==60
++        page.locator('[data-compass-tilt]').press('End');settle(page)
++        mobile_pose=state(page);report['mobilePose']=mobile_pose
++        assert mobile_pose['maxPitch']==60 and abs(mobile_pose['pitch']-60)<1e-6,mobile_pose
+         page.screenshot(path=str(OUT/'compass-mobile.png'))
+         page.set_viewport_size({'width':1440,'height':960});settle(page)
+-        page.locator('[data-compass-tilt]').press('End');settle(page);assert state(page)['pitch']==75
++        page.locator('[data-compass-tilt]').press('End');settle(page)
++        desktop_pose=state(page);report['desktopPose']=desktop_pose
++        assert desktop_pose['maxPitch']==75 and abs(desktop_pose['pitch']-75)<1e-6,desktop_pose
+         page.get_by_role('button',name='Перейти в 2D',exact=True).click();settle(page);assert state(page)['pitch']==0
+         expect(page.get_by_role('dialog',name='3D-компас',exact=True)).to_have_count(0)
+         check('390px layout remains usable, resize restores 60°/75° limits, 2D remains deterministic')
