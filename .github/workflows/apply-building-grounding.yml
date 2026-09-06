@@ -1,0 +1,117 @@
+name: Apply reviewed building grounding fix
+
+on:
+  push:
+    branches: [fix/building-grounding]
+    paths: [.github/workflows/apply-building-grounding.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  apply-and-check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Read installed client-component guidance
+        run: find node_modules/next/dist/docs -iname '*use-client*' -exec head -100 {} \;
+      - name: Confirm the new regressions fail before the fix
+        run: |
+          if npx tsx --test tests/building-grounding.test.ts > /tmp/grounding-before.log 2>&1; then
+            echo 'Expected grounding regressions to fail before applying the fix.'
+            exit 1
+          fi
+          cat /tmp/grounding-before.log
+      - name: Apply the reviewed exact replacements
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          root = Path.cwd()
+          def change(path, old, new):
+              p = root / path
+              s = p.read_text()
+              assert s.count(old) == 1, (path, s.count(old), old[:100])
+              p.write_text(s.replace(old, new))
+          m = 'src/lib/building-materials.ts'
+          change(m, "fallback: 2.8, floor: 3, spacing: 3.4", "fallback: 8, floor: 3, spacing: 3.4")
+          change(m, "  const roofShape = token(properties.roof_shape || properties['roof:shape']) || null;", "  // Match sourceToken() in the vector expression, including empty primary tags.\n  const roofShape = String(properties.roof_shape ?? properties['roof:shape'] ?? '').toLowerCase() || null;")
+          change(m, "  const eaves = height - roofHeight, minFloor", "  // Only a rendered pitch reserves roof space; a flat/unsupported roof keeps full walls.\n  const eaves = height - (roofShape && PITCHED_ROOFS.includes(roofShape) ? roofHeight : 0), minFloor")
+          change(m, "const SOURCE_FLOORS: ExpressionSpecification = ['to-number', ['get', 'num_floors'], ['get', 'building:levels'], 0];", "// to-number(null) returns zero: explicitly try the secondary floor tag.\nconst PRIMARY_FLOORS: ExpressionSpecification = ['to-number', ['get', 'num_floors'], 0];\nconst SOURCE_FLOORS: ExpressionSpecification = ['case', ['>', PRIMARY_FLOORS, 0], PRIMARY_FLOORS, ['max', 0, ['to-number', ['get', 'building:levels'], 0]]];")
+          t = 'tests/building-materials.test.ts'
+          change(t, 'assert.equal(tiny.height, 2.8)', 'assert.equal(tiny.height, 8)')
+          change(t, '[[{}, 2.8]', '[[{}, 8]')
+          change(t, "height: 30, num_floors: 9, roof_height: 3 },", "height: 30, num_floors: 9, roof_height: 3, roof_shape: 'gabled' },")
+          change(t, 'assert.equal(unknown.profile.height, 2.8); assert.equal(unknown.profile.base, 0); assert.equal(unknown.profile.floors, 1);', 'assert.equal(unknown.profile.height, 8); assert.equal(unknown.profile.base, 0); assert.equal(unknown.profile.floors, 2);')
+          g = 'src/lib/building-detail-geometry.ts'
+          change(g, "import { makeBuildingSignageGeometry } from './building-signage';", "import { makeBuildingSignageGeometry } from './building-signage';\nimport { BUILDING_TERRAIN_SKIRT } from './building-terrain';")
+          change(g, 'detailLevel: 0 | 1 | 2 = 0) {', 'detailLevel: 0 | 1 | 2 = 0, terrain = false) {')
+          change(g, '  const positions: number[] = [], uvs: number[] = [], edges: number[] = [];', "  const positions: number[] = [], uvs: number[] = [], edges: number[] = [];\n  // Same terrain basement as MapLibre; above-ground floor UVs do not stretch.\n  const bottom = profile.base - (terrain && profile.base === 0 ? BUILDING_TERRAIN_SKIRT : 0);\n  const lowerV = (bottom - profile.base) / profile.floorHeight / 4;")
+          change(g, 'positions.push(ax, ay, profile.base, bx, by, profile.base, bx, by, profile.eaves, ax, ay, profile.base, bx, by, profile.eaves, ax, ay, profile.eaves);', 'positions.push(ax, ay, bottom, bx, by, bottom, bx, by, profile.eaves, ax, ay, bottom, bx, by, profile.eaves, ax, ay, profile.eaves);')
+          change(g, 'uvs.push(shift, 0, shift + uv.columns / 4, 0, shift + uv.columns / 4, uv.rows / 4, shift, 0, shift + uv.columns / 4, uv.rows / 4, shift, uv.rows / 4);', 'uvs.push(shift, lowerV, shift + uv.columns / 4, lowerV, shift + uv.columns / 4, uv.rows / 4, shift, lowerV, shift + uv.columns / 4, uv.rows / 4, shift, uv.rows / 4);')
+          change(g, 'altitudes: number[]; origin:', 'altitudes: number[]; terrain?: boolean; origin:')
+          change(g, 'makeBuildingDetailGeometry(polygon, profile, detailLevel), latitudeScale', 'makeBuildingDetailGeometry(polygon, profile, detailLevel, input.terrain), latitudeScale')
+          change(g, '    const transform = new THREE.Matrix4().makeTranslation((geometry.origin.x - origin.x) / unit, -(geometry.origin.y - origin.y) / unit, altitudes[index] * latitudeScale)', '    const altitude = Number.isFinite(altitudes[index]) ? altitudes[index] : 0;\n    const transform = new THREE.Matrix4().makeTranslation((geometry.origin.x - origin.x) / unit, -(geometry.origin.y - origin.y) / unit, altitude * latitudeScale)')
+          l = 'src/lib/map-building-details.ts'
+          change(l, "import { BuildingSpatialCache, buildingSpatialCell } from './building-spatial-cache';", "import { BuildingSpatialCache, buildingSpatialCell } from './building-spatial-cache';\nimport { buildingTerrainAnchor, buildingTerrainAltitude, type BuildingSourceTile } from './building-terrain';")
+          change(l, 'type DetailCandidate = { feature: Feature<Geometry>; area:', 'type DetailCandidate = { feature: Feature<Geometry>; terrainAnchors: ([number, number] | null)[]; area:')
+          change(l, 'fragments: Map<string, Position[][]>; area:', 'fragments: Map<string, Position[][]>; anchors: Map<string, [number, number] | null>; area:')
+          change(l, 'candidate = { feature, fragments: new Map(), area:', 'candidate = { feature, fragments: new Map(), anchors: new Map(), area:')
+          change(l, '      candidate.fragments.set(key, polygon); candidate.area += area; candidate.points += points;', '      candidate.fragments.set(key, polygon);\n      candidate.anchors.set(key, buildingTerrainAnchor(polygon, (feature as Feature<Geometry> & { tile?: BuildingSourceTile }).tile));\n      candidate.area += area; candidate.points += points;')
+          change(l, 'area: candidate.area, points: candidate.points, signature:', 'terrainAnchors: [...candidate.anchors.values()], area: candidate.area, points: candidate.points, signature:')
+          change(l, 'cachePrefix: `${entry.signature}|${JSON.stringify(profile)}`', 'cachePrefix: `${entry.signature}|${JSON.stringify(entry.terrainAnchors)}|${JSON.stringify(profile)}`')
+          p = root / l
+          p.write_text(p.read_text().replace('this.options.mobile', 'this.mobile'))
+          change(l, '  constructor(private readonly options: BuildingDetailsOptions) { this.spatialCache', '  private mobile: boolean;\n  constructor(private readonly options: BuildingDetailsOptions) { this.mobile = options.mobile; this.spatialCache')
+          change(l, '  onAdd(map: LibreMap, gl: WebGL2RenderingContext) {', '  /** Rebudget after resize/orientation changes; never resize the buildings themselves. */\n  setMobile(mobile: boolean) {\n    if (this.removed || this.mobile === mobile) return;\n    this.mobile = mobile; this.texturesDirty = true;\n    this.spatialCache.setMaxBytes(mobile ? 16 * 1024 * 1024 : 48 * 1024 * 1024);\n    this.refresh();\n  }\n  onAdd(map: LibreMap, gl: WebGL2RenderingContext) {')
+          change(l, "map.on('sourcedata', this.sourceChanged); this.refresh();", "map.on('sourcedata', this.sourceChanged); map.on('terrain', this.terrainChanged); this.refresh();")
+          change(l, '  private moving = () =>', '  private terrainChanged = () => { this.refresh(); };\n  private moving = () =>')
+          change(l, "this.map?.off('sourcedata', this.sourceChanged); this.clear();", "this.map?.off('sourcedata', this.sourceChanged); this.map?.off('terrain', this.terrainChanged); this.clear();")
+          change(l, 'return { worker: this.geometryWorker.available', 'return { mobile: this.mobile, worker: this.geometryWorker.available')
+          change(l, "    const fragments = polygons(candidate.feature.geometry);\n    const altitudes = fragments.map(polygon => this.map?.getTerrain() ? this.map.queryTerrainElevation([polygon[0][0][0], polygon[0][0][1]]) ?? 0 : 0);\n    const altitudeKey = `${altitudes.join(',')}|${detailLevel}`;", "    const fragments = polygons(candidate.feature.geometry), terrain = Boolean(this.map?.getTerrain());\n    const altitudes = candidate.terrainAnchors.map(anchor => terrain && this.map ? buildingTerrainAltitude(this.map, anchor) : 0);\n    const altitudeKey = `${terrain ? 'terrain' : 'flat'}|${altitudes.join(',')}|${detailLevel}`;")
+          change(l, 'detailLevel, altitudes, origin: [origin.x, origin.y, origin.z]', 'detailLevel, altitudes, terrain, origin: [origin.x, origin.y, origin.z]')
+          change(l, "      const fragments = polygons(feature.geometry), altitudes = fragments.map(polygon => map.getTerrain() ? map.queryTerrainElevation([polygon[0][0][0], polygon[0][0][1]]) ?? 0 : 0);\n      const altitudeKey = `${altitudes.join(',')}|${detailLevel}`;\n      let geometryKey = candidate.geometryKeys.get(altitudeKey);\n      if (!geometryKey) { geometryKey = `${candidate.cachePrefix}|${altitudeKey}`; candidate.geometryKeys.set(altitudeKey, geometryKey); }", '      // Foreground, worker lookahead and prefetch share one grounding calculation and key.\n      const input = this.geometryInput(candidate, detailLevel, buildOrigin), geometryKey = input.key;')
+          change(l, 'buildBuildingGeometry({ key: geometryKey, polygons: fragments, profile, detailLevel, altitudes, origin: [buildOrigin.x, buildOrigin.y, buildOrigin.z] })', 'buildBuildingGeometry(input)')
+          change(l, 'const changed=batch.material.map!==textures.diffuse||batch.material.emissiveMap!==textures.emissive;', 'const changed=batch.material.map!==textures.diffuse||batch.material.emissiveMap!==textures.emissive||batch.material.normalMap!==(this.mobile ? null : textures.normal);')
+          c = 'src/lib/building-spatial-cache.ts'
+          change(c, 'constructor(private readonly maxBytes:', 'constructor(private maxBytes:')
+          change(c, '  get size() { return this.items.size; }', '  get size() { return this.items.size; }\n  setMaxBytes(maxBytes: number) { this.maxBytes = maxBytes; }')
+          change('src/components/AtlasMap.tsx', '      const bounds = containerRef.current?.getBoundingClientRect();\n      if (bounds && !map.isMoving()) {', "      const bounds = containerRef.current?.getBoundingClientRect();\n      if (bounds) detailsRef.current?.setMobile(bounds.width <= 760 || window.matchMedia('(pointer: coarse)').matches);\n      if (bounds && !map.isMoving()) {")
+          change('tests/building-architecture-integration.test.ts', 'Math.abs(range(walls).low - 125) < 0.01', 'Math.abs(range(walls).low - 115) < 0.01')
+          change('tests/building-architecture-integration.test.ts', "'custom facade follows the same ground altitude as the opaque map body'", "'custom facade includes the same 10 m terrain basement as the opaque map body'")
+          change('README.md', 'Нужны Node.js 22+ и Python 3.11+.', 'Нужны Node.js 24.20.x (точная версия в `.nvmrc`), npm 11 и Python 3.11+.')
+          change('README.md', 'Отображение: исходная высота → этажность × 3 м → условный объём 8 м.', 'Отображение: исходная высота → этажность × 3 м → условная высота по исходному типу здания. Для неизвестного типа (`neutral`) используется 8 м; гаражи, сараи и другие известные типы сохраняют отдельные низкие значения. Размер фрагмента тайла и масштаб камеры не меняют физическую высоту.')
+          PY
+          git diff --check
+      - name: All tests
+        run: npm test 2>&1 | tee /tmp/grounding-tests.log
+      - name: Typecheck
+        run: npm run typecheck 2>&1 | tee /tmp/grounding-typecheck.log
+      - name: Production build
+        run: npm run build 2>&1 | tee /tmp/grounding-build.log
+      - name: Commit only verified source changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add README.md src/components/AtlasMap.tsx src/lib/building-detail-geometry.ts src/lib/building-materials.ts src/lib/building-spatial-cache.ts src/lib/map-building-details.ts tests/building-architecture-integration.test.ts tests/building-materials.test.ts
+          git commit -m 'fix: align building heights, terrain grounding and responsive detail budgets'
+          git push origin HEAD:refs/heads/fix/building-grounding
+          git rev-parse HEAD | tee /tmp/grounding-commit.log
+          git diff HEAD~1 HEAD > /tmp/grounding-changes.log
+          git archive HEAD src/lib/building-terrain.ts src/lib/building-materials.ts src/lib/map-building-details.ts src/lib/building-detail-geometry.ts src/lib/building-spatial-cache.ts src/components/AtlasMap.tsx tests/building-grounding.test.ts tests/building-materials.test.ts tests/building-architecture-integration.test.ts README.md | gzip > /tmp/grounding-reviewed-source.tar.gz
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: grounding-verification
+          path: |
+            /tmp/grounding-*.log
+            /tmp/grounding-reviewed-source.tar.gz
+          retention-days: 3
