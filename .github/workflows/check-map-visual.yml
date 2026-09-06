@@ -1,0 +1,126 @@
+name: Map modes WebGL verification
+on:
+  push:
+    branches: [fix/map-modes-sunset]
+    paths: [.github/workflows/check-map-visual.yml]
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: python3 -m pip install playwright==1.55.0 Pillow==11.3.0
+      - run: python3 -m playwright install --with-deps chromium
+      - name: Prepare isolated fixture with production map modules
+        run: |
+          mkdir -p /tmp/map-visual/maplibre /tmp/map-visual/evidence .map-before
+          cp -R src .map-before/src
+          ln -s "$PWD/node_modules" .map-before/node_modules
+          for name in map-appearance map-solar-light building-materials; do
+            git show 5193a06909af8134dbca5215ac03ffa28cb1f709:src/lib/$name.ts > .map-before/src/lib/$name.ts
+          done
+          cp node_modules/maplibre-gl/dist/maplibre-gl-{worker,shared}.mjs /tmp/map-visual/maplibre/
+          cp node_modules/maplibre-gl/dist/maplibre-gl.css /tmp/map-visual/maplibre/
+          cat > map-modes-visual.ts <<'TS'
+          import * as maplibregl from 'maplibre-gl';
+          import { applyMapMode, DEFAULT_MAP_3D, nextMapMode } from './src/lib/map-camera-mode';
+          import { BUILDING_BODY_HEIGHT, BUILDING_BASE } from './src/lib/building-materials';
+          import { registerBuildingSurfaces, buildingSurfacePattern } from './src/lib/map-building-surface';
+          import { applyMapLighting } from './src/lib/map-appearance';
+          import { SolarLightLayer } from './src/lib/map-solar-light';
+          import { getLightingState } from './src/lib/solar';
+          const origin = maplibregl.MercatorCoordinate.fromLngLat([49.12,55.79]), unit = origin.meterInMercatorCoordinateUnits();
+          const xy = (x:number,y:number) => {const p = new maplibregl.MercatorCoordinate(origin.x+x*unit, origin.y-y*unit).toLngLat();return [p.lng,p.lat];};
+          const colors = ['#e0ded3','#687981','#d8d3c5','#ad8670','#92958e'];
+          const features = Array.from({length:15},(_,i)=>{
+            const x=(i%5-2)*105-26,y=(Math.floor(i/5)-1)*135-45,w=i%3===0?70:48,h=i%4===0?65:90;
+            return {type:'Feature',properties:{id:String(i),class:i%3?'apartments':'office',num_floors:i%3+3,height:12+(i%3)*9,facade_color:'#d8d3c5',roof_color:colors[i%5]},geometry:{type:'Polygon',coordinates:[[xy(x,y),xy(x+w,y),xy(x+w,y+h),xy(x,y+h),xy(x,y)]]}};
+          });
+          maplibregl.setWorkerUrl('/maplibre/maplibre-gl-worker.mjs');
+          const map = new maplibregl.Map({container:'map',style:{version:8,transition:{duration:0},sources:{},layers:[{id:'background',type:'background',paint:{'background-color':'#b9c1b0'}}]},center:[49.12,55.79],zoom:16.2,bearing:-15,pitch:0,maxPitch:0,touchPitch:false,canvasContextAttributes:{antialias:true,preserveDrawingBuffer:true},attributionControl:false});
+          let is3D:boolean=DEFAULT_MAP_3D,hour=17.35;
+          const solar = new SolarLightLayer(), date = new Date('2026-09-06T09:00:00Z');
+          function lighting(){applyMapLighting(map,getLightingState(hour,date),true);const world=getLightingState(hour,date,[0,0]);solar.setSun([world.sunDirection[2],world.sunDirection[0],world.sunDirection[1]]);map.triggerRepaint();}
+          function mode(value:boolean){is3D=value;applyMapMode(map,is3D,true,innerWidth<=760);map.jumpTo({center:[49.12,55.79],zoom:16.2,bearing:-15,pitch:is3D?58:0});document.querySelector('button')!.textContent=is3D?'3D':'2D';document.querySelector('button')!.setAttribute('aria-pressed',String(is3D));lighting();}
+          (window as any).renderErrors=[];map.on('error',e=>{(window as any).renderErrors.push(String(e.error));});
+          map.on('load',()=>{
+            map.addSource('atlas-buildings',{type:'geojson',data:{type:'FeatureCollection',features} as any});registerBuildingSurfaces(map);
+            for(const [id,roof,empty] of [['atlas-building-3d',false,false],['atlas-building-parts-3d',false,true],['atlas-building-roofs',true,false],['atlas-building-part-roofs',true,true]] as const)map.addLayer({id,type:'fill-extrusion',source:'atlas-buildings',filter:empty?['==',['get','id'],'not-a-building']:undefined,paint:{'fill-extrusion-pattern':buildingSurfacePattern(roof),'fill-extrusion-color':roof?'#637b76':'#b7ad95','fill-extrusion-base':roof?BUILDING_BODY_HEIGHT:BUILDING_BASE,'fill-extrusion-height':roof?['+',BUILDING_BODY_HEIGHT,0.05]:BUILDING_BODY_HEIGHT,'fill-extrusion-opacity':1,'fill-extrusion-vertical-gradient':!roof}});
+            map.addLayer({id:'atlas-building-flat',type:'fill',source:'atlas-buildings',paint:{'fill-color':'#d8ceb5','fill-outline-color':'#c3baa5','fill-opacity':0.9}});map.addLayer(solar);mode(false);
+            document.querySelector('button')!.onclick=()=>mode(nextMapMode(is3D,map.getPitch(),map.getZoom()).next3D);
+            (window as any).setHour=(value:number)=>{hour=value;lighting();};(window as any).setMode=mode;
+            (window as any).snapshot=()=>({is3D,pitch:map.getPitch(),maxPitch:map.getMaxPitch(),layers:['atlas-building-flat','atlas-building-3d','atlas-building-roofs'].map(id=>[id,map.getLayoutProperty(id,'visibility')]),light:map.getLight(),images:map.listImages().length});
+            window.addEventListener('resize',()=>{map.resize();applyMapMode(map,is3D,true,innerWidth<=760);});(window as any).ready=true;
+          });
+          TS
+          node --input-type=module <<'JS'
+          import {build} from 'esbuild';import fs from 'node:fs';
+          const options={bundle:true,format:'esm',platform:'browser',target:'es2022',define:{'process.env.NODE_ENV':'"production"'}};
+          await build({...options,entryPoints:['map-modes-visual.ts'],outfile:'/tmp/map-visual/after.js'});
+          let text=fs.readFileSync('map-modes-visual.ts','utf8');
+          for(const name of ['map-appearance','map-solar-light'])text=text.replace(`'./src/lib/${name}'`,`'./.map-before/src/lib/${name}'`);
+          await build({...options,stdin:{contents:text,loader:'ts',resolveDir:process.cwd()},outfile:'/tmp/map-visual/before.js'});
+          JS
+          cat > /tmp/map-visual/index.html <<'HTML'
+          <!doctype html><html><head><meta charset="UTF-8"><link rel="icon" href="data:,"><link rel="stylesheet" href="/maplibre/maplibre-gl.css"><style>html,body,#map{margin:0;width:100%;height:100%;overflow:hidden}button{position:absolute;z-index:2;top:16px;left:16px;background:#fff;border:1px solid #bbb;border-radius:10px;padding:12px;font:600 16px system-ui}</style></head><body><div id="map"></div><button aria-label="Переключить режим">2D</button><script type="module">import(new URLSearchParams(location.search).has('before')?'/before.js':'/after.js')</script></body></html>
+          HTML
+      - name: Check actual WebGL frames and responsive round trips
+        run: |
+          python3 - <<'PY'
+          import json, threading, functools
+          from pathlib import Path
+          from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
+          from playwright.sync_api import sync_playwright
+          from PIL import Image, ImageChops
+          OUT=Path('/tmp/map-visual/evidence')
+          server=ThreadingHTTPServer(('127.0.0.1',8765),functools.partial(SimpleHTTPRequestHandler,directory='/tmp/map-visual'))
+          threading.Thread(target=server.serve_forever,daemon=True).start()
+          with sync_playwright() as p:
+              browser=p.chromium.launch(headless=True,args=['--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader'])
+              page=browser.new_page(viewport={'width':1040,'height':720},device_scale_factor=1)
+              errors=[];page.on('pageerror',lambda error: errors.append(str(error)))
+              page.goto('http://127.0.0.1:8765/',wait_until='load');page.wait_for_function('window.ready === true',timeout=20000);page.wait_for_timeout(1200)
+              initial=page.evaluate('window.snapshot()');assert initial['is3D'] is False and initial['pitch']==0
+              page.locator('canvas').screenshot(path=str(OUT/'2d-initial.png'))
+              page.click('button');page.wait_for_timeout(700)
+              three=page.evaluate('window.snapshot()');assert three['is3D'] is True and three['pitch']>5
+              assert three['layers'][0][1]=='none' and three['layers'][2][1]=='visible'
+              page.locator('canvas').screenshot(path=str(OUT/'sunset-after.png'))
+              for click in range(5):
+                  page.click('button');page.wait_for_timeout(200)
+              page.wait_for_timeout(500);restored=page.evaluate('window.snapshot()');assert initial==restored,(initial,restored)
+              page.locator('canvas').screenshot(path=str(OUT/'2d-restored.png'))
+              diff=ImageChops.difference(Image.open(OUT/'2d-initial.png').convert('RGB'),Image.open(OUT/'2d-restored.png').convert('RGB'))
+              assert diff.getbbox() is None,'2D initial and restored frame must be pixel-identical'
+              page.set_viewport_size({'width':390,'height':844});page.wait_for_timeout(300);page.click('button');page.wait_for_timeout(700)
+              assert page.evaluate('window.snapshot().maxPitch')==60
+              page.locator('canvas').screenshot(path=str(OUT/'sunset-mobile.png'))
+              page.set_viewport_size({'width':1040,'height':720});page.wait_for_timeout(500);assert page.evaluate('window.snapshot().maxPitch')==75
+              page.evaluate('window.setHour(12)');page.wait_for_timeout(500);page.locator('canvas').screenshot(path=str(OUT/'day-after.png'))
+              assert page.evaluate('window.renderErrors')==[],page.evaluate('window.renderErrors')
+              page.goto('http://127.0.0.1:8765/?before',wait_until='load');page.wait_for_function('window.ready === true',timeout=20000);page.wait_for_timeout(600)
+              page.click('button');page.wait_for_timeout(700);page.locator('canvas').screenshot(path=str(OUT/'sunset-before.png'))
+              assert page.evaluate('window.renderErrors')==[],page.evaluate('window.renderErrors');assert errors==[],errors
+              report={'fixture':'15 synthetic buildings using production MapLibre 6.7.0, surface patterns and lighting; not the full user dataset','initial':initial,'three':three,'restored':restored,'pixelIdentical2D':True,'mobileToDesktop':True,'pageErrors':errors}
+              (OUT/'browser-checks.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False));browser.close()
+          server.shutdown()
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: map-visual-verification
+          path: /tmp/map-visual/evidence
+          retention-days: 3
