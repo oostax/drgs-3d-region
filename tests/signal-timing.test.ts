@@ -1,0 +1,16 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {calculateSignalTiming,extractOfficialDeadline,observedWorkPeriod,type TimingSample} from '../src/lib/signal-timing';
+import type {LiveEventHistoryItem} from '../src/lib/live-types';
+const entry=(state:LiveEventHistoryItem['state'],sourcePublishedAt:string):LiveEventHistoryItem=>({state,at:'2026-09-05T00:00:00Z',sourcePublishedAt,label:'Источник',sourceUrl:'https://example.org'});
+const history=[entry('in_progress','2026-09-04T00:00:00Z')];
+const samples:TimingSample[]=Array.from({length:5},(_,i)=>({id:String(i),title:'Аналог',sourceUrl:'https://example.org',history:[entry('in_progress','2026-08-01T00:00:00Z'),entry('resolved',`2026-08-${String(5+i).padStart(2,'0')}T00:00:00Z`)]}));
+test('forecast uses source times and real completed analogs',()=>{const r=calculateSignalTiming('in_progress',history,samples,null,'2026-09-05');assert.equal(r.estimate?.sampleCount,5);assert.equal(r.estimate?.from,'2026-09-08T00:00:00.000Z');assert.equal(r.estimate?.to,'2026-09-12T00:00:00.000Z');});
+test('ingestion-only history cannot produce work duration',()=>{assert.equal(observedWorkPeriod([{...history[0],sourcePublishedAt:null}]),null);});
+test('insufficient and duplicate analogs cannot create precision',()=>{assert.equal(calculateSignalTiming('in_progress',history,samples.slice(0,4),null,'2026-09-05').estimate,null);assert.equal(calculateSignalTiming('in_progress',history,Array(5).fill(samples[0]),null,'2026-09-05').estimate,null);});
+test('paused, planned and closed events never get active forecasts',()=>{for(const state of ['paused','planned','resolved','cancelled'] as const)assert.equal(calculateSignalTiming(state,history,samples,null,'2026-09-05').estimate,null);});
+test('expired forecast requests an update instead of moving the date',()=>{assert.equal(calculateSignalTiming('in_progress',history,samples,null,'2026-10-01').estimate,null);});
+test('future completion and pauses exclude analogs',()=>{const bad={...samples[0],history:[...samples[0].history,entry('paused','2026-08-02')]};assert.equal(calculateSignalTiming('in_progress',history,[...samples.slice(1),bad],null,'2026-09-05').estimate,null);});
+test('official deadline requires an explicit valid completion clause',()=>{assert.equal(extractOfficialDeadline('Работы завершат до 06.09.2026 в 18:00','https://example.org')?.at,'2026-09-06T18:00:00+03:00');for(const text of ['Публикация 06.09.2026','Работы начнут 06.09.2026','Работы завершат до 31.02.2026','Работы завершат до 06.09.2026 в 25:00'])assert.equal(extractOfficialDeadline(text,'https://example.org'),null);});
+test('analyzer correction supersedes a source version without deleting audit history',()=>{const corrected=[entry('in_progress','2026-08-01'),entry('resolved','2026-08-05'),{...entry('planned','2026-08-01'),at:'2026-09-06T00:00:00Z'}];assert.equal(observedWorkPeriod(corrected),null);});
+test('a negated commitment is not an official deadline',()=>{assert.equal(extractOfficialDeadline('Работы не завершат до 06.09.2026','https://example.org'),null);});

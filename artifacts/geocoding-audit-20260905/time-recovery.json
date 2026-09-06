@@ -1,0 +1,16 @@
+{
+  "applied": true,
+  "backup": "/Users/sergey/Documents/ChatGPT/drgs_3d_region/data/backups/live-before-time-recovery-20260905-205817.sqlite",
+  "changes": [
+    {
+      "id": "evt_5c8907c441b42895565e0c68",
+      "before": "2026-09-05",
+      "after": "2026-09-05T08:00:00+03:00"
+    },
+    {
+      "id": "evt_fb650b0d506d0ab5c083ca68",
+      "before": "2026-09-30",
+      "after": "2026-09-30T09:00:00+03:00"
+    }
+  ]
+}

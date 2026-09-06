@@ -1,0 +1,30 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import { LandmarkMapLayer } from '../src/lib/map-landmarks';
+import { LANDMARKS } from '../src/lib/landmarks';
+
+test('camera movement preserves landmark detail and picking projection storage', () => {
+  const layer = new LandmarkMapLayer({ visible: () => true, mobile: false });
+  const entry = { landmark: LANDMARKS[0], scene: new THREE.Scene(), models: {} as Record<string, THREE.Group>, current: null, projection: null as THREE.Matrix4 | null, lighting: null };
+  let moving = false;
+  const state = layer as unknown as { map: unknown; renderer: unknown; entries: unknown[] };
+  state.entries.push(entry);
+  state.map = { getZoom: () => 18, isMoving: () => moving, getBounds: () => ({ contains: () => true }), getCanvas: () => ({ width: 1200, height: 800 }), getTerrain: () => null };
+  state.renderer = { resetState() {}, setViewport() {}, render(scene: THREE.Scene) { scene.updateMatrixWorld(); } };
+  const projection = new THREE.Matrix4();
+  const args = { defaultProjectionData: { mainMatrix: projection.elements } } as unknown as Parameters<LandmarkMapLayer['render']>[1];
+  layer.render({} as WebGL2RenderingContext, args);
+  assert.ok(entry.models.high);
+  const model = entry.current, storage = entry.projection;
+  const before = new Map<THREE.Object3D, number[]>();
+  entry.models.high.traverse(object => before.set(object, object.matrixWorld.elements.slice()));
+  moving = true;
+  projection.makeTranslation(.1, .2, 0);
+  layer.render({} as WebGL2RenderingContext, args);
+  assert.equal(entry.current, model);
+  assert.equal(entry.models.low, undefined);
+  assert.equal(entry.projection, storage);
+  for (const [object, matrix] of before) assert.deepEqual(object.matrixWorld.elements, matrix);
+  assert.ok(entry.projection!.elements.every(Number.isFinite));
+});

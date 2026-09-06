@@ -1,0 +1,199 @@
+"""Search-assisted location recovery with independent OSM verification.
+
+Search snippets are untrusted hints. They may supply an address candidate, but
+coordinates are accepted only from a unique Nominatim/OSM result in the named
+settlement and configured municipal scope.
+"""
+from __future__ import annotations
+
+import json
+import os
+import re
+import ssl
+import urllib.parse
+import urllib.request
+from typing import Any
+
+from region_config import fold
+
+_calls = 0
+_cache: dict[str, dict[str, Any]] = {}
+NUMBERED_FACILITY = re.compile(
+    r"\b((?:гимнази|школ|лице|детск(?:ий|ого)\s+сад|больниц|поликлиник)\w*"
+    r"\s*(?:№|N)\s*\d+[А-Яа-яA-Za-z]?)\b", re.I,
+)
+QUOTED_FACILITY = re.compile(
+    r"\b((?:гимнази|школ|лице|детск(?:ий|ого)\s+сад|больниц|поликлиник|"
+    r"дом\s+культур|спорт(?:ивн\w*)?\s+(?:комплекс|центр)|стадион)\w*"
+    r"\s*[«\"]([^»\"]{2,80})[»\"])\b", re.I,
+)
+ADDRESS = re.compile(
+    r"((?:ул(?:ица)?\.?|проспект|пр-т|переулок|пер\.?|шоссе|тракт)\s+"
+    r"[А-ЯЁа-яёA-Za-z0-9 .'-]{2,70}?,?\s+(?:д(?:ом)?\.?\s*)?\d+[А-Яа-яA-Za-z]?(?:[/\-]\d+)?)",
+    re.I,
+)
+
+
+def named_facility(text: str) -> str | None:
+    match = NUMBERED_FACILITY.search(text) or QUOTED_FACILITY.search(text)
+    if not match:
+        return None
+    value = " ".join(match.group(1).split()).strip(" ,.;:-")
+    return value if len(value) >= 7 else None
+
+
+def _request(url: str, *, payload: dict[str, Any] | None = None, api_key: str | None = None) -> Any:
+    data = json.dumps(payload, ensure_ascii=False).encode() if payload is not None else None
+    headers = {"Accept": "application/json", "User-Agent": "SberAtlas/1.0"}
+    if payload is not None:
+        headers["Content-Type"] = "application/json"
+    if api_key:
+        headers["Authorization"] = "Bearer " + api_key
+    request = urllib.request.Request(url, data=data, headers=headers, method="POST" if data else "GET")
+    try:
+        import certifi
+        context = ssl.create_default_context(cafile=certifi.where())
+    except ImportError:
+        context = ssl.create_default_context()
+    with urllib.request.urlopen(request, timeout=20, context=context) as response:
+        return json.load(response)
+
+
+def _address_candidates(results: list[dict[str, Any]], facility: str, locality: str) -> list[dict[str, str]]:
+    wanted = {part for part in fold(facility).split() if len(part) >= 3}
+    locality_folded = fold(locality)
+    found: list[dict[str, str]] = []
+    for item in results:
+        haystack = " ".join(str(item.get(key) or "") for key in ("name", "snippet"))
+        haystack = re.sub(r"\b(ул|пер|просп|д)\s+\.", r"\1.", haystack, flags=re.I)
+        folded = fold(haystack)
+        if locality_folded not in folded or not wanted.intersection(folded.split()):
+            continue
+        for match in ADDRESS.finditer(haystack):
+            candidate = " ".join(match.group(1).split()).strip(" ,.;:-")
+            candidate = re.sub(r"\s*,\s*", ", ", candidate)
+            record = {"address": candidate, "url": str(item.get("url") or "")}
+            if record not in found:
+                found.append(record)
+    return found[:5]
+
+
+def _osm_match(address: str, locality: str, expected_scope: str, facility: str = "") -> dict[str, Any] | None:
+    direct_facility_search = False
+    requested_house = re.search(r"\b(\d+[А-Яа-яA-Za-z]?(?:[/\-]\d+)?)\s*$", address)
+    def exact_house(rows: Any) -> list[dict[str, Any]]:
+        if not requested_house or not isinstance(rows,list):
+            return rows if isinstance(rows,list) else []
+        wanted=fold(requested_house.group(1))
+        return [row for row in rows if fold(str((row.get('address') or {}).get('house_number') or ''))==wanted]
+    rows = []
+    if address:
+        params = urllib.parse.urlencode({
+            "q": f"{address}, {locality}, Татарстан, Россия", "format": "jsonv2",
+            "limit": 5, "addressdetails": 1, "polygon_geojson": 1, "countrycodes": "ru",
+        })
+        rows = exact_house(_request("https://nominatim.openstreetmap.org/search?" + params))
+    if not rows:
+        house = requested_house
+        street = address[:house.start()].strip(" ,") if house else ""
+        if house and street:
+            structured = urllib.parse.urlencode({
+                "street": f"{house.group(1)} {street}", "city": locality, "state": "Татарстан",
+                "format": "jsonv2", "limit": 5, "addressdetails": 1,
+                "polygon_geojson": 1, "countrycodes": "ru",
+            })
+            rows = exact_house(_request("https://nominatim.openstreetmap.org/search?" + structured))
+    if not rows and facility:
+        direct_facility_search = True
+        facility_query = urllib.parse.urlencode({
+            "q": f"{facility}, {locality}, Татарстан, Россия", "format": "jsonv2",
+            "limit": 5, "addressdetails": 1, "polygon_geojson": 1, "countrycodes": "ru",
+        })
+        rows = _request("https://nominatim.openstreetmap.org/search?" + facility_query)
+    locality_folded, scope_folded = fold(locality), fold(expected_scope)
+    valid = []
+    for row in rows if isinstance(rows, list) else []:
+        details = row.get("address") or {}
+        scope_text = fold(" ".join(str(v) for v in details.values()))
+        if locality_folded not in scope_text:
+            continue
+        # Settlement territory labels differ between registries, e.g.
+        # «городское поселение город Лаишево» vs «городское поселение Лаишево».
+        # The explicitly named settlement already supplies the strict scope in
+        # that case; require the extra municipal token only for a different scope.
+        if scope_folded and locality_folded not in scope_folded and scope_folded not in scope_text:
+            continue
+        if direct_facility_search:
+            result_name = fold(str(row.get('display_name') or '')+' '+str(details.get('amenity') or ''))
+            number = re.search(r'(?:№|n)\s*(\d+)', facility, re.I)
+            if number and not re.search(r'(?<!\d)'+re.escape(number.group(1))+r'(?!\d)', result_name, re.I):
+                continue
+            facility_kind = next((kind for kind in ('гимнази','школ','лице','сад','больниц','поликлиник') if kind in fold(facility)),None)
+            if facility_kind and facility_kind not in result_name:
+                continue
+        try:
+            coordinates = [float(row["lon"]), float(row["lat"])]
+        except (KeyError, TypeError, ValueError):
+            continue
+        valid.append((row, coordinates))
+    identities = {(row.get("osm_type"), row.get("osm_id")) for row, _ in valid}
+    if len(identities) != 1:
+        return None
+    row, coordinates = valid[0]
+    details = row.get("address") or {}
+    road = details.get("road") or details.get("pedestrian") or details.get("square")
+    house = details.get("house_number")
+    verified_address = ", ".join(str(value) for value in (road, house) if value) or details.get("amenity") or row.get("display_name")
+    osm_type = {"node": "node", "way": "way", "relation": "relation"}.get(row.get("osm_type"))
+    if not osm_type:
+        return None
+    geometry = row.get("geojson")
+    precision = "building" if geometry and geometry.get("type") in {"Polygon","MultiPolygon"} else "site"
+    return {
+        "coordinates": coordinates, "geometry": geometry,
+        "osmUrl": f"https://www.openstreetmap.org/{osm_type}/{row['osm_id']}",
+        "displayName": row.get("display_name"), "verifiedAddress": verified_address, "precision": precision,
+        "osmId": f"{osm_type}/{row['osm_id']}",
+    }
+
+
+def search_verified_object(text: str, title: str, locality: str, expected_scope: str) -> dict[str, Any] | None:
+    """Return one OSM-verified building candidate, or None without guessing."""
+    global _calls
+    api_key = os.getenv("ATLAS_LANGSEARCH_API_KEY", "").strip()
+    base_url = os.getenv("ATLAS_LANGSEARCH_URL", "https://api.langsearch.com/v1").rstrip("/")
+    limit = max(0, min(20, int(os.getenv("ATLAS_LANGSEARCH_MAX_PER_RUN", "3"))))
+    facility = named_facility(text)
+    if not api_key or not facility or not locality or _calls >= limit:
+        return None
+    query = " ".join(f"{locality} {facility} адрес {title}".split())[:300]
+    if query in _cache:
+        return _cache[query] or None
+    _calls += 1
+    raw = _request(base_url + "/web-search", payload={
+        "query": query, "freshness": "noLimit", "summary": False, "count": 5,
+    }, api_key=api_key)
+    if raw.get("code") != 200:
+        _cache[query] = {}
+        return None
+    results = (((raw.get("data") or {}).get("webPages") or {}).get("value") or [])
+    matches = []
+    candidates = _address_candidates(results, facility, locality)
+    for candidate in candidates:
+        osm = _osm_match(candidate["address"], locality, expected_scope, facility)
+        if osm:
+            matches.append({**candidate, **osm})
+    if not matches:
+        osm = _osm_match("", locality, expected_scope, facility)
+        relevant_url = next((str(item.get('url') or '') for item in results
+            if fold(locality) in fold(str(item.get('name') or '')+' '+str(item.get('snippet') or ''))), '')
+        if osm and relevant_url:
+            matches.append({"address": osm.get("verifiedAddress") or facility, "url": relevant_url, **osm})
+    unique = {match["osmId"]: match for match in matches}
+    if len(unique) != 1:
+        _cache[query] = {}
+        return None
+    match = next(iter(unique.values()))
+    result = {**match, "facility": facility, "query": query}
+    _cache[query] = result
+    return result

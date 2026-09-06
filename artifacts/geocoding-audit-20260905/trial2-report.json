@@ -1,0 +1,33 @@
+{
+  "version": "regional-source-context-v18-durable-recovery",
+  "before": {
+    "database": "artifacts/geocoding-audit-20260905/trial2.sqlite",
+    "counts": {
+      "verified_map_location": 44,
+      "exclude_locality_only": 7,
+      "exclude_multi_site_until_split": 11,
+      "exclude_no_address_clue": 240,
+      "review_address_candidate": 82
+    }
+  },
+  "backup": "artifacts/backups/live-before-location-recovery-20260905-203044.sqlite",
+  "queued": 1188,
+  "processed": {
+    "processed": 1188,
+    "matched": 177,
+    "ambiguous": 30,
+    "unmatched": 974,
+    "preserved": 7,
+    "failed": 0
+  },
+  "after": {
+    "database": "artifacts/geocoding-audit-20260905/trial2.sqlite",
+    "counts": {
+      "verified_map_location": 57,
+      "exclude_locality_only": 7,
+      "exclude_multi_site_until_split": 11,
+      "exclude_no_address_clue": 240,
+      "review_address_candidate": 62
+    }
+  }
+}

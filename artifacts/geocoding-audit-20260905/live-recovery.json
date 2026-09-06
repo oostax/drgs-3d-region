@@ -1,0 +1,54 @@
+{
+  "version": "regional-source-context-v18-durable-recovery",
+  "before": {
+    "database": "/Users/sergey/Documents/ChatGPT/drgs_3d_region/data/live/atlas-live.sqlite",
+    "counts": {
+      "verified_map_location": 44,
+      "exclude_locality_only": 8,
+      "exclude_multi_site_until_split": 12,
+      "exclude_no_address_clue": 239,
+      "review_address_candidate": 82
+    },
+    "mapEligiblePrecision": {
+      "building": 13,
+      "territory": 273,
+      "settlement": 67,
+      "street": 31,
+      "site": 1
+    },
+    "geocodeJobs": {
+      "complete": 5595
+    }
+  },
+  "backup": "/Users/sergey/Documents/ChatGPT/drgs_3d_region/data/backups/live-before-location-recovery-20260905-203615.sqlite",
+  "queued": 1188,
+  "processed": {
+    "processed": 1162,
+    "matched": 178,
+    "ambiguous": 31,
+    "unmatched": 949,
+    "preserved": 4,
+    "failed": 0
+  },
+  "after": {
+    "database": "/Users/sergey/Documents/ChatGPT/drgs_3d_region/data/live/atlas-live.sqlite",
+    "counts": {
+      "verified_map_location": 60,
+      "exclude_locality_only": 8,
+      "exclude_multi_site_until_split": 12,
+      "exclude_no_address_clue": 239,
+      "review_address_candidate": 57
+    },
+    "mapEligiblePrecision": {
+      "building": 14,
+      "territory": 247,
+      "settlement": 68,
+      "street": 37,
+      "site": 10
+    },
+    "geocodeJobs": {
+      "complete": 6757,
+      "queued": 26
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "name": "sber-atlas",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.20.0 <25",
+    "npm": ">=11 <12"
+  },
+  "packageManager": "npm@11.6.2",
+  "scripts": {
+    "postinstall": "node scripts/ensure-apple-silicon.mjs",
+    "dev": "next dev --hostname 127.0.0.1 --port 3200",
+    "build": "next build",
+    "start": "node scripts/start-production.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "import:data": "python3 scripts/import_xlsx.py --directory /Users/sergey/Downloads --db private-data/atlas.sqlite",
+    "refresh:public": "data/public/.venv/bin/python scripts/fetch_public_data.py --news --refresh",
+    "live:once": "python3 scripts/live/worker.py --once",
+    "live:run": "python3 scripts/live/worker.py --run",
+    "live:backfill": "python3 scripts/live/worker.py --backfill 60",
+    "live:check": "python3 scripts/live/worker.py --check-sources",
+    "live:audit": "python3 scripts/live/audit_signals.py --check-urls",
+    "live:export": "python3 scripts/live/worker.py --export",
+    "live:install": "sh scripts/live/install_launch_agent.sh",
+    "predev": "node scripts/ensure-apple-silicon.mjs && node scripts/prepare-map.mjs",
+    "prebuild": "node scripts/ensure-apple-silicon.mjs && node scripts/prepare-map.mjs",
+    "prestart": "node scripts/ensure-apple-silicon.mjs"
+  },
+  "dependencies": {
+    "@fontsource/cormorant-garamond": "^5.2.8",
+    "@fontsource/manrope": "^5.2.8",
+    "better-sqlite3": "13.0.3",
+    "lucide-react": "^0.577.0",
+    "maplibre-gl": "6.7.0",
+    "next": "16.3.4",
+    "pmtiles": "^4.3.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "three": "0.185.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/three": "^0.183.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

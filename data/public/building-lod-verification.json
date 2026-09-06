@@ -1,0 +1,355 @@
+{
+  "minZoom": 10,
+  "maxZoom": 15,
+  "retainedDetailTilesVerified": 50577,
+  "allDetailBytesEqual": true,
+  "zooms": {
+    "10": {
+      "tiles": 182,
+      "bytes": 2490952,
+      "maxTileBytes": 375520,
+      "p95TileBytes": 47138,
+      "maxTileFeatures": 9068
+    },
+    "11": {
+      "tiles": 618,
+      "bytes": 3856428,
+      "maxTileBytes": 396283,
+      "p95TileBytes": 17928,
+      "maxTileFeatures": 9008
+    },
+    "12": {
+      "tiles": 2157,
+      "bytes": 27928070,
+      "maxTileBytes": 319272,
+      "p95TileBytes": 45262,
+      "maxTileFeatures": 8934
+    },
+    "13": {
+      "tiles": 6298,
+      "bytes": 96846253,
+      "maxTileBytes": 425004,
+      "p95TileBytes": 59942
+    },
+    "14": {
+      "tiles": 14253,
+      "bytes": 104727371,
+      "maxTileBytes": 233124,
+      "p95TileBytes": 31813
+    },
+    "15": {
+      "tiles": 30026,
+      "bytes": 116851050,
+      "maxTileBytes": 88423,
+      "p95TileBytes": 16582
+    }
+  },
+  "samples": [
+    {
+      "area": "kazan",
+      "z": 12,
+      "x": 2605,
+      "y": 1278,
+      "bytes": 124631,
+      "features": {
+        "building": 3458,
+        "building_part": 10
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 12,
+      "x": 2605,
+      "y": 1279,
+      "bytes": 80331,
+      "features": {
+        "building": 2042,
+        "building_part": 14
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 12,
+      "x": 2605,
+      "y": 1280,
+      "bytes": 69380,
+      "features": {
+        "building": 1881
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 12,
+      "x": 2606,
+      "y": 1278,
+      "bytes": 314170,
+      "features": {
+        "building": 8163,
+        "building_part": 219
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 12,
+      "x": 2606,
+      "y": 1279,
+      "bytes": 229625,
+      "features": {
+        "building": 4758,
+        "building_part": 398
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 12,
+      "x": 2606,
+      "y": 1280,
+      "bytes": 107064,
+      "features": {
+        "building": 2539,
+        "building_part": 50
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 12,
+      "x": 2607,
+      "y": 1278,
+      "bytes": 131706,
+      "features": {
+        "building": 3321,
+        "building_part": 80
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 12,
+      "x": 2607,
+      "y": 1279,
+      "bytes": 255812,
+      "features": {
+        "building": 5342,
+        "building_part": 504
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 12,
+      "x": 2607,
+      "y": 1280,
+      "bytes": 282917,
+      "features": {
+        "building": 6435,
+        "building_part": 470
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 13,
+      "x": 5212,
+      "y": 2558,
+      "bytes": 138693,
+      "features": {
+        "building": 3373,
+        "building_part": 79
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 13,
+      "x": 5212,
+      "y": 2559,
+      "bytes": 39230,
+      "features": {
+        "building": 966,
+        "building_part": 8
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 13,
+      "x": 5212,
+      "y": 2560,
+      "bytes": 5052,
+      "features": {
+        "building": 116
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 13,
+      "x": 5213,
+      "y": 2558,
+      "bytes": 81097,
+      "features": {
+        "building": 1598,
+        "building_part": 181
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 13,
+      "x": 5213,
+      "y": 2559,
+      "bytes": 130294,
+      "features": {
+        "building": 2518,
+        "building_part": 257
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 13,
+      "x": 5213,
+      "y": 2560,
+      "bytes": 109617,
+      "features": {
+        "building": 2670,
+        "building_part": 62
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 13,
+      "x": 5214,
+      "y": 2558,
+      "bytes": 66383,
+      "features": {
+        "building": 1376,
+        "building_part": 121
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 13,
+      "x": 5214,
+      "y": 2559,
+      "bytes": 172839,
+      "features": {
+        "building": 3833,
+        "building_part": 196
+      }
+    },
+    {
+      "area": "kazan",
+      "z": 13,
+      "x": 5214,
+      "y": 2560,
+      "bytes": 164318,
+      "features": {
+        "building": 4094,
+        "building_part": 100
+      }
+    },
+    {
+      "area": "innopolis",
+      "z": 12,
+      "x": 2602,
+      "y": 1280,
+      "bytes": 36490,
+      "features": {
+        "building": 891,
+        "building_part": 4
+      }
+    },
+    {
+      "area": "innopolis",
+      "z": 13,
+      "x": 5205,
+      "y": 2560,
+      "bytes": 31228,
+      "features": {
+        "building": 789,
+        "building_part": 4
+      }
+    },
+    {
+      "area": "chelny",
+      "z": 12,
+      "x": 2644,
+      "y": 1280,
+      "bytes": 164714,
+      "features": {
+        "building": 3572,
+        "building_part": 104
+      }
+    },
+    {
+      "area": "chelny",
+      "z": 13,
+      "x": 5288,
+      "y": 2561,
+      "bytes": 74005,
+      "features": {
+        "building": 1478,
+        "building_part": 48
+      }
+    },
+    {
+      "area": "almetyevsk",
+      "z": 12,
+      "x": 2643,
+      "y": 1297,
+      "bytes": 275872,
+      "features": {
+        "building": 7177,
+        "building_part": 14
+      }
+    },
+    {
+      "area": "almetyevsk",
+      "z": 13,
+      "x": 5286,
+      "y": 2595,
+      "bytes": 169508,
+      "features": {
+        "building": 4463,
+        "building_part": 4
+      }
+    },
+    {
+      "area": "bolgar",
+      "z": 12,
+      "x": 2606,
+      "y": 1295,
+      "bytes": 13927,
+      "features": {
+        "building": 310,
+        "building_part": 5
+      }
+    },
+    {
+      "area": "bolgar",
+      "z": 13,
+      "x": 5212,
+      "y": 2591,
+      "bytes": 33699,
+      "features": {
+        "building": 836,
+        "building_part": 11
+      }
+    }
+  ],
+  "layers": [
+    "building",
+    "building_part"
+  ],
+  "checkedAt": "2026-09-04T12:58:25.312424+00:00",
+  "sourceArchiveSha256": "11d42696a546d1a596d6ca499be1dd07ac1735ec67eba269121fdd868cb9b05f",
+  "archiveSha256": "ba327015def0730977aefc1adf9d2579c61cfe1a4e43c1a72e3be77817811f0c",
+  "archiveBytes": 352835760,
+  "backup": "data/public/cache/building-lod/original-11d42696a546d1a5.pmtiles",
+  "sourceGeoJSONBytes": 942618235,
+  "networkRequests": 0,
+  "policy": {
+    "minZoom": 10,
+    "detailMinZoom": 13,
+    "maxZoom": 15,
+    "detailTilesPreserved": true,
+    "lowZoomPolicy": "Source polygons simplified/quantized for distance. Smallest polygons may be omitted only at z10–12 to fit 512 KiB / 12000 feature budgets; no synthetic squares. Detailed z13–15 tiles are unchanged. Not new survey data.",
+    "maxLowTileBytes": 524288,
+    "maxLowTileFeatures": 12000
+  },
+  "browserVerified": false,
+  "originalBaselineBackup": "data/public/cache/building-lod/original-11d42696a546d1a5.pmtiles"
+}

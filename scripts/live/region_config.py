@@ -1,0 +1,149 @@
+"""Region metadata and content-derived place selection, independent of publisher scope."""
+import json,re,unicodedata
+from functools import lru_cache
+from runtime_paths import DATA_ROOT,APP_ROOT
+
+@lru_cache(maxsize=1)
+def registry():return json.loads((APP_ROOT/'config/regions.json').read_text())
+def region_config(region_id=None):
+    region_id=region_id or registry()['defaultRegion']
+    for region in registry()['regions']:
+        if region['id']==region_id:return region
+    raise ValueError('Region is not configured: '+region_id)
+@lru_cache(maxsize=8)
+def territories(region_id):
+    file=DATA_ROOT/region_config(region_id)['territories']
+    return json.loads(file.read_text())
+def fold(value):return ' '.join(re.findall(r'[^\W_]+',unicodedata.normalize('NFKC',value).casefold().replace('ё','е')))
+@lru_cache(maxsize=16_000)
+def locality_forms(name):
+    name=fold(name);forms={name}
+    if name.endswith('поль'):forms.update({name[:-1]+'е',name[:-1]+'я'})
+    elif name.endswith('ь'):forms.add(name[:-1]+'и')
+    elif name.endswith('а'):forms.update({name[:-1]+'е',name[:-1]+'ы',name[:-1]+'и'})
+    elif name.endswith('я'):forms.add(name[:-1]+'е')
+    elif name.endswith(('ск','ль','град','поль')):forms.update({name+'е',name+'а'})
+    if name.endswith('ый'):forms.update({name[:-2]+'ом',name[:-2]+'ого'})
+    if name.endswith('ий'):forms.update({name[:-2]+'ем',name[:-2]+'его'})
+    if name.endswith('о'):forms.add(name[:-1]+'е')
+    if ' ' in name:
+        from itertools import product
+        words=name.split();options=[]
+        for word in words:
+            variants={word}
+            if word.endswith('ий'):variants.update({word[:-2]+'ем',word[:-2]+'его'})
+            elif word.endswith('ый'):variants.update({word[:-2]+'ом',word[:-2]+'ого'})
+            elif word.endswith('ое'):variants.update({word[:-2]+'ом',word[:-2]+'ого'})
+            elif word.endswith('ые'):variants.add(word[:-2]+'ых')
+            elif word.endswith('ая'):variants.add(word[:-2]+'ой')
+            elif word.endswith('ы'):variants.update({word[:-1]+'ах',word[:-1]})
+            elif word.endswith('о'):variants.add(word[:-1]+'е')
+            elif word.endswith(('н','р','к','д','г','л')):variants.update({word+'е',word+'а'})
+            options.append(variants)
+        if len(options)<=4:forms.update(' '.join(parts) for parts in product(*options))
+    return forms
+
+def mentioned_locality(text,name,explicit):
+    folded=fold(name)
+    # Ordinary words are valid settlement names only with an explicit place
+    # introducer. "новый водовод" must never move Kazan into the village Новый.
+    ambiguous=folded in {'новый','мир','победа','труд','луч','заря','дружба','свобода','надежда','березка','октябрь','центральный','солнечный','юбилейный','первомайский','молодежный','культура','красный','маяк','степной','советский','прогресс','совхоз','рассвет','красный октябрь','комсомолец'}
+    for value in locality_forms(name):
+        if ' '+value+' ' not in text:continue
+        if not ambiguous:return True
+        if re.search(r'\b(?:село|селе|села|деревн[яеи]|поселок|поселке|поселка|пгт|с|д|п)\s+'+re.escape(value)+r'\b',text):return True
+    return False
+
+@lru_cache(maxsize=8)
+def localities(region_id):
+    file=DATA_ROOT/region_config(region_id).get('localityIndex','data/public/tatarstan-locality-index.json')
+    return json.loads(file.read_text()).get('localities',[]) if file.exists() else []
+
+def matching_locality(text,source_territory,places):
+    hay=' '+fold(text)+' '
+    matches=[p for p in places if any(mentioned_locality(hay,n,[]) for n in p.get('aliases',[p['name']]))]
+    local=[p for p in matches if source_territory in p.get('scopeIds',[p['territoryId']])]
+    if len(local)==1:return local[0]
+    # A person's or organisation's name may equal a remote settlement name
+    # (for example, Ильдус Зарипов vs the hamlet Ильдус). Outside the source
+    # municipality, accept a unique name only when the sentence explicitly
+    # locates the event there: «в Ильдусе», «в селе Ильдус», etc.
+    explicit=[p for p in matches if source_locates_in_place(text,p)]
+    if len(explicit)==1:return explicit[0]
+    return None
+
+def source_locates_in_place(text,place):
+    """A company/airport named after a village is not a settlement location."""
+    hay=' '+fold(text)+' '
+    for alias in place.get('aliases',[place['name']]):
+        for value in locality_forms(alias):
+            name=re.escape(value)
+            if re.search(r'\b(?:в|во|из|городе|город|селе|село|села|деревне|деревня|деревни|поселке|поселок|пгт)\s+'+name+r'\b(?!\s+(?:экспо|арена|информ|район))',hay):return True
+            if re.search(r'\b'+name+r'\s+(?:авылында|авылда|шәһәрендә)\b',hay):return True
+    return False
+
+def contextual_locality(text, context, source_territory, places):
+    """Bind a list row to its nearest explicit settlement heading in the source.
+
+    Do not let distant person/street names override a heading, or select the
+    first occurrence when a repeated row belongs to different settlements.
+    """
+    if not context or context not in text:
+        return None
+    direct = matching_locality(context, source_territory, places)
+    if direct and source_locates_in_place(context, direct):
+        return direct
+    found = []
+    for match in re.finditer(re.escape(context), text):
+        prefix = text[:match.start()]
+        selected = None
+        for line in reversed(prefix.splitlines()[-30:]):
+            if not line.strip():
+                continue
+            place = matching_locality(line, source_territory, places)
+            if place and source_locates_in_place(line, place):
+                selected = place
+                break
+        if selected is None:
+            return None
+        found.append(selected)
+    return found[0] if len({p['id'] for p in found}) == 1 else None
+def resolve_locality(text,candidates,source_territory,region,places):
+    hay=' '+fold(text)+' ';matches={}
+    explicit=[fold(value) for value in candidates if fold(value) and ' '+fold(value)+' ' in hay]
+    by_id={p['id']:p for p in places}
+    for place in places:
+        names=region.get('aliases',{}).get(place['id'],[])
+        name=re.sub(r'^(?:городское поселение город|сельское поселение|город|село|деревня)\s+','',place['name'],flags=re.I)
+        center=re.sub(r'^(?:г|с|д|п|пгт)\s+','',place.get('administrativeCenterName') or '')
+        names=[name,*names,*([center] if center else [])]
+        if any(len(fold(n))>=3 and mentioned_locality(hay,n,explicit) for n in names):matches[place['id']]=place
+    def descendant(child,parent):
+        seen=set()
+        while child in by_id and child not in seen:
+            if child==parent:return True
+            seen.add(child);child=by_id[child].get('parentId')
+        return False
+    # A named settlement is more precise than its simultaneously named district.
+    matches={k:v for k,v in matches.items() if not any(other!=k and descendant(other,k) for other in matches)}
+    local={k:v for k,v in matches.items() if descendant(k,source_territory)}
+    if len(local)==1:return next(iter(local))
+    if len(matches)==1:return next(iter(matches))
+    return source_territory
+
+def event_territory(event,document,source):
+    region_id=source['region_id'] if 'region_id' in source.keys() else registry()['defaultRegion']
+    region=region_config(region_id);places=territories(region_id);text=document.title+' '+document.body
+    # The paragraph attached to one schedule row disambiguates repeated street
+    # names in different villages. Its words must occur verbatim in the source.
+    context=event.get('location_context')
+    if context and context in text:
+        heading_place=contextual_locality(document.title+'\n'+document.body,context,source['territory_id'],localities(region_id))
+        if heading_place:return heading_place['territoryId']
+        place=matching_locality(context,source['territory_id'],localities(region_id))
+        if place:return place['territoryId']
+        local=resolve_locality(context,event.get('locality_candidates',[]),source['territory_id'],region,places)
+        if local!=source['territory_id']:return local
+    place=matching_locality(document.title,source['territory_id'],localities(region_id))
+    if place:return place['territoryId']
+    return resolve_locality(text,event.get('locality_candidates',[]),source['territory_id'],region,places)

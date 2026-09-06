@@ -1,0 +1,656 @@
+{
+  "applied": true,
+  "backup": "/Users/sergey/Documents/ChatGPT/drgs_3d_region/data/backups/live-before-time-recovery-20260905-210034.sqlite",
+  "changes": [
+    {
+      "id": "evt_legacy_4603c879b80bd70cd90813ec",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_legacy_00308ee9a5f2529be3d524d7",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_legacy_5dd9219f01d985196c3ee5da",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_legacy_1de2e1df2103bb4352a6dddb",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_legacy_57c97c22b38659121eae0ca2",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_legacy_d51f84ab1170bde30fb981b1",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_legacy_800b817ae1081a9aaa7f0d9e",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_legacy_6e426f1bc1d5e6c053669b3d",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_legacy_a0870477c3dec20a5080c01a",
+      "before": "2026-09-03T00:00:00Z",
+      "after": "2026-09-03"
+    },
+    {
+      "id": "evt_legacy_ae6ec175cd0ec1f132927a9a",
+      "before": "2026-09-03T00:00:00Z",
+      "after": "2026-09-03"
+    },
+    {
+      "id": "evt_legacy_561d65e143f99aa88af1aba8",
+      "before": "2026-09-03T00:00:00Z",
+      "after": "2026-09-03"
+    },
+    {
+      "id": "evt_legacy_7531f4f12cf222db5f8988a0",
+      "before": "2026-09-03T00:00:00Z",
+      "after": "2026-09-03"
+    },
+    {
+      "id": "evt_legacy_cb7ac6b26bc8d4f6becdbe49",
+      "before": "2026-09-03T00:00:00Z",
+      "after": "2026-09-03"
+    },
+    {
+      "id": "evt_legacy_dcca8e0b2f81b648940f38a5",
+      "before": "2026-09-02T00:00:00Z",
+      "after": "2026-09-02"
+    },
+    {
+      "id": "evt_legacy_3929ab52bbec19bf46f7cc87",
+      "before": "2026-09-02T00:00:00Z",
+      "after": "2026-09-02"
+    },
+    {
+      "id": "evt_legacy_dd0966b7dde5ae1c6b8d9d91",
+      "before": "2026-09-02T00:00:00Z",
+      "after": "2026-09-02"
+    },
+    {
+      "id": "evt_legacy_fdc7fcfc906ddabf67b3e405",
+      "before": "2026-09-02T00:00:00Z",
+      "after": "2026-09-02"
+    },
+    {
+      "id": "evt_legacy_3f52bad07d3b9829398a75d1",
+      "before": "2026-09-02T00:00:00Z",
+      "after": "2026-09-02"
+    },
+    {
+      "id": "evt_legacy_35f0646c94c9e69a19bdd5ee",
+      "before": "2026-09-01T00:00:00Z",
+      "after": "2026-09-01"
+    },
+    {
+      "id": "evt_legacy_2d5d693f4ac9685522875175",
+      "before": "2026-09-01T00:00:00Z",
+      "after": "2026-09-01"
+    },
+    {
+      "id": "evt_legacy_d5eddb0f3c3e093015e80cab",
+      "before": "2026-09-01T00:00:00Z",
+      "after": "2026-09-01"
+    },
+    {
+      "id": "evt_legacy_697dc3252a16508bd9ca6673",
+      "before": "2026-09-01T00:00:00Z",
+      "after": "2026-09-01"
+    },
+    {
+      "id": "evt_legacy_4d92d826b5e5c6ebbcd8e71e",
+      "before": "2026-09-01T00:00:00Z",
+      "after": "2026-09-01"
+    },
+    {
+      "id": "evt_legacy_cd2d4363a78b85a16c7a753d",
+      "before": "2026-09-01T00:00:00Z",
+      "after": "2026-09-01"
+    },
+    {
+      "id": "evt_legacy_a7bd1af54fc32f945a428453",
+      "before": "2026-09-01T00:00:00Z",
+      "after": "2026-09-01"
+    },
+    {
+      "id": "evt_legacy_c937776e0dc452204869b752",
+      "before": "2026-09-01T00:00:00Z",
+      "after": "2026-09-01"
+    },
+    {
+      "id": "evt_legacy_a1b26a9aa67cac7111c27d9e",
+      "before": "2026-09-01T00:00:00Z",
+      "after": "2026-09-01"
+    },
+    {
+      "id": "evt_legacy_5baf46bb211e69232a6f43a9",
+      "before": "2026-09-01T00:00:00Z",
+      "after": "2026-09-01"
+    },
+    {
+      "id": "evt_legacy_f62aba737d3cca3913828d70",
+      "before": "2026-08-31T00:00:00Z",
+      "after": "2026-08-31"
+    },
+    {
+      "id": "evt_legacy_e07ed172694b2af23a9cf53d",
+      "before": "2026-08-31T00:00:00Z",
+      "after": "2026-08-31"
+    },
+    {
+      "id": "evt_legacy_564a90f75011a3eda703fcd7",
+      "before": "2026-08-31T00:00:00Z",
+      "after": "2026-08-31"
+    },
+    {
+      "id": "evt_legacy_ce9b6d330f540bb5952ff767",
+      "before": "2026-08-31T00:00:00Z",
+      "after": "2026-08-31"
+    },
+    {
+      "id": "evt_legacy_62dc76bfbdaad6377a4ab068",
+      "before": "2026-08-30T00:00:00Z",
+      "after": "2026-08-30"
+    },
+    {
+      "id": "evt_legacy_7eec780994864c84b1889c51",
+      "before": "2026-08-30T00:00:00Z",
+      "after": "2026-08-30"
+    },
+    {
+      "id": "evt_legacy_a4a8de3e92b7139471eb25e1",
+      "before": "2026-08-30T00:00:00Z",
+      "after": "2026-08-30"
+    },
+    {
+      "id": "evt_legacy_a91226a2a3372f99152d349c",
+      "before": "2026-08-29T00:00:00Z",
+      "after": "2026-08-29"
+    },
+    {
+      "id": "evt_legacy_574276e0c41d51483502dfd0",
+      "before": "2026-08-29T00:00:00Z",
+      "after": "2026-08-29"
+    },
+    {
+      "id": "evt_legacy_517798fc6e8736899cabf639",
+      "before": "2026-08-29T00:00:00Z",
+      "after": "2026-08-29"
+    },
+    {
+      "id": "evt_legacy_bdd94e5225bf90c1169ee8fb",
+      "before": "2026-08-29T00:00:00Z",
+      "after": "2026-08-29"
+    },
+    {
+      "id": "evt_legacy_53fb27ab625777a55ae5be90",
+      "before": "2026-08-29T00:00:00Z",
+      "after": "2026-08-29"
+    },
+    {
+      "id": "evt_legacy_82441b9b0c5d92966e550a5c",
+      "before": "2026-08-29T00:00:00Z",
+      "after": "2026-08-29"
+    },
+    {
+      "id": "evt_legacy_edee259f1aa36b3c074fca24",
+      "before": "2026-08-28T00:00:00Z",
+      "after": "2026-08-28"
+    },
+    {
+      "id": "evt_legacy_b6a2fee76b35b14ce1aca95f",
+      "before": "2026-08-28T00:00:00Z",
+      "after": "2026-08-28"
+    },
+    {
+      "id": "evt_legacy_3e49fdd1b2b6c585f0c2892d",
+      "before": "2026-08-28T00:00:00Z",
+      "after": "2026-08-28"
+    },
+    {
+      "id": "evt_legacy_33f6a0a9b41f23bfb42e29c6",
+      "before": "2026-08-28T00:00:00Z",
+      "after": "2026-08-28"
+    },
+    {
+      "id": "evt_legacy_4155a526a446c394cd25e983",
+      "before": "2026-08-28T00:00:00Z",
+      "after": "2026-08-28"
+    },
+    {
+      "id": "evt_legacy_43e8f416b004dcbfa1a04157",
+      "before": "2026-08-28T00:00:00Z",
+      "after": "2026-08-28"
+    },
+    {
+      "id": "evt_legacy_4e9fab6e1335cfa004d95096",
+      "before": "2026-08-28T00:00:00Z",
+      "after": "2026-08-28"
+    },
+    {
+      "id": "evt_legacy_255cc51ac6793536f327fe32",
+      "before": "2026-08-28T00:00:00Z",
+      "after": "2026-08-28"
+    },
+    {
+      "id": "evt_legacy_4fdbc7fb51fe46d2ffd64d37",
+      "before": "2026-08-28T00:00:00Z",
+      "after": "2026-08-28"
+    },
+    {
+      "id": "evt_legacy_98cf39890b63d5a5b5c9e260",
+      "before": "2026-08-28T00:00:00Z",
+      "after": "2026-08-28"
+    },
+    {
+      "id": "evt_legacy_bb689982a517b922c4290230",
+      "before": "2026-08-28T00:00:00Z",
+      "after": "2026-08-28"
+    },
+    {
+      "id": "evt_legacy_06fcf01f8bb210897aa5313c",
+      "before": "2026-08-28T00:00:00Z",
+      "after": "2026-08-28"
+    },
+    {
+      "id": "evt_legacy_c57d8341e03119bb8a53a22b",
+      "before": "2026-08-28T00:00:00Z",
+      "after": "2026-08-28"
+    },
+    {
+      "id": "evt_legacy_34a78de176e71a48b4dcd74d",
+      "before": "2026-08-28T00:00:00Z",
+      "after": "2026-08-28"
+    },
+    {
+      "id": "evt_legacy_3b40f7caded2812978fde566",
+      "before": "2026-08-28T00:00:00Z",
+      "after": "2026-08-28"
+    },
+    {
+      "id": "evt_legacy_489e8d6dda1252ebbd5e72be",
+      "before": "2026-08-27T00:00:00Z",
+      "after": "2026-08-27"
+    },
+    {
+      "id": "evt_legacy_d062e0b15bf51708c8b84bca",
+      "before": "2026-08-27T00:00:00Z",
+      "after": "2026-08-27"
+    },
+    {
+      "id": "evt_legacy_b4df326a03c1265c8ecefbae",
+      "before": "2026-08-27T00:00:00Z",
+      "after": "2026-08-27"
+    },
+    {
+      "id": "evt_legacy_89625e4837446a825b397591",
+      "before": "2026-08-27T00:00:00Z",
+      "after": "2026-08-27"
+    },
+    {
+      "id": "evt_legacy_d8415bf8be62355360a61591",
+      "before": "2026-08-27T00:00:00Z",
+      "after": "2026-08-27"
+    },
+    {
+      "id": "evt_legacy_8f18143b54b872ef4be9784c",
+      "before": "2026-08-27T00:00:00Z",
+      "after": "2026-08-27"
+    },
+    {
+      "id": "evt_legacy_a336b4311c295c44be685566",
+      "before": "2026-08-27T00:00:00Z",
+      "after": "2026-08-27"
+    },
+    {
+      "id": "evt_legacy_a0add16007f42e11eb74bf90",
+      "before": "2026-08-27T00:00:00Z",
+      "after": "2026-08-27"
+    },
+    {
+      "id": "evt_legacy_793af325935f93b2cbabaca5",
+      "before": "2026-08-27T00:00:00Z",
+      "after": "2026-08-27"
+    },
+    {
+      "id": "evt_legacy_8f7eee4498410d365750957d",
+      "before": "2026-08-27T00:00:00Z",
+      "after": "2026-08-27"
+    },
+    {
+      "id": "evt_legacy_abf8bca4ab064e76d4a5f7b2",
+      "before": "2026-08-26T00:00:00Z",
+      "after": "2026-08-26"
+    },
+    {
+      "id": "evt_legacy_23250171b41a20283564e236",
+      "before": "2026-08-26T00:00:00Z",
+      "after": "2026-08-26"
+    },
+    {
+      "id": "evt_legacy_485cbe58696600bcdb9f09c9",
+      "before": "2026-08-26T00:00:00Z",
+      "after": "2026-08-26"
+    },
+    {
+      "id": "evt_legacy_60ae4705ab258501e5451482",
+      "before": "2026-08-26T00:00:00Z",
+      "after": "2026-08-26"
+    },
+    {
+      "id": "evt_legacy_acaacdbfd3eae668ac907e9a",
+      "before": "2026-08-26T00:00:00Z",
+      "after": "2026-08-26"
+    },
+    {
+      "id": "evt_legacy_40075059036da10b78ebe88e",
+      "before": "2026-08-26T00:00:00Z",
+      "after": "2026-08-26"
+    },
+    {
+      "id": "evt_legacy_b0ff909667ce66119536d51a",
+      "before": "2026-08-26T00:00:00Z",
+      "after": "2026-08-26"
+    },
+    {
+      "id": "evt_legacy_95a828331d0994eddf0c5ba8",
+      "before": "2026-08-25T00:00:00Z",
+      "after": "2026-08-25"
+    },
+    {
+      "id": "evt_legacy_d338a2bfa45d14ee2c402420",
+      "before": "2026-08-25T00:00:00Z",
+      "after": "2026-08-25"
+    },
+    {
+      "id": "evt_legacy_6629159df7faa8fe87866a61",
+      "before": "2026-08-24T00:00:00Z",
+      "after": "2026-08-24"
+    },
+    {
+      "id": "evt_legacy_4937868beb622f4ed1dddd6d",
+      "before": "2026-08-24T00:00:00Z",
+      "after": "2026-08-24"
+    },
+    {
+      "id": "evt_legacy_5753549b868d55cda94ad28a",
+      "before": "2026-08-21T00:00:00Z",
+      "after": "2026-08-21"
+    },
+    {
+      "id": "evt_legacy_d0788e9ea6f611bd02ea64fc",
+      "before": "2026-08-21T00:00:00Z",
+      "after": "2026-08-21"
+    },
+    {
+      "id": "evt_legacy_44a7d7eca20121d0969f6cb0",
+      "before": "2026-08-18T00:00:00Z",
+      "after": "2026-08-18"
+    },
+    {
+      "id": "evt_legacy_faeeb32bf91542a3d641b10b",
+      "before": "2026-08-13T00:00:00Z",
+      "after": "2026-08-13"
+    },
+    {
+      "id": "evt_legacy_bbefe032b5fd3ca4c8d46ee6",
+      "before": "2026-08-13T00:00:00Z",
+      "after": "2026-08-13"
+    },
+    {
+      "id": "evt_legacy_993a57446578abc0174fa107",
+      "before": "2026-08-06T00:00:00Z",
+      "after": "2026-08-06"
+    },
+    {
+      "id": "evt_legacy_09fe3c5321ae035135509ef0",
+      "before": "2026-08-06T00:00:00Z",
+      "after": "2026-08-06"
+    },
+    {
+      "id": "evt_legacy_beda80fc5ef043f3883f5a19",
+      "before": "2026-08-04T00:00:00Z",
+      "after": "2026-08-04"
+    },
+    {
+      "id": "evt_legacy_1922ed1fa00f956f89098703",
+      "before": "2026-07-30T00:00:00Z",
+      "after": "2026-07-30"
+    },
+    {
+      "id": "evt_legacy_ca91b676b06cd94eb88a2723",
+      "before": "2026-07-30T00:00:00Z",
+      "after": "2026-07-30"
+    },
+    {
+      "id": "evt_legacy_eb8ef26d84f7583753d903b3",
+      "before": "2026-07-27T00:00:00Z",
+      "after": "2026-07-27"
+    },
+    {
+      "id": "evt_legacy_e0ac4d1f820438a201b08b35",
+      "before": "2026-07-24T00:00:00Z",
+      "after": "2026-07-24"
+    },
+    {
+      "id": "evt_legacy_bb1f5c0f25b9555563937700",
+      "before": "2026-07-24T00:00:00Z",
+      "after": "2026-07-24"
+    },
+    {
+      "id": "evt_legacy_d1ad7685ec76a73af5899b81",
+      "before": "2026-07-16T00:00:00Z",
+      "after": "2026-07-16"
+    },
+    {
+      "id": "evt_legacy_65ebd817b7a1c3c01c85c78d",
+      "before": "2026-07-16T00:00:00Z",
+      "after": "2026-07-16"
+    },
+    {
+      "id": "evt_legacy_ea2d079d108c02e08b1a6cf5",
+      "before": "2026-05-29T00:00:00Z",
+      "after": "2026-05-29"
+    },
+    {
+      "id": "evt_legacy_c045f7d0283a4eed9fe93ee3",
+      "before": "2026-05-29T00:00:00Z",
+      "after": "2026-05-29"
+    },
+    {
+      "id": "evt_legacy_d4801664b3c7600bea3c9e63",
+      "before": "2026-05-21T00:00:00Z",
+      "after": "2026-05-21"
+    },
+    {
+      "id": "evt_legacy_6bbe7a1f8086c1c7cc9e56cb",
+      "before": "2026-05-21T00:00:00Z",
+      "after": "2026-05-21"
+    },
+    {
+      "id": "evt_legacy_082d6237d7c75e0ca3a627e2",
+      "before": "2026-05-07T00:00:00Z",
+      "after": "2026-05-07"
+    },
+    {
+      "id": "evt_legacy_4ac176dad8611c08e1e297c5",
+      "before": "2026-05-06T00:00:00Z",
+      "after": "2026-05-06"
+    },
+    {
+      "id": "evt_legacy_7b13c4b652ad1f8d78982b23",
+      "before": "2026-05-05T00:00:00Z",
+      "after": "2026-05-05"
+    },
+    {
+      "id": "evt_legacy_36e47920461d33493d626731",
+      "before": "2026-04-28T00:00:00Z",
+      "after": "2026-04-28"
+    },
+    {
+      "id": "evt_legacy_3af47eaacdd676985ac5d2ce",
+      "before": "2026-03-17T00:00:00Z",
+      "after": "2026-03-17"
+    },
+    {
+      "id": "evt_legacy_e92a80b8ecca4dae88de9f03",
+      "before": "2026-02-19T00:00:00Z",
+      "after": "2026-02-19"
+    },
+    {
+      "id": "evt_legacy_a82bbf0f9956b0d29afd8d8f",
+      "before": "2026-02-06T00:00:00Z",
+      "after": "2026-02-06"
+    },
+    {
+      "id": "evt_legacy_736f8b3f105be8ed673f3309",
+      "before": "2024-11-26T00:00:00Z",
+      "after": "2024-11-26"
+    },
+    {
+      "id": "evt_16f8f6c9f6255e75923bb22e",
+      "before": "2026-08-25T00:00:00Z",
+      "after": "2026-08-25"
+    },
+    {
+      "id": "evt_8a37a748db3232e832cdff01",
+      "before": "2026-09-06T00:00:00Z",
+      "after": "2026-09-06"
+    },
+    {
+      "id": "evt_2b799ebb210766211d4d35b5",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_ca188db4f1514fd5927c82fa",
+      "before": "2026-09-09T00:00:00Z",
+      "after": "2026-09-09"
+    },
+    {
+      "id": "evt_80aa32fb002871536aacb60d",
+      "before": "2026-09-08T00:00:00Z",
+      "after": "2026-09-08"
+    },
+    {
+      "id": "evt_b6ba9522afd7639b40f3b347",
+      "before": "2026-09-01T00:00:00Z",
+      "after": "2026-09-01"
+    },
+    {
+      "id": "evt_573c03a384d1ef61449636ae",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_668be9974786b18895ab0e92",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_040c411e93fff88c9716150a",
+      "before": "2026-09-14T00:00:00Z",
+      "after": "2026-09-14"
+    },
+    {
+      "id": "evt_cad182180df497ba00a31871",
+      "before": "2026-09-03T00:00:00Z",
+      "after": "2026-09-03"
+    },
+    {
+      "id": "evt_3a70719fba85ad24009c70e3",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_6dec7d78513e302888320d30",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_aa44e8cc48acf7cf16cc413a",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_5e36cb3ba71770e8d5892836",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_41be541c5776dc70358d1e8c",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_1839fbb31fcd0abf36e933c5",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_d3631deb28ce9339b0c13ae5",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_ac3d0d2b3d10bf86c7c26aa6",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_edeccd6d574d603632391fa6",
+      "before": "2026-09-04T00:00:00Z",
+      "after": "2026-09-04"
+    },
+    {
+      "id": "evt_9f503cb533153e0b9d2af6a3",
+      "before": "2026-09-01T00:00:00Z",
+      "after": "2026-09-01"
+    },
+    {
+      "id": "evt_c46cdda42a041994eb3d2900",
+      "before": "2026-09-05T00:00:00Z",
+      "after": "2026-09-05"
+    },
+    {
+      "id": "evt_ac96017da0a2a20ea33c3ecc",
+      "before": "2026-09-11T00:00:00Z",
+      "after": "2026-09-11"
+    },
+    {
+      "id": "evt_24cbb88a9e88d2fb21da31e4",
+      "before": "2026-08-31T00:00:00Z",
+      "after": "2026-08-31"
+    },
+    {
+      "id": "evt_51c41e01900f2816492f14bd",
+      "before": "2026-09-01T00:00:00Z",
+      "after": "2026-09-01"
+    },
+    {
+      "id": "evt_60c1b799285dcf939f1d5dde",
+      "before": "2026-09-01T00:00:00Z",
+      "after": "2026-09-01"
+    },
+    {
+      "id": "evt_bb7dbe3c0b3eaab30249a836",
+      "before": "2026-09-03T00:00:00Z",
+      "after": "2026-09-03"
+    }
+  ]
+}

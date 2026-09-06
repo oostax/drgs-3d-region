@@ -1,0 +1,454 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-09-04T11:23:15Z",
+  "scope": "Public pilot directory and editorial signal enrichment. No private workbooks, portfolio or private database inputs.",
+  "organizations": [
+    {
+      "id": "public-kfu",
+      "inn": "1655018018",
+      "name": "Казанский (Приволжский) федеральный университет",
+      "address": "420008, Республика Татарстан, г. Казань, ул. Кремлёвская, д. 18, корпус 1",
+      "legalAddress": "420008, Республика Татарстан, г. Казань, ул. Кремлёвская, д. 18, корпус 1",
+      "addressKind": "legal",
+      "coordinates": [
+        49.121418,
+        55.7905909
+      ],
+      "precision": "building",
+      "sourceUrl": "https://dpo.kpfu.ru/documents/karta-partnera-kfu.pdf/",
+      "identitySourceUrl": "https://kpfu.ru/oplatascheta/rekvizity-dlya-oplaty-schetov-119917.html",
+      "coordinateSourceUrl": "https://www.openstreetmap.org/way/182148884",
+      "coordinateMethod": "exact municipality, street, house and corpus match; OSM building bbox center",
+      "coordinateAsOf": "2026-09-04T11:17:21Z",
+      "checkedAt": "2026-09-04T11:23:15Z",
+      "meetingPlaceVerified": false,
+      "note": "Юридический адрес и здание главного корпуса. Кабинет и место встречи не подтверждены.",
+      "verificationMethod": "public-source-editorial-review-and-OSM-exact-address-match-where-available"
+    },
+    {
+      "id": "public-innopolis-university",
+      "inn": "1655258235",
+      "name": "АНО ВО «Университет Иннополис»",
+      "address": "420500, Республика Татарстан, г. Иннополис, ул. Университетская, д. 1",
+      "legalAddress": "420500, Республика Татарстан, г. Иннополис, ул. Университетская, д. 1",
+      "addressKind": "office",
+      "coordinates": [
+        48.7436216,
+        55.7536903
+      ],
+      "precision": "building",
+      "sourceUrl": "https://innopolis.university/about/",
+      "identitySourceUrl": "https://lk-dovuz.innopolis.university/public/files/offer_prepIT_full_9feb.pdf",
+      "coordinateSourceUrl": "https://www.openstreetmap.org/way/308285819",
+      "coordinateMethod": "exact named university building and complete street address",
+      "coordinateAsOf": "2026-09-04T11:17:21Z",
+      "checkedAt": "2026-09-04T11:23:15Z",
+      "meetingPlaceVerified": false,
+      "note": "Официальный адрес университета и юридический адрес совпадают. Конкретное место встречи и вход необходимо согласовать.",
+      "verificationMethod": "public-source-editorial-review-and-OSM-exact-address-match-where-available"
+    },
+    {
+      "id": "public-almet-gymnasium-5",
+      "inn": "1644022157",
+      "name": "МАОУ «Гимназия №5» г. Альметьевска РТ",
+      "address": "423450, Республика Татарстан, г. Альметьевск, ул. Тимирязева, д. 39",
+      "legalAddress": "423450, Республика Татарстан, г. Альметьевск, ул. Тимирязева, д. 39",
+      "addressKind": "office",
+      "coordinates": [
+        52.3049048,
+        54.9013529
+      ],
+      "precision": "building",
+      "sourceUrl": "https://edu.tatar.ru/almet/sch5",
+      "identitySourceUrl": "https://companies.rbc.ru/id/1021601630852-munitsipalnoe-avtonomnoe-obscheobrazovatelnoe-uchrezhdenie-gimnaziya--5-g-almetevska-respubliki-tatarstan/",
+      "coordinateSourceUrl": "https://www.openstreetmap.org/way/45954474",
+      "coordinateMethod": "official institution address + public registry INN; exact OSM school street and house",
+      "coordinateAsOf": "2026-09-04T11:18:21Z",
+      "checkedAt": "2026-09-04T11:23:15Z",
+      "meetingPlaceVerified": false,
+      "note": "Здание образовательной организации. Из-за капитального ремонта фактическое место приёма требуется уточнить; этот адрес не назначает встречу автоматически.",
+      "verificationMethod": "public-source-editorial-review-and-OSM-exact-address-match-where-available"
+    },
+    {
+      "id": "public-menzelinsk-kindergarten-2",
+      "inn": "1628008395",
+      "name": "МБДОУ «Детский сад №2 «Алтынчеч» Мензелинского муниципального района РТ",
+      "address": "423700, Республика Татарстан, г. Мензелинск, ул. Кадомцевых, д. 91",
+      "addressKind": "office",
+      "coordinates": [
+        53.1068425,
+        55.7294608
+      ],
+      "precision": "building",
+      "sourceUrl": "https://edu.tatar.ru/menzelinsk/mbdou2",
+      "identitySourceUrl": "https://edu.tatar.ru/upload/storage/org4135/files/%D0%A0%D0%B0%D0%B1%D0%BE%D1%87%D0%B0%D1%8F%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B0%20%D0%BF%D0%BE%20%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D1%8E%20%D0%B4%D0%B5%D1%82%D0%B5%D0%B9%20%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%BC%D1%83%20%D1%8F%D0%B7%D1%8B%D0%BA%D1%83_pdf%20%D0%BF%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D0%B0%D0%BD.pdf",
+      "coordinateSourceUrl": "https://www.openstreetmap.org/way/351154341",
+      "coordinateMethod": "official institution address and INN; exact OSM street and house",
+      "coordinateAsOf": "2026-09-04T11:18:21Z",
+      "checkedAt": "2026-09-04T11:23:15Z",
+      "meetingPlaceVerified": false,
+      "note": "Объект ремонта. Учреждение объявило закрытие с 1 февраля 2026 года; адрес временного приёма и возобновление работы не подтверждены.",
+      "verificationMethod": "public-source-editorial-review-and-OSM-exact-address-match-where-available"
+    },
+    {
+      "id": "public-innopolis-city-hall",
+      "inn": "1615011993",
+      "name": "МКУ «Исполнительный комитет города Иннополис»",
+      "address": "Республика Татарстан, г. Иннополис, ул. Спортивная, д. 114, помещение 1",
+      "addressKind": "legal",
+      "coordinates": null,
+      "precision": "settlement",
+      "sourceUrl": "https://verhniy-uslon.tatarstan.ru/normativno-pravovie-akti.htm?pub_id=2706758",
+      "identitySourceUrl": "https://pravo.tatarstan.ru/file/npa/2025-05/1627635/npa_1627636.pdf",
+      "checkedAt": "2026-09-04T11:23:15Z",
+      "meetingPlaceVerified": false,
+      "autoMatchEligible": false,
+      "verificationStatus": "conflicting-public-addresses",
+      "relatedSources": [
+        {
+          "label": "Документ от 13.05.2025: Спортивная, 1",
+          "url": "https://pravo.tatarstan.ru/file/npa/2025-05/1627635/npa_1627636.pdf"
+        },
+        {
+          "label": "Регламент от 26.02.2021: Спортивная, 114, помещение 1",
+          "url": "https://verhniy-uslon.tatarstan.ru/normativno-pravovie-akti.htm?pub_id=2706758"
+        }
+      ],
+      "note": "Публичные муниципальные документы расходятся: дом 114 и дом 1. Координата намеренно не присвоена; требуется уточнение адреса.",
+      "verificationMethod": "public-source-editorial-review-and-OSM-exact-address-match-where-available"
+    },
+    {
+      "id": "public-menzelinsk-ped-college",
+      "inn": "1628000734",
+      "name": "ГАПОУ «Мензелинский педагогический колледж имени Мусы Джалиля»",
+      "address": "423700, Республика Татарстан, г. Мензелинск, ул. Мусы Джалиля, д. 18",
+      "legalAddress": "423700, Республика Татарстан, г. Мензелинск, ул. Мусы Джалиля, д. 18",
+      "addressKind": "office",
+      "coordinates": null,
+      "precision": "settlement",
+      "sourceUrl": "https://edu.tatar.ru/menzelinsk/page882427.htm/page3397910.htm",
+      "checkedAt": "2026-09-04T11:23:15Z",
+      "meetingPlaceVerified": false,
+      "note": "Официальная страница содержит ИНН, фактический и юридический адрес. Точное здание пока не сопоставлено; координаты не назначены.",
+      "verificationMethod": "public-source-editorial-review-and-OSM-exact-address-match-where-available"
+    }
+  ],
+  "signals": {
+    "buinsk-school": {
+      "sourceTitle": "Продолжается строительство школы в Буинске",
+      "lifecycle": {
+        "status": "under_construction",
+        "asOf": "2026-04-28",
+        "sourceUrl": "https://minstroy.tatarstan.ru/index.htm/news/2516488.htm",
+        "currentStatusVerified": false,
+        "animationEligible": false,
+        "note": "Строительство подтверждено на дату публикации. Стадия на дату просмотра не установлена."
+      },
+      "facts": [
+        "28 апреля 2026 года готовность школы превышала 50%; велись фасадные и инженерные работы.",
+        "Проект рассчитан на 192 места; площадь — 5 931 м².",
+        "Работы начались в 2025 году; источник указывает финансирование более 766 млн рублей."
+      ],
+      "enrichmentCheckedAt": "2026-09-04T11:23:15Z"
+    },
+    "kuyuki-kindergarten": {
+      "sourceTitle": "По нацпроекту «Семья» в Куюках продолжается строительство детского сада на 340 мест",
+      "lifecycle": {
+        "status": "under_construction",
+        "asOf": "2026-05-07",
+        "sourceUrl": "https://minstroy.tatarstan.ru/index.htm/news/2519259.htm",
+        "currentStatusVerified": false,
+        "animationEligible": false,
+        "note": "Работы описаны на 7 мая 2026 года; плановый ввод в 2027 году не подтверждает текущую активность."
+      },
+      "facts": [
+        "Детский сад в Куюках рассчитан на 340 мест.",
+        "Работы начались в 2025 году; заявленный срок ввода — 2027 год.",
+        "Источник указывает финансирование на 2026 год в размере 204,5 млн рублей."
+      ],
+      "enrichmentCheckedAt": "2026-09-04T11:23:15Z"
+    },
+    "menzelinsk-kindergarten": {
+      "sourceTitle": "По республиканской программе в Мензелинске будет обновлен детский сад «Алтынчеч»",
+      "address": "423700, Республика Татарстан, г. Мензелинск, ул. Кадомцевых, д. 91",
+      "addressSourceUrl": "https://edu.tatar.ru/menzelinsk/mbdou2",
+      "coordinates": [
+        53.1068425,
+        55.7294608
+      ],
+      "precision": "building",
+      "coordinateSourceUrl": "https://www.openstreetmap.org/way/351154341",
+      "coordinateAsOf": "2026-09-04T11:18:21Z",
+      "locationVerificationMethod": "official institution address and INN; exact OSM street and house",
+      "organizationInn": "1628008395",
+      "lifecycle": {
+        "status": "planned",
+        "asOf": "2026-05-06",
+        "sourceUrl": "https://minstroy.tatarstan.ru/index.htm/news/2518845.htm",
+        "currentStatusVerified": false,
+        "animationEligible": false,
+        "note": "Публикация перечисляет план ремонта; текущий ход работ и открытие не подтверждены. Сад объявил закрытие на ремонт с 01.02.2026."
+      },
+      "relatedSources": [
+        {
+          "label": "Официальная карточка учреждения и сообщение о закрытии на ремонт",
+          "url": "https://edu.tatar.ru/menzelinsk/mbdou2",
+          "publishedAt": "2026-01-24"
+        }
+      ],
+      "enrichmentCheckedAt": "2026-09-04T11:23:15Z"
+    },
+    "almetyevsk-gymnasium": {
+      "sourceTitle": "Строители капитально ремонтируют здание гимназии №5 в Альметьевске",
+      "address": "423450, Республика Татарстан, г. Альметьевск, ул. Тимирязева, д. 39",
+      "addressSourceUrl": "https://edu.tatar.ru/almet/sch5",
+      "coordinates": [
+        52.3049048,
+        54.9013529
+      ],
+      "precision": "building",
+      "coordinateSourceUrl": "https://www.openstreetmap.org/way/45954474",
+      "coordinateAsOf": "2026-09-04T11:18:21Z",
+      "locationVerificationMethod": "official institution address + public registry INN; exact OSM school street and house",
+      "organizationInn": "1644022157",
+      "lifecycle": {
+        "status": "under_construction",
+        "asOf": "2026-05-05",
+        "sourceUrl": "https://minstroy.tatarstan.ru/index.htm/news/2518397.htm",
+        "currentStatusVerified": false,
+        "animationEligible": false,
+        "note": "На 5 мая готовность — 25%. Школа разместила видеорепортаж 7 августа, но его заголовок не подтверждает текущую стадию или завершение."
+      },
+      "facts": [
+        "5 мая 2026 года готовность капитального ремонта составляла 25%.",
+        "В программу включены инженерные сети, электромонтажные и слаботочные работы, отделка, оборудование и мебель.",
+        "Площадь работ — 2 700 м²; источник указывает финансирование более 88 млн рублей."
+      ],
+      "relatedSources": [
+        {
+          "label": "Официальный адрес гимназии",
+          "url": "https://edu.tatar.ru/almet/sch5"
+        },
+        {
+          "label": "Лента школы: видеорепортаж о ремонте от 07.08.2026",
+          "url": "https://edu-2.tatar.ru/almet/sch5/main-news",
+          "publishedAt": "2026-08-07"
+        }
+      ],
+      "enrichmentCheckedAt": "2026-09-04T11:23:15Z"
+    },
+    "novosheshminsk-school": {
+      "lifecycle": {
+        "status": "under_construction",
+        "asOf": "2026-05-29",
+        "sourceUrl": "https://minstroy.tatarstan.ru/index.htm/news/2526196.htm",
+        "currentStatusVerified": false,
+        "animationEligible": false,
+        "note": "Капитальный ремонт подтверждён на дату публикации; текущая стадия не установлена."
+      },
+      "facts": [
+        "29 мая 2026 года оперативное выполнение капитального ремонта составляло 15%.",
+        "В двухэтажном здании площадью 2 503 м² ремонтировали сети, кровлю и фасад; меняли окна и двери.",
+        "В программе предусмотрены новая мебель и оборудование."
+      ],
+      "enrichmentCheckedAt": "2026-09-04T11:23:15Z"
+    },
+    "kazan-school": {
+      "sourceTitle": "В Приволжском районе Казани построят школу на 1,5 тысячи мест",
+      "lifecycle": {
+        "status": "planned",
+        "asOf": "2026-03-17",
+        "sourceUrl": "https://mon.tatarstan.ru/index.htm/news/2502664.htm",
+        "currentStatusVerified": false,
+        "animationEligible": false,
+        "note": "Статус отражает публикацию от 17 марта 2026 года. Текущий этап работ не проверен. Контур по OSM обозначает площадку школы, но не подтверждает стадию строительства."
+      },
+      "facts": [
+        "17 марта 2026 года заявлено начало строительства в течение 2026 года.",
+        "Первая очередь в ЖК «Станция Юбилейная» рассчитана на 1 501 учащегося; перспективный комплекс — на 2 119.",
+        "Проект предусматривает актовый зал на 800 мест и столовую на 500 мест."
+      ],
+      "enrichmentCheckedAt": "2026-09-04T12:55:20.827030Z",
+      "coordinates": [
+        49.1960961,
+        55.6784525
+      ],
+      "precision": "site",
+      "locationKind": "site",
+      "siteType": "school-construction-site",
+      "address": "Казань, Приволжский район, ЖК «Станция Юбилейная» / «Станция Спортивная», район улицы Ярышлар и Детского проезда",
+      "addressSourceUrl": "https://suvarstroit.ru/sportivnaya",
+      "coordinateSourceUrl": "https://www.openstreetmap.org/way/1489504229",
+      "coordinateAsOf": "2026-09-04T12:50:50Z",
+      "siteZoom": 16.4,
+      "siteGeometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              49.1942722,
+              55.6783194
+            ],
+            [
+              49.1963401,
+              55.6793145
+            ],
+            [
+              49.1977429,
+              55.6783829
+            ],
+            [
+              49.1980433,
+              55.6785236
+            ],
+            [
+              49.1984162,
+              55.6781894
+            ],
+            [
+              49.195227,
+              55.6776661
+            ],
+            [
+              49.1942722,
+              55.6783194
+            ]
+          ]
+        ]
+      },
+      "locationVerificationMethod": "Named OSM school-construction area: identical six-vertex polygon from OSM API and Overpass; location consistent with the current developer masterplan and brochure page 2; not a building footprint or cadastral boundary",
+      "geographyNote": "Показан подписанный в OpenStreetMap участок «строительство школы» южнее Детского проезда в ЖК «Станция Спортивная». Контур way/1489504229 получен из OSM API и совпадает с Overpass; положение согласуется с генпланом застройщика. Это картографический контур стройплощадки, не контур здания и не кадастровая граница. Он не подтверждает текущую стадию работ.",
+      "relatedSources": [
+        {
+          "label": "Застройщик: проект «Станция Спортивная» в Приволжском районе Казани",
+          "url": "https://suvarstroit.ru/sportivnaya"
+        },
+        {
+          "label": "Госстройнадзор: ЖК «Станция Юбилейная», застройщик «Станция Спортивная-2»",
+          "url": "https://gsn.tatarstan.ru/index.htm/news/2404776.htm"
+        },
+        {
+          "label": "Госкомитет по тарифам: официальное название проекта и застройщик",
+          "url": "https://kt.tatarstan.ru/protokoli-zasedniy-pravleniya-gosudarstvennogo.htm?pub_id=4323180",
+          "publishedAt": "2024-10-11"
+        },
+        {
+          "label": "Жилой квартал OpenStreetMap: ориентир, не граница школы",
+          "url": "https://www.openstreetmap.org/relation/13013477"
+        },
+        {
+          "label": "Буклет застройщика: расположение школы на развороте 2, 2024 год",
+          "url": "https://suvarstroit.ru/public/projects/236dfd8b-0995-41b5-903f-6668a8981391/documents/%D0%BB%D0%B8%D1%84%D0%BB%D0%B5%D1%82_%D1%81%D1%82%D1%81%D0%BF%D0%BE%D1%80%D1%82%D0%B8%D0%B2%D0%BD%D0%B0%D1%8F_2024_12_%D1%80%D0%B0%D0%B7%D0%B2%D0%BE%D1%80%D0%BE%D1%82%D0%BE%D0%B2.pdf"
+        },
+        {
+          "label": "OpenFreeMap / OSM: подписанная точка «строительство школы», срез 30.08.2026",
+          "url": "https://tiles.openfreemap.org/planet/20260830_080001_pt/14/10431/5127.pbf"
+        },
+        {
+          "label": "OpenStreetMap: участок «строительство школы»",
+          "url": "https://www.openstreetmap.org/way/1489504229"
+        },
+        {
+          "label": "Актуальный генплан застройщика: школа южнее Детского проезда",
+          "url": "https://suvarstroit.ru/public/maingenplan/236dfd8b-0995-41b5-903f-6668a8981391/genplans/2f91919a-9c09-493f-9600-06bd411a7a21.webp"
+        }
+      ],
+      "siteBbox": [
+        49.1942722,
+        55.6776661,
+        49.1984162,
+        55.6793145
+      ]
+    },
+    "chelny-sewer": {
+      "lifecycle": {
+        "status": "planned",
+        "asOf": "2026-02-06",
+        "sourceUrl": "https://minstroy.tatarstan.ru/index.htm/news/2490951.htm",
+        "currentStatusVerified": false,
+        "animationEligible": false,
+        "note": "План продолжения ремонта сетей; конкретный участок работ и текущая стадия не подтверждены."
+      },
+      "enrichmentCheckedAt": "2026-09-04T11:23:15Z"
+    },
+    "nizhnekamsk-park": {
+      "coordinates": [
+        51.8131668,
+        55.6547539
+      ],
+      "precision": "site",
+      "locationKind": "site",
+      "address": "Нижнекамск, Парк нефтехимиков",
+      "addressSourceUrl": "https://e-nkama.ru/news/3043/126397/",
+      "coordinateSourceUrl": "https://www.openstreetmap.org/way/234738886",
+      "coordinateAsOf": "2026-09-04T11:17:21Z",
+      "locationVerificationMethod": "Unique named park in the named municipality; OSM site bbox center, not a building or work-front coordinate",
+      "lifecycle": {
+        "status": "under_construction",
+        "asOf": "2026-05-29",
+        "sourceUrl": "https://www.sibur.ru/nknh/ru/press-center/sibur-nachal-masshtabnuyu-rekonstruktsiyu-parka-neftekhimikov-v-nizhnekamske/",
+        "currentStatusVerified": false,
+        "animationEligible": false,
+        "note": "Старт реконструкции подтверждён 29 мая. Августовская публикация о гранте не описывает текущий фронт работ; анимация активной стройки отключена."
+      },
+      "relatedSources": [
+        {
+          "label": "Инициатор: старт реконструкции",
+          "url": "https://www.sibur.ru/nknh/ru/press-center/sibur-nachal-masshtabnuyu-rekonstruktsiyu-parka-neftekhimikov-v-nizhnekamske/",
+          "publishedAt": "2026-05-29"
+        },
+        {
+          "label": "Муниципальная публикация о гранте на реконструкцию",
+          "url": "https://e-nkama.ru/news/252/127408/",
+          "publishedAt": "2026-08-12"
+        }
+      ],
+      "enrichmentCheckedAt": "2026-09-04T11:23:15Z"
+    },
+    "bolgar-tourism": {
+      "lifecycle": {
+        "status": "completed",
+        "asOf": "2026-05-21",
+        "sourceUrl": "https://tourism.tatarstan.ru/index.htm/news/2524031.htm",
+        "currentStatusVerified": false,
+        "animationEligible": false,
+        "note": "Публикация описывает реализованный туристский код. Это не текущая стройка; объектом является музейная территория, а не произвольное здание."
+      },
+      "enrichmentCheckedAt": "2026-09-04T11:23:15Z"
+    },
+    "innopolis-development": {
+      "lifecycle": {
+        "status": "planned",
+        "asOf": "2024-11-26",
+        "sourceUrl": "https://verhniy-uslon.tatarstan.ru/normativno-pravovie-akti.htm?pub_id=4377292",
+        "currentStatusVerified": false,
+        "animationEligible": false,
+        "note": "Исторический прогноз на 2025–2027 годы. Не является подтверждением начала или продолжения строительства."
+      },
+      "planningPeriod": "2025–2027",
+      "enrichmentCheckedAt": "2026-09-04T11:23:15Z"
+    },
+    "tatarstan-ppp": {
+      "lifecycle": {
+        "status": "not_applicable",
+        "asOf": "2026-01-01",
+        "sourceUrl": "https://tida.tatarstan.ru/index.htm/news/2499799.htm",
+        "currentStatusVerified": false,
+        "animationEligible": false,
+        "note": "Региональный обзор нескольких проектов; единая стадия и единый адрес неприменимы."
+      },
+      "enrichmentCheckedAt": "2026-09-04T11:23:15Z"
+    },
+    "tatarstan-investcouncil": {
+      "lifecycle": {
+        "status": "planned",
+        "asOf": "2026-05-21",
+        "sourceUrl": "https://tatarstan.ru/index.htm/news/2524079.htm",
+        "currentStatusVerified": false,
+        "animationEligible": false,
+        "note": "Рассмотрение инвестиционных инициатив не означает одобрение или начало строительства. Несколько проектов не получают одну точку на карте."
+      },
+      "enrichmentCheckedAt": "2026-09-04T11:23:15Z"
+    }
+  }
+}

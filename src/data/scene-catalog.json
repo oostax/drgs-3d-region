@@ -1,0 +1,5750 @@
+{
+  "version": "2.0.0",
+  "sourceTaxonomy": {
+    "groups": 26,
+    "topics": 247
+  },
+  "families": {
+    "construction": {
+      "label": "Строительство",
+      "kind": "construction"
+    },
+    "renovation": {
+      "label": "Ремонт здания",
+      "kind": "construction"
+    },
+    "road_defect": {
+      "label": "Дефекты покрытия",
+      "kind": "road_defect"
+    },
+    "roads": {
+      "label": "Дороги и тротуары",
+      "kind": "road_repair"
+    },
+    "bridge": {
+      "label": "Мосты",
+      "kind": "road_repair"
+    },
+    "traffic": {
+      "label": "Ограничения движения",
+      "kind": "place_event"
+    },
+    "water": {
+      "label": "Вода и канализация",
+      "kind": "utility_repair"
+    },
+    "heating": {
+      "label": "Теплоснабжение",
+      "kind": "utility_repair"
+    },
+    "gas": {
+      "label": "Газоснабжение",
+      "kind": "utility_repair"
+    },
+    "electricity": {
+      "label": "Электроснабжение",
+      "kind": "utility_repair"
+    },
+    "lighting": {
+      "label": "Освещение",
+      "kind": "utility_repair"
+    },
+    "waste": {
+      "label": "Отходы",
+      "kind": "waste"
+    },
+    "landscape": {
+      "label": "Благоустройство",
+      "kind": "landscaping"
+    },
+    "trees": {
+      "label": "Деревья и озеленение",
+      "kind": "landscaping"
+    },
+    "ecology": {
+      "label": "Экология",
+      "kind": "generic"
+    },
+    "snow": {
+      "label": "Снег и наледь",
+      "kind": "snow_ice"
+    },
+    "flood": {
+      "label": "Подтопление",
+      "kind": "flood"
+    },
+    "fire": {
+      "label": "Пожар",
+      "kind": "fire"
+    },
+    "weather": {
+      "label": "Погода",
+      "kind": "emergency"
+    },
+    "housing": {
+      "label": "Жильё",
+      "kind": "social"
+    },
+    "safety": {
+      "label": "Безопасность",
+      "kind": "generic"
+    },
+    "health": {
+      "label": "Медицина",
+      "kind": "social"
+    },
+    "education": {
+      "label": "Образование",
+      "kind": "social"
+    },
+    "culture": {
+      "label": "Культура",
+      "kind": "culture"
+    },
+    "sport": {
+      "label": "Спорт",
+      "kind": "culture"
+    },
+    "tourism": {
+      "label": "Туризм",
+      "kind": "culture"
+    },
+    "transit": {
+      "label": "Общественный транспорт",
+      "kind": "place_event"
+    },
+    "communication": {
+      "label": "Связь",
+      "kind": "utilities"
+    },
+    "agriculture": {
+      "label": "Сельское хозяйство",
+      "kind": "investment"
+    },
+    "economy": {
+      "label": "Экономика",
+      "kind": "investment"
+    },
+    "employment": {
+      "label": "Занятость",
+      "kind": "social"
+    },
+    "social": {
+      "label": "Социальная поддержка",
+      "kind": "social"
+    },
+    "services": {
+      "label": "Муниципальные услуги",
+      "kind": "generic"
+    },
+    "banking": {
+      "label": "Банки и обслуживание",
+      "kind": "place_event"
+    }
+  },
+  "states": {
+    "reported": "Сообщают",
+    "planned": "Запланировано",
+    "in_progress": "Выполняется",
+    "paused": "Приостановлено",
+    "resolved": "Завершено",
+    "cancelled": "Отменено",
+    "unknown": "Требуется уточнение"
+  },
+  "recipes": [
+    {
+      "id": "complaints:1aa255acc3e1cc90",
+      "source": "complaints",
+      "group": "Безопасность и правопорядок",
+      "topic": "Асоциальное поведение, нарушение общественного порядка (в т.ч. тишины, вандализм)",
+      "family": "safety",
+      "sceneKind": "generic",
+      "icon": "shield",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:e6e83f796466c287",
+      "source": "complaints",
+      "group": "Безопасность и правопорядок",
+      "topic": "Безопасность и правопорядок прочее",
+      "family": "safety",
+      "sceneKind": "generic",
+      "icon": "shield",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:18003c2c7cda6a8f",
+      "source": "complaints",
+      "group": "Безопасность и правопорядок",
+      "topic": "Видеофиксация нарушения ПДД",
+      "family": "safety",
+      "sceneKind": "generic",
+      "icon": "shield",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:bdaf630b8fe0e44e",
+      "source": "complaints",
+      "group": "Безопасность и правопорядок",
+      "topic": "Вопросы гражданской обороны (в т.ч. эвакуация населения)",
+      "family": "safety",
+      "sceneKind": "generic",
+      "icon": "shield",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:6019874746635d8e",
+      "source": "complaints",
+      "group": "Безопасность и правопорядок",
+      "topic": "Дети на опасных объектах (в т.ч. крыши, стройки)",
+      "family": "safety",
+      "sceneKind": "generic",
+      "icon": "shield",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:4152b801ce430e3f",
+      "source": "complaints",
+      "group": "Безопасность и правопорядок",
+      "topic": "Дикие животные в населенных пунктах",
+      "family": "safety",
+      "sceneKind": "generic",
+      "icon": "shield",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:d0b874f7b582357c",
+      "source": "complaints",
+      "group": "Безопасность и правопорядок",
+      "topic": "Затопление территорий в результате паводков, противопаводковые мероприятия",
+      "family": "flood",
+      "sceneKind": "flood",
+      "icon": "waves",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:e1439b2f50dba4bf",
+      "source": "complaints",
+      "group": "Безопасность и правопорядок",
+      "topic": "Защита прав потребителей",
+      "family": "safety",
+      "sceneKind": "generic",
+      "icon": "shield",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:25f6bc1d6424bce0",
+      "source": "complaints",
+      "group": "Безопасность и правопорядок",
+      "topic": "Нарушение ПДД",
+      "family": "safety",
+      "sceneKind": "generic",
+      "icon": "shield",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:e654d9f954897645",
+      "source": "complaints",
+      "group": "Безопасность и правопорядок",
+      "topic": "Нарушение правил выгула домашних животных",
+      "family": "safety",
+      "sceneKind": "generic",
+      "icon": "shield",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:4c1ee820dad46871",
+      "source": "complaints",
+      "group": "Безопасность и правопорядок",
+      "topic": "Некорректное обращение с животными (в т.ч. дикими)",
+      "family": "safety",
+      "sceneKind": "generic",
+      "icon": "shield",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:8512e315a296e6c2",
+      "source": "complaints",
+      "group": "Безопасность и правопорядок",
+      "topic": "Объявления о продаже наркотиков",
+      "family": "safety",
+      "sceneKind": "generic",
+      "icon": "shield",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:304c160276b43dce",
+      "source": "complaints",
+      "group": "Безопасность и правопорядок",
+      "topic": "Отлов безнадзорных собак и кошек",
+      "family": "safety",
+      "sceneKind": "generic",
+      "icon": "shield",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:df386d5e82a335ab",
+      "source": "complaints",
+      "group": "Безопасность и правопорядок",
+      "topic": "Санитарно-эпидемиологическое благополучие",
+      "family": "safety",
+      "sceneKind": "generic",
+      "icon": "shield",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:f7144ed335e20582",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Благоустройство дворовых и придомовых территорий (за исключением уточненных тем)",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:225e083456e8d765",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Благоустройство и содержание кладбищ и мест захоронения",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:8d8ad3a3e36b0744",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Благоустройство общественных пространств (за исключением уточненных тем)",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:15b4e327316c1ceb",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Благоустройство прочее",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:4d94d1110da1f3b5",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Борщевик Сосновского, амброзия и другие инвазивные растения",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:e9057058c21607ab",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Брошенное транспортное средство",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:207f8a0c231d37f8",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Восстановление после проведения земляных работ (в т.ч. нарушения)",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:d5b7d150161d19d5",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Вырубка, опиловка и спил деревьев (в т.ч. кустарников)",
+      "family": "trees",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:3ad080f7eee400ef",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Канализационные люки",
+      "family": "water",
+      "sceneKind": "utility_repair",
+      "icon": "droplets",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:a7e3389a0326be28",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Неисправность или отсутствие освещения на территории (кроме автодорог)",
+      "family": "lighting",
+      "sceneKind": "utility_repair",
+      "icon": "lamp-desk",
+      "geometry": [
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:1535d2be44344781",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Ненадлежащее состояние конструкций на детской или спортивной площадке",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:ea60e43ffe974ab6",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Ненадлежащее состояние фасадов нежилых зданий, объектов и ограждений",
+      "family": "renovation",
+      "sceneKind": "construction",
+      "icon": "paint-roller",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:f28fd4ae1b0ba2ae",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Обработка территорий от клещей и комаров",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:bc2d2609bf9fec8d",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Обустройство покрытия в общественных местах (кроме парковок)",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:ac5e2c6797b59159",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Организация и содержание парковок в общественных пространствах и во дворах (кроме социальных учреждений)",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:78dc1f696a62a35f",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Организация и содержание парковок вблизи социальных учреждений",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:933d7c6e8c98a7b1",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Отсутствие детских и спортивных площадок",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:40e0d0a4567744c1",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Отсутствие или неудовлетворительное состояние МАФ (лавочки, урны, лестницы и пр.) в общественных местах",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:4fba76758b71cfd0",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Отсутствие или неудовлетворительное состояние общественных туалетов",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:9e5f718be657e411",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Отсутствие ограждений при ремонтных и строительных работах",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:2508af7c9e5644d2",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Парковка на газонах",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:99eed9c8eb394be9",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Площадки для выгула домашних животных",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:4b34ed38d860b4b1",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Подтопление территории (кроме дорог) из-за дождей, работа и ремонт ливневых канализаций",
+      "family": "flood",
+      "sceneKind": "flood",
+      "icon": "waves",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:19a1d6cbb51eaf39",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Проведение земляных работ",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:3ee594e3fdbf53ef",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Работа фонтанов",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:eeba4270cb2c6c1c",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Самовольная установка ограждений и некапитальных объектов на территории общего пользования",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:10e56c6fa20a7f57",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Содержание и уборка зеленых насаждений",
+      "family": "trees",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:034e28bc66d298fc",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Уборка дворовых и придомовых территорий от мусора, смета, листвы",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:8009d80496f9df8d",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Уборка дворовых и придомовых территорий от снега и наледи",
+      "family": "snow",
+      "sceneKind": "snow_ice",
+      "icon": "snowflake",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:8ce69d8182257bf2",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Уборка детской игровой и спортивной площадки",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:c54971fa50459aee",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Уборка общественных пространств от мусора, смета, листвы",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:9906842881bb16ce",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Уборка общественных пространств от снега и наледи",
+      "family": "snow",
+      "sceneKind": "snow_ice",
+      "icon": "snowflake",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:cc8069f1fb31e6ef",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Упавшие деревья",
+      "family": "trees",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:d31dd1e0d2622b6b",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Шлагбаумы и ограждения (установка, содержание и восстановление)",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:75b7b2b3007fbdeb",
+      "source": "complaints",
+      "group": "Благоустройство",
+      "topic": "Ямы во дворах",
+      "family": "road_defect",
+      "sceneKind": "road_defect",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:902f5347f27f4438",
+      "source": "complaints",
+      "group": "Внутренняя политика",
+      "topic": "Внутренняя политика прочее",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:a23a93128cd24c50",
+      "source": "complaints",
+      "group": "Внутренняя политика",
+      "topic": "Работа избирательных комиссий и порядок проведения голосования",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:cde49f520d4ec1ba",
+      "source": "complaints",
+      "group": "Военная служба",
+      "topic": "Военная служба прочее",
+      "family": "social",
+      "sceneKind": "social",
+      "icon": "hand-heart",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:d606f2fcb49b0c2e",
+      "source": "complaints",
+      "group": "Военная служба",
+      "topic": "Выплаты, зарплаты, соцгарантии и льготы для военнослужащих",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:aa843843bacce28a",
+      "source": "complaints",
+      "group": "Военная служба",
+      "topic": "Гуманитарная помощь военнослужащим",
+      "family": "social",
+      "sceneKind": "social",
+      "icon": "hand-heart",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:0dcb9dfc3e061d8c",
+      "source": "complaints",
+      "group": "Военная служба",
+      "topic": "Контактно-справочная информация о работе военкоматов",
+      "family": "social",
+      "sceneKind": "social",
+      "icon": "hand-heart",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:b5c3bf3d665b3dc2",
+      "source": "complaints",
+      "group": "Военная служба",
+      "topic": "Поддержка семей военнослужащих",
+      "family": "social",
+      "sceneKind": "social",
+      "icon": "hand-heart",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:9843cc31cdf67352",
+      "source": "complaints",
+      "group": "Военная служба",
+      "topic": "Порядок призыва на военную службу (в т.ч. мобилизация)",
+      "family": "social",
+      "sceneKind": "social",
+      "icon": "hand-heart",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:5c280017bf39cdef",
+      "source": "complaints",
+      "group": "Военная служба",
+      "topic": "Поступление и увольнение со службы по контракту",
+      "family": "social",
+      "sceneKind": "social",
+      "icon": "hand-heart",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:cc600132ead72a06",
+      "source": "complaints",
+      "group": "Военная служба",
+      "topic": "Пропавшие без вести (в т.ч. отсутствие связи с военнослужащими) и погибшие военнослужащие",
+      "family": "social",
+      "sceneKind": "social",
+      "icon": "hand-heart",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:c45159a1dddcd014",
+      "source": "complaints",
+      "group": "Военная служба",
+      "topic": "Социализация военнослужащих из зоны СВО",
+      "family": "social",
+      "sceneKind": "social",
+      "icon": "hand-heart",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:f748cfdb32210f8f",
+      "source": "complaints",
+      "group": "Военная служба",
+      "topic": "Юридические вопросы военнослужащих, проблемы с документами",
+      "family": "social",
+      "sceneKind": "social",
+      "icon": "hand-heart",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:a8efc0a9c23afd38",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Велосипедные дорожки",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:4e5d36eca2a9e52d",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Дороги прочее",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:f3e2adb325e53a5b",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Крупногабаритный транспорт (в т.ч. весогабаритный контроль)",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:725750f2b4a1908f",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Неисправность или отсутствие освещения на дорогах и тротуарах",
+      "family": "lighting",
+      "sceneKind": "utility_repair",
+      "icon": "lamp-desk",
+      "geometry": [
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:4a9ae15fc379a214",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Некачественное покрытие асфальтовых дорог (ямы, выбоины и пр.)",
+      "family": "road_defect",
+      "sceneKind": "road_defect",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:3b545ae6c534c1fa",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Некачественные ремонт и реконструкция дорог (в т.ч. нарушение технологий, сроков)",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:ba8c5851a6a68cbb",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Некачественные ремонт и реконструкция мостов (в т.ч. нарушение технологий, сроков)",
+      "family": "bridge",
+      "sceneKind": "road_repair",
+      "icon": "construction",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:652870fba1371a09",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Обустройство и ремонт тротуаров",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:cfe0460b66612f9c",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Оплата проезда (платные дороги)",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:2ca589b9cffa558c",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Организация и содержание пешеходных переходов (в т.ч. надземных и подземных)",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:6f72bcbacb88726e",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Организация работы и содержание светофоров",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:85731a69cbc48b01",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Отсутствие разметки или некачественно нанесенная разметка на проезжей части",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:cbca10ba93bbd01e",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Перекрытие дорог",
+      "family": "traffic",
+      "sceneKind": "place_event",
+      "icon": "signpost",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:707f9b52171f60ce",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Подтопление автомобильных дорог из-за дождей, работа и ремонт ливневых канализаций",
+      "family": "flood",
+      "sceneKind": "flood",
+      "icon": "waves",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:37b2ad789c21bcc5",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Содержание грунтовых дорог (в т.ч. грейдирование)",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:94f503da6d076d32",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Строительство дорог и мостов",
+      "family": "bridge",
+      "sceneKind": "road_repair",
+      "icon": "construction",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:2ca790d3b1d0a888",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Уборка дорог от пыли, смета, листвы",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:630ae32210c97b7d",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Уборка дорог от снега и наледи",
+      "family": "snow",
+      "sceneKind": "snow_ice",
+      "icon": "snowflake",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:3cae086b178991c4",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Уборка тротуара от мусора, смета, листвы",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:39f8f95a8557e06c",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Уборка тротуара от снега и наледи",
+      "family": "snow",
+      "sceneKind": "snow_ice",
+      "icon": "snowflake",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:bf605e40eb20b37a",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Установка и замена дорожных ограждений",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:00d44200b7bc436c",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Установка и содержание дорожных знаков",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:9c774bd597040e23",
+      "source": "complaints",
+      "group": "Дороги",
+      "topic": "Установка и содержание искусственных неровностей (лежачих полицейских) на дорогах",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:0958f1f0b1f05951",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Аварии (в т.ч. прорывы) в системе водоснабжения",
+      "family": "water",
+      "sceneKind": "utility_repair",
+      "icon": "droplets",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:d1230bda925f4f08",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Аварийное и ветхое жилье (в т.ч. переселение)",
+      "family": "housing",
+      "sceneKind": "social",
+      "icon": "building-2",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:4231a3e3153b4613",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Водоразборные колонки, колодцы",
+      "family": "water",
+      "sceneKind": "utility_repair",
+      "icon": "droplets",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:23224ad35fe8dc19",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "ЖКХ прочее",
+      "family": "housing",
+      "sceneKind": "social",
+      "icon": "building-2",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:71d12438d7db092f",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Жалобы на управляющие и ресурсоснабжающие организации",
+      "family": "housing",
+      "sceneKind": "social",
+      "icon": "building-2",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:7bceb66ae8a44b79",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Затопление подъездов, подвальных помещений МКД",
+      "family": "flood",
+      "sceneKind": "flood",
+      "icon": "waves",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:08ebec82d18f7016",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Капитальный ремонт домов ",
+      "family": "renovation",
+      "sceneKind": "construction",
+      "icon": "paint-roller",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:3c5ab69541bfe4fe",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Начало или завершение отопительного сезона",
+      "family": "housing",
+      "sceneKind": "social",
+      "icon": "building-2",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:536ab39be60164c5",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Неисправность в системе водоотведения (в т.ч. прорывы, засоры, запахи)",
+      "family": "water",
+      "sceneKind": "utility_repair",
+      "icon": "droplets",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:2c9c06758b367efa",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Неисправность или отключение лифтов",
+      "family": "housing",
+      "sceneKind": "social",
+      "icon": "building-2",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:bf47449293b5b2d6",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Некачественный ремонт мест общего пользования МКД (подъездов)",
+      "family": "renovation",
+      "sceneKind": "construction",
+      "icon": "paint-roller",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:c9e089c733d31d66",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Ненадлежащее качество или отключение отопления",
+      "family": "heating",
+      "sceneKind": "utility_repair",
+      "icon": "heater",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:c7dab921c7f26f0a",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Ненадлежащее содержание и уборка мест общего пользования МКД",
+      "family": "housing",
+      "sceneKind": "social",
+      "icon": "building-2",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:959f47de98ea8012",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Ненадлежащее содержание фасадов и кровли МКД",
+      "family": "renovation",
+      "sceneKind": "construction",
+      "icon": "paint-roller",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:47269cb8445395ff",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Низкая температура воды или слабое давление",
+      "family": "water",
+      "sceneKind": "utility_repair",
+      "icon": "droplets",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:fef6286e42df1a21",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Отсутствие холодной и/или горячей воды",
+      "family": "water",
+      "sceneKind": "utility_repair",
+      "icon": "droplets",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:598450f4d1b9a878",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Плата за жилое помещение, предоставление коммунальных и иных услуг (ЖКУ)",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:0d86a14f2fb32275",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Плохое качество воды",
+      "family": "water",
+      "sceneKind": "utility_repair",
+      "icon": "droplets",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:e763e0b16b853e9b",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Приборы учета",
+      "family": "housing",
+      "sceneKind": "social",
+      "icon": "building-2",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:b62c6f6bb0c3dd8d",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Протечки с кровли и проблемы с водостоком МКД",
+      "family": "renovation",
+      "sceneKind": "construction",
+      "icon": "paint-roller",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:96c9afa1886bef37",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Санитарная обработка прочих мест",
+      "family": "housing",
+      "sceneKind": "social",
+      "icon": "building-2",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:95b4a04d80f3fb78",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Строительство объектов водоснабжения и водоотведения (в т.ч. подключение)",
+      "family": "water",
+      "sceneKind": "utility_repair",
+      "icon": "droplets",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:80a8ce938be44dc1",
+      "source": "complaints",
+      "group": "ЖКХ",
+      "topic": "Уборка снега и наледи с крыш",
+      "family": "snow",
+      "sceneKind": "snow_ice",
+      "icon": "snowflake",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:1a580e469e51f281",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Больничный лист и справка о болезни",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:a85ab09eadd5bc50",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Вакцинация",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:b745c10d89445756",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Врачебные комиссии (МСЭ, медосвидетельствование)",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:bda327efc81ca0a6",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Госуслуги и региональные порталы в сфере здравоохранения",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:87f8804292700c1e",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Диспансеризация",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:839e1f6fbe3f4c8e",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Донорство",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:1d375ee4d4aefba0",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Закрытие медицинских учреждений",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:b31f9d3dd3591fbc",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Запрос на оказание специализированной медицинской помощи",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:14c4b7a14914e31e",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Зарплата и выплаты медработникам",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:34bcb11e360aff75",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Здравоохранение прочее",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:a1e5f5ead0777d18",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Льготные лекарства",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:f44a5a02713ca3f9",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Молочная кухня",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:fb67331d601ca030",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Некачественное оказание медпомощи (в т.ч. отказ)",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:4cfe5e78469caea4",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Нехватка лекарств и расходных материалов в аптеках",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:374f7db08f43ad1c",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Нехватка медработников (в т.ч. узкопрофильных)",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:843badee48c3d6f1",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Нехватка оборудования в учреждениях здравоохранения",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:4f7ebca6fda1f37a",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Оказание медицинской помощи не в полном объеме или отказ в оказании медицинской помощи",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:afc2962e5022b4cf",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Отсутствие аптек",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:06d3c607d8087600",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Отсутствие лекарств в учреждениях здравоохранения",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:0968bd859d4bc77a",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Очередь в учреждениях здравоохранения",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:9dbb399014ca17d5",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Работа регистратуры и терминалов в сфере здравоохранения",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:652e1c67ff96a00d",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Ремонт и содержание медицинских учреждений",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:d8537e64c9aa34a4",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Скорая помощь",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:4908ec74fee4b04c",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Социальная поддержка медработников (в т.ч. молодых специалистов)",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:1d0f85f91ed62a73",
+      "source": "complaints",
+      "group": "Здравоохранение",
+      "topic": "Строительство медицинских учреждений",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:7201a0663eb10623",
+      "source": "complaints",
+      "group": "Имущественные и земельные отношения",
+      "topic": "Выделение земельных участков",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:d01359479a58d684",
+      "source": "complaints",
+      "group": "Имущественные и земельные отношения",
+      "topic": "Государственное и муниципальное имущество",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:1dc2f783b4f33ee4",
+      "source": "complaints",
+      "group": "Имущественные и земельные отношения",
+      "topic": "Предоставление земельных участков многодетным семьям",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:853c48719890853c",
+      "source": "complaints",
+      "group": "Культура",
+      "topic": "Библиотеки",
+      "family": "culture",
+      "sceneKind": "culture",
+      "icon": "drama",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:e99f1195fd9b0945",
+      "source": "complaints",
+      "group": "Культура",
+      "topic": "Культура прочее",
+      "family": "culture",
+      "sceneKind": "culture",
+      "icon": "drama",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:7610c323ea16d706",
+      "source": "complaints",
+      "group": "Культура",
+      "topic": "Культурно-досуговые мероприятия",
+      "family": "culture",
+      "sceneKind": "culture",
+      "icon": "drama",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:512b6093bf09d816",
+      "source": "complaints",
+      "group": "Культура",
+      "topic": "Содержание памятников и объектов культурного наследия",
+      "family": "culture",
+      "sceneKind": "culture",
+      "icon": "drama",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:7b352f6d560cd1b4",
+      "source": "complaints",
+      "group": "Культура",
+      "topic": "Строительство и содержание учреждений культуры",
+      "family": "culture",
+      "sceneKind": "culture",
+      "icon": "drama",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:22e6fe07937367ee",
+      "source": "complaints",
+      "group": "Межнациональные отношения",
+      "topic": "Организация национальных культурно-досуговых мероприятий",
+      "family": "social",
+      "sceneKind": "social",
+      "icon": "hand-heart",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:66770a0179fc17be",
+      "source": "complaints",
+      "group": "Молодежная политика",
+      "topic": "Молодежная политика прочее",
+      "family": "social",
+      "sceneKind": "social",
+      "icon": "hand-heart",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:5b5548c38bef6caf",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "Безопасность образовательного процесса",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:b88598ac59041721",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "Детский отдых",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:f51d8eb352fd84c7",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "Дополнительное образование (кружки, секции)",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:8c57ea4364bf0f92",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "ЕГЭ, ОГЭ, промежуточная аттестация (в т.ч. ВПР)",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:3ff09049c546f558",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "Зарплата учителей, воспитателей и преподавателей",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:de1d400469050806",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "Некорректное поведение работников образовательных учреждений",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:5f145ddfb5110bc1",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "Образование прочее",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:ed09c59382a8e4b6",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "Образовательные программы",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:f5d9701f4ef28806",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "Общежития для студентов",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:7ffbd5271f139444",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "Питание в образовательных учреждениях",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:1e9863d465ad0a76",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "Поступление в ДОУ, нехватка мест",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:e437880c6fe6bc60",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "Поступление в СОШ, нехватка мест",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:1a8a2eaea2c03a53",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "Поступление в вуз и ссуз, нехватка бюджетных мест",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:70835deaf73c10ee",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "Сборы средств, коррупция в образовательных учреждениях",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:ce24d8b364f42c67",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "Содержание и ремонт образовательных организаций",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:1fb2569e2d722272",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "Социальная поддержка работников образования",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:e666954a8de6377c",
+      "source": "complaints",
+      "group": "Образование",
+      "topic": "Строительство школ, детских садов",
+      "family": "construction",
+      "sceneKind": "construction",
+      "icon": "construction",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:2f28f2678531435e",
+      "source": "complaints",
+      "group": "Обращение с отходами",
+      "topic": "Мусорные полигоны, мусоросжигательные и мусороперерабатывающие заводы (в т.ч. строительство и закрытие)",
+      "family": "waste",
+      "sceneKind": "waste",
+      "icon": "trash-2",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:2d502f1c678af7e2",
+      "source": "complaints",
+      "group": "Обращение с отходами",
+      "topic": "Нарушение при обращении с отходами (слив ЖБО, сброс мусора и др.)",
+      "family": "waste",
+      "sceneKind": "waste",
+      "icon": "trash-2",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:84cc2b959d17a5c8",
+      "source": "complaints",
+      "group": "Обращение с отходами",
+      "topic": "Обращение с отходами прочее",
+      "family": "waste",
+      "sceneKind": "waste",
+      "icon": "trash-2",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:d44b427684a0188d",
+      "source": "complaints",
+      "group": "Обращение с отходами",
+      "topic": "Плата за вывоз ТКО",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:1fd6d3c8f0ed2a6d",
+      "source": "complaints",
+      "group": "Обращение с отходами",
+      "topic": "Раздельная сортировка отходов",
+      "family": "waste",
+      "sceneKind": "waste",
+      "icon": "trash-2",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:dbd5f71be4eefb57",
+      "source": "complaints",
+      "group": "Обращение с отходами",
+      "topic": "Содержание, строительство или отсутствие контейнерных площадок (в т.ч. контейнеров)",
+      "family": "waste",
+      "sceneKind": "waste",
+      "icon": "trash-2",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:17a4b59bd3b7064a",
+      "source": "complaints",
+      "group": "Общественный транспорт",
+      "topic": "Автостанции, автовокзалы",
+      "family": "transit",
+      "sceneKind": "place_event",
+      "icon": "bus-front",
+      "geometry": [
+        "building",
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:51d8f88c9a89191e",
+      "source": "complaints",
+      "group": "Общественный транспорт",
+      "topic": "Водный транспорт (в т.ч. переправа)",
+      "family": "transit",
+      "sceneKind": "place_event",
+      "icon": "bus-front",
+      "geometry": [
+        "building",
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:d4cd8a26f0f0448d",
+      "source": "complaints",
+      "group": "Общественный транспорт",
+      "topic": "График движения общественного транспорта",
+      "family": "transit",
+      "sceneKind": "place_event",
+      "icon": "bus-front",
+      "geometry": [
+        "building",
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:e3ab34c863eafbbf",
+      "source": "complaints",
+      "group": "Общественный транспорт",
+      "topic": "Деятельность такси",
+      "family": "transit",
+      "sceneKind": "place_event",
+      "icon": "bus-front",
+      "geometry": [
+        "building",
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:9c33ad3542a16848",
+      "source": "complaints",
+      "group": "Общественный транспорт",
+      "topic": "Изменение класса и количества подвижного состава на маршрутах общественного транспорта",
+      "family": "transit",
+      "sceneKind": "place_event",
+      "icon": "bus-front",
+      "geometry": [
+        "building",
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:d345ffdb3b603446",
+      "source": "complaints",
+      "group": "Общественный транспорт",
+      "topic": "Изменение, отмена или добавление маршрутов общественного транспорта",
+      "family": "transit",
+      "sceneKind": "place_event",
+      "icon": "bus-front",
+      "geometry": [
+        "building",
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:4ad1a7faa0651360",
+      "source": "complaints",
+      "group": "Общественный транспорт",
+      "topic": "Льготы на проезд и проездные документы (в т.ч. социальные карты) в общественном транспорте",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:b64f422bb4356b01",
+      "source": "complaints",
+      "group": "Общественный транспорт",
+      "topic": "Некорректное поведение и нарушение ПДД водительским составом",
+      "family": "transit",
+      "sceneKind": "place_event",
+      "icon": "bus-front",
+      "geometry": [
+        "building",
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:ae3882f37132a2aa",
+      "source": "complaints",
+      "group": "Общественный транспорт",
+      "topic": "Общественный транспорт прочее",
+      "family": "transit",
+      "sceneKind": "place_event",
+      "icon": "bus-front",
+      "geometry": [
+        "building",
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:ef057cfb7d6a80d5",
+      "source": "complaints",
+      "group": "Общественный транспорт",
+      "topic": "Оплата проезда в общественном транспорте (в т.ч. рост стоимости)",
+      "family": "transit",
+      "sceneKind": "place_event",
+      "icon": "bus-front",
+      "geometry": [
+        "building",
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:000506503a3cea6b",
+      "source": "complaints",
+      "group": "Общественный транспорт",
+      "topic": "Отсутствие или содержание остановочных пунктов",
+      "family": "transit",
+      "sceneKind": "place_event",
+      "icon": "bus-front",
+      "geometry": [
+        "building",
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:8fbc8364f7d659d7",
+      "source": "complaints",
+      "group": "Общественный транспорт",
+      "topic": "Пешеходные переходы, ж/д и трамвайные переезды",
+      "family": "transit",
+      "sceneKind": "place_event",
+      "icon": "bus-front",
+      "geometry": [
+        "building",
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:21a2464ca4b7a51a",
+      "source": "complaints",
+      "group": "Общественный транспорт",
+      "topic": "Содержание подвижного состава (уборка, техническое состояние)",
+      "family": "transit",
+      "sceneKind": "place_event",
+      "icon": "bus-front",
+      "geometry": [
+        "building",
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:6ecf9d2edc4c6d62",
+      "source": "complaints",
+      "group": "Общественный транспорт",
+      "topic": "Средства индивидуальной мобильности (самокаты, гироскутеры и т.д.)",
+      "family": "transit",
+      "sceneKind": "place_event",
+      "icon": "bus-front",
+      "geometry": [
+        "building",
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:2d9d25774c5cdb71",
+      "source": "complaints",
+      "group": "Общественный транспорт",
+      "topic": "Транспортная карта (за исключением социальных карт)",
+      "family": "transit",
+      "sceneKind": "place_event",
+      "icon": "bus-front",
+      "geometry": [
+        "building",
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:8f6ad5fd865fd941",
+      "source": "complaints",
+      "group": "Органы власти и подведомственные учреждения",
+      "topic": "Архивное дело",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:782f747d024f114d",
+      "source": "complaints",
+      "group": "Органы власти и подведомственные учреждения",
+      "topic": "Запись на прием к должностному лицу",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:5b8b353a701d6b81",
+      "source": "complaints",
+      "group": "Органы власти и подведомственные учреждения",
+      "topic": "Органы власти и подведомственные учреждения прочее",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:2e42a28dbe518162",
+      "source": "complaints",
+      "group": "Органы власти и подведомственные учреждения",
+      "topic": "Предоставление государственных и муниципальных услуг",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:1a5590cf2d3c6c4f",
+      "source": "complaints",
+      "group": "Органы власти и подведомственные учреждения",
+      "topic": "Публичные слушания, общественные обсуждения",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:eb6cd1b95348d181",
+      "source": "complaints",
+      "group": "Органы власти и подведомственные учреждения",
+      "topic": "Средства массовой информации",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:e092e04bb669507a",
+      "source": "complaints",
+      "group": "Связь и телевидение",
+      "topic": "Отсутствие или неудовлетворительное качество интернета (в т.ч. мобильного)",
+      "family": "communication",
+      "sceneKind": "utilities",
+      "icon": "wifi",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:16b520a1d9a69b64",
+      "source": "complaints",
+      "group": "Связь и телевидение",
+      "topic": "Отсутствие или неудовлетворительное качество связи (в т.ч. мобильной)",
+      "family": "communication",
+      "sceneKind": "utilities",
+      "icon": "wifi",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:3fb98dc36fec6758",
+      "source": "complaints",
+      "group": "Связь и телевидение",
+      "topic": "Отсутствие или неудовлетворительное качество телевещания (в т.ч. аналогового, спутникового)",
+      "family": "communication",
+      "sceneKind": "utilities",
+      "icon": "wifi",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:09dfd2ebfabe8323",
+      "source": "complaints",
+      "group": "Связь и телевидение",
+      "topic": "Почтовая связь (в т.ч. работа отделений, доставка)",
+      "family": "communication",
+      "sceneKind": "utilities",
+      "icon": "wifi",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:571f8903e3ecf399",
+      "source": "complaints",
+      "group": "Связь и телевидение",
+      "topic": "Связь и телевидение прочее",
+      "family": "communication",
+      "sceneKind": "utilities",
+      "icon": "wifi",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:7e38c8de405ac6b1",
+      "source": "complaints",
+      "group": "Сельское хозяйство и охота",
+      "topic": "Выпас сельскохозяйственных животных",
+      "family": "agriculture",
+      "sceneKind": "investment",
+      "icon": "wheat",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:a7d597fc123d85e1",
+      "source": "complaints",
+      "group": "Сельское хозяйство и охота",
+      "topic": "Лицензия на охоту и рыболовство",
+      "family": "agriculture",
+      "sceneKind": "investment",
+      "icon": "wheat",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:d4c2073f2c938f41",
+      "source": "complaints",
+      "group": "Социальное обслуживание и защита",
+      "topic": "Гуманитарная помощь",
+      "family": "social",
+      "sceneKind": "social",
+      "icon": "hand-heart",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:6bfd0a6b571b826c",
+      "source": "complaints",
+      "group": "Социальное обслуживание и защита",
+      "topic": "Единое пособие на детей (задержка выплаты, отказ, оформление)",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:17b725518d7452a0",
+      "source": "complaints",
+      "group": "Социальное обслуживание и защита",
+      "topic": "Жилищные субсидии, социальный найм жилья",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:2c649fca3763c099",
+      "source": "complaints",
+      "group": "Социальное обслуживание и защита",
+      "topic": "Качество обслуживания в социальных учреждениях (в т.ч. очереди, хамство сотрудников)",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:6474364ea89736f0",
+      "source": "complaints",
+      "group": "Социальное обслуживание и защита",
+      "topic": "Материнский капитал",
+      "family": "social",
+      "sceneKind": "social",
+      "icon": "hand-heart",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:7ecf789ca850a4e6",
+      "source": "complaints",
+      "group": "Социальное обслуживание и защита",
+      "topic": "Поддержка инвалидов и детей с ОВЗ (запрос помощи, задержка выплат, отказ и т.д.)",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:953d0d36b87bf0cf",
+      "source": "complaints",
+      "group": "Социальное обслуживание и защита",
+      "topic": "Поддержка иных категорий граждан (запрос помощи, задержка выплат, отказ и т.д.)",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:e90ebdbd7c2ae0c7",
+      "source": "complaints",
+      "group": "Социальное обслуживание и защита",
+      "topic": "Поддержка пенсионеров и ветеранов труда (запрос помощи, задержка выплат, отказ и т.д.)",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:e8cfacf92e840999",
+      "source": "complaints",
+      "group": "Социальное обслуживание и защита",
+      "topic": "Поддержка сирот (запрос помощи, предоставление жилья, отказ и т.д.)",
+      "family": "social",
+      "sceneKind": "social",
+      "icon": "hand-heart",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:d64b3f81ec5c2b2c",
+      "source": "complaints",
+      "group": "Социальное обслуживание и защита",
+      "topic": "Создание доступной среды для маломобильных групп граждан",
+      "family": "social",
+      "sceneKind": "social",
+      "icon": "hand-heart",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:06e088899e7592c3",
+      "source": "complaints",
+      "group": "Социальное обслуживание и защита",
+      "topic": "Социальное обслуживание и защита прочее",
+      "family": "social",
+      "sceneKind": "social",
+      "icon": "hand-heart",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:b6f54fa348d4e36d",
+      "source": "complaints",
+      "group": "Строительство и архитектура",
+      "topic": "Архитектурное планирование города (в т.ч. генеральный план, точечная застройка)",
+      "family": "construction",
+      "sceneKind": "construction",
+      "icon": "construction",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:062b2b08ce1adfa8",
+      "source": "complaints",
+      "group": "Строительство и архитектура",
+      "topic": "Дольщики",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:3935cd9333ae67fd",
+      "source": "complaints",
+      "group": "Строительство и архитектура",
+      "topic": "Заброшенные здания",
+      "family": "construction",
+      "sceneKind": "construction",
+      "icon": "construction",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:a3f10f62f4e602ae",
+      "source": "complaints",
+      "group": "Строительство и архитектура",
+      "topic": "Льготная ипотека",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:8f8b3c81fee03f4f",
+      "source": "complaints",
+      "group": "Строительство и архитектура",
+      "topic": "Несанкционированные постройки",
+      "family": "construction",
+      "sceneKind": "construction",
+      "icon": "construction",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:fda6c07591b1c7a0",
+      "source": "complaints",
+      "group": "Строительство и архитектура",
+      "topic": "Строительный надзор",
+      "family": "construction",
+      "sceneKind": "construction",
+      "icon": "construction",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:117d25b0e09c3643",
+      "source": "complaints",
+      "group": "Строительство и архитектура",
+      "topic": "Строительство и архитектура прочее",
+      "family": "construction",
+      "sceneKind": "construction",
+      "icon": "construction",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:9187c3eb728cd430",
+      "source": "complaints",
+      "group": "Труд и занятость",
+      "topic": "Жалобы на работодателя",
+      "family": "employment",
+      "sceneKind": "social",
+      "icon": "briefcase-business",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:f701530696dbbb62",
+      "source": "complaints",
+      "group": "Труд и занятость",
+      "topic": "Задержка или невыплата заработной платы",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:dcbbf262f8e0a71a",
+      "source": "complaints",
+      "group": "Труд и занятость",
+      "topic": "Социальный контракт",
+      "family": "employment",
+      "sceneKind": "social",
+      "icon": "briefcase-business",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:12e019fb7dd15bea",
+      "source": "complaints",
+      "group": "Труд и занятость",
+      "topic": "Труд и занятость прочее",
+      "family": "employment",
+      "sceneKind": "social",
+      "icon": "briefcase-business",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:21d37b7e9c5f6486",
+      "source": "complaints",
+      "group": "Труд и занятость",
+      "topic": "Трудоустройство незащищенных категорий граждан",
+      "family": "employment",
+      "sceneKind": "social",
+      "icon": "briefcase-business",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:9cff548d0072bcae",
+      "source": "complaints",
+      "group": "Труд и занятость",
+      "topic": "Трудоустройство несовершеннолетних и выпускников",
+      "family": "employment",
+      "sceneKind": "social",
+      "icon": "briefcase-business",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:338a8bd91bde08b5",
+      "source": "complaints",
+      "group": "Туризм",
+      "topic": "Туризм прочее",
+      "family": "tourism",
+      "sceneKind": "culture",
+      "icon": "map-pinned",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:7533f079af997a20",
+      "source": "complaints",
+      "group": "Физическая культура и спорт",
+      "topic": "Содержание и ремонт спортивных учреждений и объектов",
+      "family": "sport",
+      "sceneKind": "culture",
+      "icon": "dumbbell",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:9363363040d3310c",
+      "source": "complaints",
+      "group": "Физическая культура и спорт",
+      "topic": "Спортивные мероприятия",
+      "family": "sport",
+      "sceneKind": "culture",
+      "icon": "dumbbell",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:8037ae0ed4aff807",
+      "source": "complaints",
+      "group": "Физическая культура и спорт",
+      "topic": "Спортивные секции",
+      "family": "sport",
+      "sceneKind": "culture",
+      "icon": "dumbbell",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:0ed7573e446781f2",
+      "source": "complaints",
+      "group": "Физическая культура и спорт",
+      "topic": "Строительство спортивных учреждений и объектов",
+      "family": "construction",
+      "sceneKind": "construction",
+      "icon": "construction",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:9e328dba37e730b3",
+      "source": "complaints",
+      "group": "Физическая культура и спорт",
+      "topic": "Физическая культура и спорт прочее",
+      "family": "sport",
+      "sceneKind": "culture",
+      "icon": "dumbbell",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:8dfd93042a97b288",
+      "source": "complaints",
+      "group": "ЦУР",
+      "topic": "Вакансии, стажировки в ЦУР",
+      "family": "services",
+      "sceneKind": "generic",
+      "icon": "landmark",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:f6ffa1c3d2cef42e",
+      "source": "complaints",
+      "group": "Экология",
+      "topic": "Выбросы вредных веществ в атмосферу (загрязнение воздуха)",
+      "family": "ecology",
+      "sceneKind": "generic",
+      "icon": "sprout",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:458b569085d9f194",
+      "source": "complaints",
+      "group": "Экология",
+      "topic": "Вырубка лесов",
+      "family": "trees",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:952f4225f415e38a",
+      "source": "complaints",
+      "group": "Экология",
+      "topic": "Гибель животных (в т.ч. птиц, рыб)",
+      "family": "ecology",
+      "sceneKind": "generic",
+      "icon": "sprout",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:3c73cd8a78ff9923",
+      "source": "complaints",
+      "group": "Экология",
+      "topic": "Загрязнение водных объектов и нарушение водоохранных зон",
+      "family": "ecology",
+      "sceneKind": "generic",
+      "icon": "sprout",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:8a070221b9c1c337",
+      "source": "complaints",
+      "group": "Экология",
+      "topic": "Загрязнение почв",
+      "family": "ecology",
+      "sceneKind": "generic",
+      "icon": "sprout",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:8c7482bf2a2a0a86",
+      "source": "complaints",
+      "group": "Экология",
+      "topic": "Содержание лесополосы",
+      "family": "ecology",
+      "sceneKind": "generic",
+      "icon": "sprout",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:7da2d831f3ebf9ed",
+      "source": "complaints",
+      "group": "Экология",
+      "topic": "Экология прочее",
+      "family": "ecology",
+      "sceneKind": "generic",
+      "icon": "sprout",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:ce3684f19a61c852",
+      "source": "complaints",
+      "group": "Экономика и бизнес",
+      "topic": "Отсутствие наличных в банкоматах",
+      "family": "banking",
+      "sceneKind": "place_event",
+      "icon": "landmark",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:ea256053c32da5b6",
+      "source": "complaints",
+      "group": "Экономика и бизнес",
+      "topic": "Продажа алкоголя и табака (несовершеннолетним, вблизи соцобъектов, в ночное время)",
+      "family": "economy",
+      "sceneKind": "investment",
+      "icon": "store",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:8f1efc75415f353d",
+      "source": "complaints",
+      "group": "Экономика и бизнес",
+      "topic": "Производство и промышленность",
+      "family": "economy",
+      "sceneKind": "investment",
+      "icon": "store",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:9b33704213c6b0db",
+      "source": "complaints",
+      "group": "Экономика и бизнес",
+      "topic": "Стационарная торговля (торговые центры, торговые комплексы, магазины)",
+      "family": "economy",
+      "sceneKind": "investment",
+      "icon": "store",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:b999f60bda505295",
+      "source": "complaints",
+      "group": "Экономика и бизнес",
+      "topic": "Стихийная и нестационарная торговля (киоски, павильоны, сезонная торговля)",
+      "family": "economy",
+      "sceneKind": "investment",
+      "icon": "store",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:79af5a74c27694c1",
+      "source": "complaints",
+      "group": "Экономика и бизнес",
+      "topic": "Цены и ценообразование",
+      "family": "economy",
+      "sceneKind": "investment",
+      "icon": "store",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:ea43c672d5421235",
+      "source": "complaints",
+      "group": "Экономика и бизнес",
+      "topic": "Экономика и бизнес прочее",
+      "family": "economy",
+      "sceneKind": "investment",
+      "icon": "store",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:345d177f17b7b8c2",
+      "source": "complaints",
+      "group": "Энергетика",
+      "topic": "Жалоба на газовую компанию (по вопросам газификации)",
+      "family": "gas",
+      "sceneKind": "utility_repair",
+      "icon": "flame",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:9f1bdd7f9269a7eb",
+      "source": "complaints",
+      "group": "Энергетика",
+      "topic": "Запрос на газификацию и её условия",
+      "family": "gas",
+      "sceneKind": "utility_repair",
+      "icon": "flame",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:1d9abbd0b6267e59",
+      "source": "complaints",
+      "group": "Энергетика",
+      "topic": "Запрос на подключение к системам электроснабжения и его условия",
+      "family": "electricity",
+      "sceneKind": "utility_repair",
+      "icon": "zap",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:62b48a2344079068",
+      "source": "complaints",
+      "group": "Энергетика",
+      "topic": "Нехватка топлива",
+      "family": "electricity",
+      "sceneKind": "utility_repair",
+      "icon": "zap",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:9378280ccd227141",
+      "source": "complaints",
+      "group": "Энергетика",
+      "topic": "Низкое качество электроснабжения, плохое состояние электросетевого хозяйства",
+      "family": "electricity",
+      "sceneKind": "utility_repair",
+      "icon": "zap",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:57bbc1751ddcb27f",
+      "source": "complaints",
+      "group": "Энергетика",
+      "topic": "Отключение газоснабжения, аварийная ситуация",
+      "family": "gas",
+      "sceneKind": "utility_repair",
+      "icon": "flame",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:a01ff1213b8ecdd6",
+      "source": "complaints",
+      "group": "Энергетика",
+      "topic": "Отключение электричества, аварии на подстанциях, ЛЭП",
+      "family": "electricity",
+      "sceneKind": "utility_repair",
+      "icon": "zap",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:5cbafd9d04f1392e",
+      "source": "complaints",
+      "group": "Энергетика",
+      "topic": "Приобретение и доставка твердого топлива (уголь, топливные брикеты и пр.)",
+      "family": "electricity",
+      "sceneKind": "utility_repair",
+      "icon": "zap",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "complaints:18eaeef4ba53c3db",
+      "source": "complaints",
+      "group": "Энергетика",
+      "topic": "Рост цен на топливо",
+      "family": "electricity",
+      "sceneKind": "utility_repair",
+      "icon": "zap",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:4fad25f013aa4a6f",
+      "source": "news",
+      "group": "Строительство",
+      "topic": "Подготовка площадки",
+      "family": "construction",
+      "sceneKind": "construction",
+      "icon": "construction",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:f9ddbdcb4ddd0a6f",
+      "source": "news",
+      "group": "Строительство",
+      "topic": "Котлован",
+      "family": "construction",
+      "sceneKind": "construction",
+      "icon": "construction",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:e1d9c744474a419f",
+      "source": "news",
+      "group": "Строительство",
+      "topic": "Фундамент",
+      "family": "construction",
+      "sceneKind": "construction",
+      "icon": "construction",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:1f7c3b8f14555d99",
+      "source": "news",
+      "group": "Строительство",
+      "topic": "Возведение каркаса",
+      "family": "construction",
+      "sceneKind": "construction",
+      "icon": "construction",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:e77dfa521f6b2364",
+      "source": "news",
+      "group": "Строительство",
+      "topic": "Монтаж перекрытий",
+      "family": "construction",
+      "sceneKind": "construction",
+      "icon": "construction",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:0d0107df756de4cd",
+      "source": "news",
+      "group": "Строительство",
+      "topic": "Доставка материалов",
+      "family": "construction",
+      "sceneKind": "construction",
+      "icon": "construction",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:ad786e82c8f80cf3",
+      "source": "news",
+      "group": "Строительство",
+      "topic": "Отделка",
+      "family": "construction",
+      "sceneKind": "construction",
+      "icon": "construction",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:68b28b1e916ea098",
+      "source": "news",
+      "group": "Строительство",
+      "topic": "Ввод объекта",
+      "family": "construction",
+      "sceneKind": "construction",
+      "icon": "construction",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:ea1456feb0e61044",
+      "source": "news",
+      "group": "Ремонт здания",
+      "topic": "Ремонт фасада",
+      "family": "renovation",
+      "sceneKind": "construction",
+      "icon": "paint-roller",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:7dce9ecf9939e71e",
+      "source": "news",
+      "group": "Ремонт здания",
+      "topic": "Ремонт кровли",
+      "family": "renovation",
+      "sceneKind": "construction",
+      "icon": "paint-roller",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:287ca5eb509b88d8",
+      "source": "news",
+      "group": "Ремонт здания",
+      "topic": "Ремонт входной группы",
+      "family": "renovation",
+      "sceneKind": "construction",
+      "icon": "paint-roller",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:0956d0024ae866e4",
+      "source": "news",
+      "group": "Ремонт здания",
+      "topic": "Временное закрытие здания",
+      "family": "renovation",
+      "sceneKind": "construction",
+      "icon": "paint-roller",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:d11ea78c5268f27f",
+      "source": "news",
+      "group": "Дороги и тротуары",
+      "topic": "Фрезерование покрытия",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:774810321de4131f",
+      "source": "news",
+      "group": "Дороги и тротуары",
+      "topic": "Укладка асфальта",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:508a4aad35d609f3",
+      "source": "news",
+      "group": "Дороги и тротуары",
+      "topic": "Уплотнение катком",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:12c880ccd0a4340f",
+      "source": "news",
+      "group": "Дороги и тротуары",
+      "topic": "Нанесение разметки",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:1a8ab37947397665",
+      "source": "news",
+      "group": "Дороги и тротуары",
+      "topic": "Ремонт бордюров",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:d54ce451e215e9d4",
+      "source": "news",
+      "group": "Дороги и тротуары",
+      "topic": "Ремонт ливневой канализации",
+      "family": "roads",
+      "sceneKind": "road_repair",
+      "icon": "traffic-cone",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:e54ab8399e2ef719",
+      "source": "news",
+      "group": "Мосты",
+      "topic": "Ремонт пролёта",
+      "family": "bridge",
+      "sceneKind": "road_repair",
+      "icon": "construction",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:971851f73766eb18",
+      "source": "news",
+      "group": "Мосты",
+      "topic": "Восстановление движения по мосту",
+      "family": "bridge",
+      "sceneKind": "road_repair",
+      "icon": "construction",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:5171be12c68eea49",
+      "source": "news",
+      "group": "Ограничения движения",
+      "topic": "Закрытие проезда",
+      "family": "traffic",
+      "sceneKind": "place_event",
+      "icon": "signpost",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:dc58f5d13a8302bc",
+      "source": "news",
+      "group": "Ограничения движения",
+      "topic": "Подтверждённый объезд",
+      "family": "traffic",
+      "sceneKind": "place_event",
+      "icon": "signpost",
+      "geometry": [
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:9f062854fc4e36c4",
+      "source": "news",
+      "group": "Вода и канализация",
+      "topic": "Прорыв сети",
+      "family": "water",
+      "sceneKind": "utility_repair",
+      "icon": "droplets",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:4e352f9d8064792a",
+      "source": "news",
+      "group": "Вода и канализация",
+      "topic": "Откачка воды",
+      "family": "water",
+      "sceneKind": "utility_repair",
+      "icon": "droplets",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:17cfcf801daffd14",
+      "source": "news",
+      "group": "Вода и канализация",
+      "topic": "Восстановление водоснабжения",
+      "family": "water",
+      "sceneKind": "utility_repair",
+      "icon": "droplets",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:0b58bb0c1355c292",
+      "source": "news",
+      "group": "Теплоснабжение",
+      "topic": "Ремонт теплового пункта",
+      "family": "heating",
+      "sceneKind": "utility_repair",
+      "icon": "heater",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:72bedc9d050e0b8b",
+      "source": "news",
+      "group": "Электроснабжение",
+      "topic": "Ремонт подстанции",
+      "family": "electricity",
+      "sceneKind": "utility_repair",
+      "icon": "zap",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:4336d9e86f8c5e13",
+      "source": "news",
+      "group": "Газоснабжение",
+      "topic": "Восстановление подачи газа",
+      "family": "gas",
+      "sceneKind": "utility_repair",
+      "icon": "flame",
+      "geometry": [
+        "building",
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:a2b15359992d7230",
+      "source": "news",
+      "group": "Отходы",
+      "topic": "Вывоз отходов",
+      "family": "waste",
+      "sceneKind": "waste",
+      "icon": "trash-2",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:166a4cd9f6c93298",
+      "source": "news",
+      "group": "Отходы",
+      "topic": "Установка контейнеров",
+      "family": "waste",
+      "sceneKind": "waste",
+      "icon": "trash-2",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:473249c02511b259",
+      "source": "news",
+      "group": "Благоустройство",
+      "topic": "Открытие парка",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:5338463e372dfac2",
+      "source": "news",
+      "group": "Благоустройство",
+      "topic": "Ремонт детской площадки",
+      "family": "landscape",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:0531166e68e92c2e",
+      "source": "news",
+      "group": "Деревья и озеленение",
+      "topic": "Посадка деревьев",
+      "family": "trees",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:f8d1999260f5d190",
+      "source": "news",
+      "group": "Деревья и озеленение",
+      "topic": "Расчистка упавших деревьев",
+      "family": "trees",
+      "sceneKind": "landscaping",
+      "icon": "trees",
+      "geometry": [
+        "site",
+        "street"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:93ce7b873828309d",
+      "source": "news",
+      "group": "Экология",
+      "topic": "Очистка водоёма",
+      "family": "ecology",
+      "sceneKind": "generic",
+      "icon": "sprout",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:038ff1736be97941",
+      "source": "news",
+      "group": "Экология",
+      "topic": "Загрязнение воздуха",
+      "family": "ecology",
+      "sceneKind": "generic",
+      "icon": "sprout",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:eda056f15000f18c",
+      "source": "news",
+      "group": "Пожар",
+      "topic": "Возгорание объекта",
+      "family": "fire",
+      "sceneKind": "fire",
+      "icon": "flame",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:71b60f09cdf0c5e0",
+      "source": "news",
+      "group": "Подтопление",
+      "topic": "Подтопление территории",
+      "family": "flood",
+      "sceneKind": "flood",
+      "icon": "waves",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:309daaf718480110",
+      "source": "news",
+      "group": "Погода",
+      "topic": "Последствия сильного ветра",
+      "family": "weather",
+      "sceneKind": "emergency",
+      "icon": "cloud-lightning",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:ff76edc081510d66",
+      "source": "news",
+      "group": "Общественный транспорт",
+      "topic": "Изменение маршрута",
+      "family": "transit",
+      "sceneKind": "place_event",
+      "icon": "bus-front",
+      "geometry": [
+        "building",
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:062ff275d51960db",
+      "source": "news",
+      "group": "Общественный транспорт",
+      "topic": "Ремонт остановки",
+      "family": "transit",
+      "sceneKind": "place_event",
+      "icon": "bus-front",
+      "geometry": [
+        "building",
+        "street",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:29e80f7f7d59d54d",
+      "source": "news",
+      "group": "Медицина",
+      "topic": "Открытие медицинского учреждения",
+      "family": "health",
+      "sceneKind": "social",
+      "icon": "heart-pulse",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:41e736b141a8cbe5",
+      "source": "news",
+      "group": "Образование",
+      "topic": "Открытие школы",
+      "family": "education",
+      "sceneKind": "social",
+      "icon": "graduation-cap",
+      "geometry": [
+        "building"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:d18f637cde6ac9b9",
+      "source": "news",
+      "group": "Культура",
+      "topic": "Открытие культурного центра",
+      "family": "culture",
+      "sceneKind": "culture",
+      "icon": "drama",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:c3bf57d20eedab2d",
+      "source": "news",
+      "group": "Культура",
+      "topic": "Мероприятие",
+      "family": "culture",
+      "sceneKind": "culture",
+      "icon": "drama",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:22d5947b46a42836",
+      "source": "news",
+      "group": "Спорт",
+      "topic": "Открытие спортивного объекта",
+      "family": "sport",
+      "sceneKind": "culture",
+      "icon": "dumbbell",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 24,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:b5acdbab0aec2f35",
+      "source": "news",
+      "group": "Экономика",
+      "topic": "Инвестиционный проект",
+      "family": "economy",
+      "sceneKind": "investment",
+      "icon": "store",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:eb619a0de7dc1d8f",
+      "source": "news",
+      "group": "Экономика",
+      "topic": "Расширение производства",
+      "family": "economy",
+      "sceneKind": "investment",
+      "icon": "store",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 720,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:8343b2ecf1c26546",
+      "source": "news",
+      "group": "Сельское хозяйство",
+      "topic": "Сезонные сельскохозяйственные работы",
+      "family": "agriculture",
+      "sceneKind": "investment",
+      "icon": "wheat",
+      "geometry": [
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:9a62c756fc9691b0",
+      "source": "news",
+      "group": "Связь",
+      "topic": "Подключение учреждения к связи",
+      "family": "communication",
+      "sceneKind": "utilities",
+      "icon": "wifi",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 6,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:294575d6d3f8f1dc",
+      "source": "news",
+      "group": "Банки и обслуживание",
+      "topic": "Открытие офиса",
+      "family": "banking",
+      "sceneKind": "place_event",
+      "icon": "landmark",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:7898399beac085a2",
+      "source": "news",
+      "group": "Банки и обслуживание",
+      "topic": "Перенос банкомата",
+      "family": "banking",
+      "sceneKind": "place_event",
+      "icon": "landmark",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    },
+    {
+      "id": "news:82fd5b9bb4e161bd",
+      "source": "news",
+      "group": "Банки и обслуживание",
+      "topic": "Ограничение обслуживания",
+      "family": "banking",
+      "sceneKind": "place_event",
+      "icon": "landmark",
+      "geometry": [
+        "building",
+        "site"
+      ],
+      "fallback": "territory_summary",
+      "near": "thematic_sign_and_confirmed_geometry",
+      "detail": "physical_if_supported_else_thematic_sign",
+      "activityTtlHours": 168,
+      "animation": "confirmed_activity_only",
+      "statePolicy": "evidence-v1"
+    }
+  ]
+}

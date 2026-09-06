@@ -1,0 +1,12 @@
+import type {Coordinates,Organization,Precision} from './types';
+export type LocationPoint={address:string;coordinates:Coordinates|null;precision:Precision;sourceUrl:string;coordinateSourceUrl?:string;identitySourceUrl?:string;checkedAt:string;confirmedByUser:boolean;note?:string;requiresMeetingConfirmation?:boolean};
+export type AddressCandidate=LocationPoint&{id:string;name:string;inn:string|null;addressKind:'legal'|'office';autoMatchEligible?:boolean;legalAddress?:string};
+export type OrganizationLocation={orgId:string;status:'verified'|'source_exact'|'candidate'|'unlocated';legalAddress:LocationPoint|null;office:LocationPoint|null;meeting:LocationPoint|null;candidates:AddressCandidate[];updatedAt:string|null;note:string};
+export type LocationInput={orgId:string;kind:'legal'|'office'|'meeting';address:string;coordinates:Coordinates|null;precision:Precision;sourceUrl?:string;confirmed:boolean};
+export type Opportunity={id:string;orgId:string;rule:'current_offers'|'payroll_growth'|'no_meetings';title:string;priority:'high'|'medium';facts:string[];hypothesis:string;products:string[];nextStep:string;sourceLabels:string[]};
+export type ManagerOption={id:string;name:string;role:string;sourceLabel:string;assignmentKnown:boolean};
+export type PlanInput={title:string;orgIds:string[];startAt:string;meetingMinutes:number;bufferMinutes:number;speedKmh:number;detourFactor:number;optimize:boolean;startCoordinates?:Coordinates|null;managerId?:string|null};
+export type PlanStop={orgId:string;name:string;coordinates:Coordinates;address:string;locationKind:'office'|'meeting';locationSource:string;arrivalAt:string;meetingEndsAt:string;travelMinutes:number;straightLineKm:number;estimatedDistanceKm:number;bufferMinutes:number;warnings:string[]};
+export type MeetingPlan={id:string;title:string;createdAt:string;timezone:'Europe/Moscow';startAt:string;endsAt:string;manager:ManagerOption|null;method:'straight-line-estimate'|'road';methodLabel:string;input:PlanInput;stops:PlanStop[];geometry:GeoJSON.LineString;totalDistanceKm:number;totalTravelMinutes:number;warnings:string[];routingSourceUrl?:string;routingCheckedAt?:string;routingError?:string};
+export type PlanningOrganization=Organization&{opportunities:Opportunity[];assignedManagers:ManagerOption[]};
+export type PlanningPayload={organizations:PlanningOrganization[];total:number;locatedOrganizations:PlanningOrganization[];managers:ManagerOption[];plans:MeetingPlan[];routing:{method:'straight-line-estimate';label:string};limits:string[]};

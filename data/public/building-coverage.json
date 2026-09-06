@@ -1,0 +1,65 @@
+{
+  "building": {
+    "count": 2332429,
+    "withKnownHeight": 597,
+    "withoutKnownHeight": 2331832,
+    "bboxCandidates": 4369792,
+    "release": "2026-08-19.0",
+    "datasets": {
+      "Microsoft ML Buildings": 1683994,
+      "OpenStreetMap": 648435
+    },
+    "licenses": {
+      "ODbL-1.0": 2332429
+    },
+    "selection": "intersects verified OSM Tatarstan polygon",
+    "withKnownFloorCount": 82346
+  },
+  "building_part": {
+    "count": 2702,
+    "withKnownHeight": 169,
+    "withoutKnownHeight": 2533,
+    "bboxCandidates": 5691,
+    "release": "2026-08-19.0",
+    "datasets": {
+      "OpenStreetMap": 2702
+    },
+    "licenses": {
+      "ODbL-1.0": 2702
+    },
+    "selection": "intersects verified OSM Tatarstan polygon",
+    "withKnownFloorCount": 2298
+  },
+  "pmtilesPath": "/data/tatarstan-buildings.pmtiles",
+  "bytes": 352835760,
+  "minZoom": 10,
+  "maxZoom": 15,
+  "layers": [
+    "building",
+    "building_part"
+  ],
+  "builtAt": "2026-09-04T10:29:24Z",
+  "heightPolicy": "Render source height, otherwise estimate floors × 3 m, otherwise render an 8 m schematic volume. Display estimates never overwrite source height.",
+  "renderingHeightPolicy": {
+    "priority": [
+      "source-height",
+      "source-floors-times-3",
+      "schematic-8m"
+    ],
+    "metresPerFloor": 3,
+    "fallbackMetres": 8,
+    "isFallbackMeasured": false,
+    "label": "Высота из источника; иначе оценка 3 м на этаж; без этажности — условный объём 8 м."
+  },
+  "lod": {
+    "minZoom": 10,
+    "detailMinZoom": 13,
+    "maxZoom": 15,
+    "detailTilesPreserved": true,
+    "lowZoomPolicy": "Source polygons simplified/quantized for distance. Smallest polygons may be omitted only at z10–12 to fit 512 KiB / 12000 feature budgets; no synthetic squares. Detailed z13–15 tiles are unchanged. Not new survey data.",
+    "maxLowTileBytes": 524288,
+    "maxLowTileFeatures": 12000
+  },
+  "lodBuiltAt": "2026-09-04T12:58:25.312424+00:00",
+  "archiveSha256": "ba327015def0730977aefc1adf9d2579c61cfe1a4e43c1a72e3be77817811f0c"
+}

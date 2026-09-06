@@ -1,0 +1,393 @@
+{
+  "attribution": "Авторские процедурные модели по публичным архитектурным источникам; пропорции приблизительны. Координаты: © OpenStreetMap contributors, ODbL.",
+  "coordinatesVerifiedAt": "2026-09-04",
+  "note": "Original architectural interpretations. Footprint coordinates verified; decorative proportions approximate. GLB is Y-up. Runtime procedural API is Z-up.",
+  "landmarks": [
+    {
+      "id": "qol-sharif",
+      "name": "Кул Шариф",
+      "subtitle": "Казанский Кремль",
+      "territoryId": "mo-92701000",
+      "coordinates": [
+        49.1051597,
+        55.79834865
+      ],
+      "rotation": 0,
+      "height": 56,
+      "modelKind": "QolSharif",
+      "sourceUrl": "https://www.openstreetmap.org/way/230132591",
+      "referenceUrl": "https://kazan-kremlin.ru/en/architectural-objects/mechet-kul-sharif",
+      "description": "Белый мрамор, бирюзовый купол и четыре главных минарета. Архитектурная доминанта Казанского Кремля."
+    },
+    {
+      "id": "suyumbike",
+      "name": "Башня Сююмбике",
+      "subtitle": "Семь ярусов истории",
+      "territoryId": "mo-92701000",
+      "coordinates": [
+        49.10518105,
+        55.80047585
+      ],
+      "rotation": 0.235,
+      "height": 59,
+      "modelKind": "SuyumbikeTower",
+      "sourceUrl": "https://www.openstreetmap.org/way/228963085",
+      "referenceUrl": "https://kazan-kremlin.ru/",
+      "description": "Ступенчатая кирпичная башня с арочным проездом, восьмигранными ярусами и высоким шатром."
+    },
+    {
+      "id": "spasskaya",
+      "name": "Спасская башня",
+      "subtitle": "Главные ворота Кремля",
+      "territoryId": "mo-92701000",
+      "coordinates": [
+        49.10807935,
+        55.79653445
+      ],
+      "rotation": 0,
+      "height": 49,
+      "modelKind": "SpasskayaTower",
+      "sourceUrl": "https://www.openstreetmap.org/relation/15958803",
+      "referenceUrl": "https://kazan-kremlin.ru/en/museums/muzej-spasskoj-bashni",
+      "description": "Белокаменная надвратная башня с часами, открытыми арками звонницы и золотой звездой."
+    },
+    {
+      "id": "farmers-palace",
+      "name": "Дворец земледельцев",
+      "subtitle": "Министерство сельского хозяйства",
+      "territoryId": "mo-92701000",
+      "coordinates": [
+        49.1119517,
+        55.800457
+      ],
+      "rotation": -2.356194490192345,
+      "height": 50,
+      "modelKind": "FarmersPalace",
+      "sourceUrl": "https://www.openstreetmap.org/way/90251771",
+      "referenceUrl": "https://go.kzn.ru/places/dvorec-zemledelcev",
+      "description": "Симметричные крылья, колоннады и зелёный купол. Бронзовое дерево в центральном портале стало символом дворца."
+    },
+    {
+      "id": "kazan-family-center",
+      "name": "Центр семьи «Казан»",
+      "subtitle": "Чаша на берегу Казанки",
+      "territoryId": "mo-92701000",
+      "coordinates": [
+        49.10824125,
+        55.8128093
+      ],
+      "rotation": 0,
+      "height": 32,
+      "modelKind": "KazanFamilyCenter",
+      "sourceUrl": "https://www.openstreetmap.org/way/222787130",
+      "referenceUrl": "https://centerkazan.ru/",
+      "description": "Монументальная чаша с бронзовыми рёбрами, поднятая над стеклянным основанием. На кровле расположена смотровая площадка."
+    },
+    {
+      "id": "innopolis-university",
+      "name": "Университет Иннополис",
+      "subtitle": "Образование и робототехника",
+      "territoryId": "mo-92620109",
+      "coordinates": [
+        48.74362155,
+        55.7536903
+      ],
+      "rotation": 0,
+      "height": 22,
+      "modelKind": "InnopolisUniversity",
+      "sourceUrl": "https://www.openstreetmap.org/way/308285819",
+      "referenceUrl": "https://kazanforum.ru/promekskursii/",
+      "description": "Современный учебный корпус с ломаным планом, стеклянными фасадами, белыми рамами и тёплыми ламелями."
+    },
+    {
+      "id": "popov-technopark",
+      "name": "Технопарк имени Попова",
+      "subtitle": "Технологический центр Иннополиса",
+      "territoryId": "mo-92620109",
+      "coordinates": [
+        48.75229995,
+        55.7519036
+      ],
+      "rotation": 0,
+      "height": 31,
+      "modelKind": "PopovTechnopark",
+      "sourceUrl": "https://www.openstreetmap.org/relation/3399852",
+      "referenceUrl": "https://innopolis.com/",
+      "description": "Кольцевой стеклянный корпус с семью этажами и внутренним двором — узнаваемый центр технологического города."
+    },
+    {
+      "id": "white-mosque-bolgar",
+      "name": "Белая мечеть",
+      "subtitle": "Болгар · Спасский район",
+      "territoryId": "mo-92632101",
+      "coordinates": [
+        49.0612657,
+        54.96613015
+      ],
+      "rotation": 2.961592653589793,
+      "height": 47,
+      "modelKind": "WhiteMosqueBolgar",
+      "sourceUrl": "https://www.openstreetmap.org/way/265653923",
+      "referenceUrl": "https://vbolgar.ru/",
+      "description": "Беломраморный ансамбль с двумя минаретами, тремя куполами, открытыми аркадами и водоёмом во дворе."
+    }
+  ],
+  "assets": [
+    {
+      "id": "qol-sharif",
+      "kind": "QolSharif",
+      "detail": "high",
+      "url": "/models/qol-sharif-high.glb",
+      "triangles": 16245,
+      "drawCalls": 22,
+      "sizeMeters": [
+        51,
+        48.5,
+        55.51948285102844
+      ],
+      "glbUpAxis": "Y",
+      "proceduralUpAxis": "Z",
+      "bytes": 170920
+    },
+    {
+      "id": "qol-sharif",
+      "kind": "QolSharif",
+      "detail": "low",
+      "url": "/models/qol-sharif-low.glb",
+      "triangles": 5995,
+      "drawCalls": 20,
+      "sizeMeters": [
+        51,
+        48.5,
+        55.51948285102844
+      ],
+      "glbUpAxis": "Y",
+      "proceduralUpAxis": "Z",
+      "bytes": 100488
+    },
+    {
+      "id": "suyumbike",
+      "kind": "SuyumbikeTower",
+      "detail": "high",
+      "url": "/models/suyumbike-high.glb",
+      "triangles": 9520,
+      "drawCalls": 17,
+      "sizeMeters": [
+        19,
+        19,
+        58.255455278421266
+      ],
+      "glbUpAxis": "Y",
+      "proceduralUpAxis": "Z",
+      "bytes": 151008
+    },
+    {
+      "id": "suyumbike",
+      "kind": "SuyumbikeTower",
+      "detail": "low",
+      "url": "/models/suyumbike-low.glb",
+      "triangles": 4208,
+      "drawCalls": 16,
+      "sizeMeters": [
+        19,
+        19,
+        58.255455278421266
+      ],
+      "glbUpAxis": "Y",
+      "proceduralUpAxis": "Z",
+      "bytes": 88496
+    },
+    {
+      "id": "spasskaya",
+      "kind": "SpasskayaTower",
+      "detail": "high",
+      "url": "/models/spasskaya-high.glb",
+      "triangles": 4552,
+      "drawCalls": 14,
+      "sizeMeters": [
+        58,
+        23,
+        48.39999997615814
+      ],
+      "glbUpAxis": "Y",
+      "proceduralUpAxis": "Z",
+      "bytes": 87264
+    },
+    {
+      "id": "spasskaya",
+      "kind": "SpasskayaTower",
+      "detail": "low",
+      "url": "/models/spasskaya-low.glb",
+      "triangles": 2008,
+      "drawCalls": 13,
+      "sizeMeters": [
+        58,
+        23,
+        48.39999997615814
+      ],
+      "glbUpAxis": "Y",
+      "proceduralUpAxis": "Z",
+      "bytes": 55640
+    },
+    {
+      "id": "farmers-palace",
+      "kind": "FarmersPalace",
+      "detail": "high",
+      "url": "/models/farmers-palace-high.glb",
+      "triangles": 21749,
+      "drawCalls": 20,
+      "sizeMeters": [
+        123.60000038146973,
+        44,
+        49.56000182032585
+      ],
+      "glbUpAxis": "Y",
+      "proceduralUpAxis": "Z",
+      "bytes": 156304
+    },
+    {
+      "id": "farmers-palace",
+      "kind": "FarmersPalace",
+      "detail": "low",
+      "url": "/models/farmers-palace-low.glb",
+      "triangles": 8083,
+      "drawCalls": 18,
+      "sizeMeters": [
+        123.60000038146973,
+        44,
+        49.56000182032585
+      ],
+      "glbUpAxis": "Y",
+      "proceduralUpAxis": "Z",
+      "bytes": 91916
+    },
+    {
+      "id": "kazan-family-center",
+      "kind": "KazanFamilyCenter",
+      "detail": "high",
+      "url": "/models/kazan-family-center-high.glb",
+      "triangles": 10272,
+      "drawCalls": 10,
+      "sizeMeters": [
+        70,
+        70,
+        31.65000081062317
+      ],
+      "glbUpAxis": "Y",
+      "proceduralUpAxis": "Z",
+      "bytes": 152152
+    },
+    {
+      "id": "kazan-family-center",
+      "kind": "KazanFamilyCenter",
+      "detail": "low",
+      "url": "/models/kazan-family-center-low.glb",
+      "triangles": 3512,
+      "drawCalls": 10,
+      "sizeMeters": [
+        70,
+        70,
+        31.65000081062317
+      ],
+      "glbUpAxis": "Y",
+      "proceduralUpAxis": "Z",
+      "bytes": 70916
+    },
+    {
+      "id": "innopolis-university",
+      "kind": "InnopolisUniversity",
+      "detail": "high",
+      "url": "/models/innopolis-university-high.glb",
+      "triangles": 3660,
+      "drawCalls": 7,
+      "sizeMeters": [
+        107.4568182613657,
+        191.40418846299872,
+        21.200000405311584
+      ],
+      "glbUpAxis": "Y",
+      "proceduralUpAxis": "Z",
+      "bytes": 39588
+    },
+    {
+      "id": "innopolis-university",
+      "kind": "InnopolisUniversity",
+      "detail": "low",
+      "url": "/models/innopolis-university-low.glb",
+      "triangles": 2400,
+      "drawCalls": 6,
+      "sizeMeters": [
+        107.38277159448728,
+        191.26914685964584,
+        20.484464842378642
+      ],
+      "glbUpAxis": "Y",
+      "proceduralUpAxis": "Z",
+      "bytes": 34168
+    },
+    {
+      "id": "popov-technopark",
+      "kind": "PopovTechnopark",
+      "detail": "high",
+      "url": "/models/popov-technopark-high.glb",
+      "triangles": 14888,
+      "drawCalls": 13,
+      "sizeMeters": [
+        134,
+        135,
+        30.600000381469727
+      ],
+      "glbUpAxis": "Y",
+      "proceduralUpAxis": "Z",
+      "bytes": 198940
+    },
+    {
+      "id": "popov-technopark",
+      "kind": "PopovTechnopark",
+      "detail": "low",
+      "url": "/models/popov-technopark-low.glb",
+      "triangles": 5768,
+      "drawCalls": 13,
+      "sizeMeters": [
+        134,
+        135,
+        30.600000381469727
+      ],
+      "glbUpAxis": "Y",
+      "proceduralUpAxis": "Z",
+      "bytes": 88532
+    },
+    {
+      "id": "white-mosque-bolgar",
+      "kind": "WhiteMosqueBolgar",
+      "detail": "high",
+      "url": "/models/white-mosque-bolgar-high.glb",
+      "triangles": 16522,
+      "drawCalls": 27,
+      "sizeMeters": [
+        102,
+        86,
+        46.93919804963909
+      ],
+      "glbUpAxis": "Y",
+      "proceduralUpAxis": "Z",
+      "bytes": 237764
+    },
+    {
+      "id": "white-mosque-bolgar",
+      "kind": "WhiteMosqueBolgar",
+      "detail": "low",
+      "url": "/models/white-mosque-bolgar-low.glb",
+      "triangles": 7470,
+      "drawCalls": 25,
+      "sizeMeters": [
+        102,
+        86,
+        46.93919804963909
+      ],
+      "glbUpAxis": "Y",
+      "proceduralUpAxis": "Z",
+      "bytes": 136580
+    }
+  ]
+}
