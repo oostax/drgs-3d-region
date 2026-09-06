@@ -34,9 +34,9 @@ jobs:
           prepare = next(step['run'] for step in steps if step.get('name') == 'Prepare isolated fixture with production map modules')
           old = "filter:empty?['==',['get','id'],'not-a-building']:undefined"
           assert prepare.count(old) == 1
-          # MapLibre rejects an explicitly present undefined filter; this fixes
-          # the synthetic test fixture only, not the production map layers.
-          prepare = prepare.replace(old, "filter:empty?['==',['get','id'],'not-a-building']:['==',1,1]")
+          # Both filters have been checked with validateStyleMin. Every fixture
+          # building has an ID; only the intentionally empty part layers filter it out.
+          prepare = prepare.replace(old, "filter:empty?['==',['get','id'],'not-a-building']:['has','id']")
           subprocess.run(['bash','-e','-o','pipefail','-c',prepare],check=True)
           check = next(step['run'] for step in steps if step.get('name') == 'Check actual WebGL frames and responsive round trips')
           check = check.replace("three=page.evaluate('window.snapshot()');assert", "three=page.evaluate('window.snapshot()');print('3D state',three,'errors',page.evaluate('window.renderErrors'),flush=True);assert")
