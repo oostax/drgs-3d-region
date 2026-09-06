@@ -42,6 +42,7 @@ jobs:
           Path('/tmp/analytics.patch').write_bytes(patch)
           PY
           git apply --index /tmp/analytics.patch
+          git apply --index .github/analytics-fixes.patch
           git diff --check
           git diff --cached --stat > /tmp/analytics-review/changes.txt
       - run: npm ci
@@ -74,7 +75,7 @@ jobs:
           python3 scripts/verify-analytics.py 2>&1 | tee "$ATLAS_BROWSER_OUTPUT/browser.log"
       - name: Record verified candidate without temporary staging files
         run: |
-          git rm .github/analytics-patch-{0,1,2,3}.b64 .github/workflows/atlas-review.yml .github/workflows/apply-analytics-review.yml
+          git rm .github/analytics-patch-{0,1,2,3}.b64 .github/analytics-fixes.patch .github/workflows/atlas-review.yml .github/workflows/apply-analytics-review.yml
           git diff --cached --check
           git commit -m 'feat: territorial analytics and complete private client portfolio'
           git push origin HEAD:fix/map-appearance-0ebf9ae
