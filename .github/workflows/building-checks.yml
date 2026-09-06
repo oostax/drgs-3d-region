@@ -1,7 +1,7 @@
 name: Building checks
 on:
   push:
-    branches: [master, fix/building-elevation]
+    branches: [master, fix/building-elevation, fix/building-elevation-verified]
   pull_request:
 permissions:
   contents: read
