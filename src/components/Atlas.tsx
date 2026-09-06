@@ -68,6 +68,8 @@ import {signalPriority} from '@/lib/signal-priority';
 import {isResidentReport, signalMatchesFlow, signalVisibleInView, stateForSignalPeriod, type SignalFlow} from "@/lib/signal-view";
 import type { MeetingPlan } from "@/lib/planning-types";
 import {DEFAULT_MAP_3D, nextMapMode} from "@/lib/map-camera-mode";
+import MapCompass from "./MapCompass";
+import type { CompassCamera } from "@/lib/map-compass";
 import { clientViewLayers } from "@/lib/client-map-visibility";
 import {territoryScopeIds} from '@/lib/map-camera-scope';
 const AtlasMap = dynamic(() => import("./AtlasMap"), {
@@ -208,6 +210,7 @@ export default function Atlas({
       pitch?: number;
       bearing?: number;
     }>({ zoom: 6.35, networkError: false, webgl: true });
+  const [compassCamera, setCompassCamera] = useState<CompassCamera | null>(null);
   const [layers, setLayers] = useState({
       signals: true,
       banks: true,
@@ -225,18 +228,19 @@ export default function Atlas({
     [category, setCategory] = useState("Все"),
     [bank, setBank] = useState("Все банки");
   const mapLayers = useMemo(() => clientViewLayers(layers, mode === 'work' && view === 'organizations'), [layers, mode, view]);
-  type Overlay = 'map' | 'search' | 'sources' | 'planning' | 'dossiers' | 'incidents' | 'analytics';
+  type Overlay = 'map' | 'search' | 'sources' | 'planning' | 'dossiers' | 'incidents' | 'analytics' | 'compass';
   const [overlay, setOverlay] = useState<Overlay | null>(null);
   const showSources = overlay === 'sources', exploreOpen = overlay === 'map', showPlanning = overlay === 'planning',
     showDossiers = overlay === 'dossiers', showIncidents = overlay === 'incidents', showSearch = overlay === 'search';
   const setOverlayVisible = useCallback((name: Overlay, visible: boolean) => setOverlay(current => visible ? name : current === name ? null : current), []);
+  const setCompassOpen = useCallback((visible: boolean) => setOverlayVisible('compass', visible), [setOverlayVisible]);
   const setShowSources = useCallback((visible: boolean) => setOverlayVisible('sources', visible), [setOverlayVisible]);
   const setExploreOpen = useCallback((visible: boolean) => setOverlayVisible('map', visible), [setOverlayVisible]);
   const setShowPlanning = useCallback((visible: boolean) => setOverlayVisible('planning', visible), [setOverlayVisible]);
   const setShowDossiers = useCallback((visible: boolean) => setOverlayVisible('dossiers', visible), [setOverlayVisible]);
   const setShowIncidents = useCallback((visible: boolean) => setOverlayVisible('incidents', visible), [setOverlayVisible]);
   const setShowSearch = useCallback((visible: boolean) => setOverlayVisible('search', visible), [setOverlayVisible]);
-  const contextVisible = panelOpen && overlay === null;
+  const contextVisible = panelOpen && (overlay === null || overlay === 'compass');
   const [perspective,setPerspective]=useState<'region'|'sber'>('region');
   const [clientMapData,setClientMapData]=useState<ClientMapPayload|null>(null);
   const clientInns=useMemo(()=>new Set(clientMapData?.portfolioInns||[]),[clientMapData]);
@@ -841,6 +845,7 @@ export default function Atlas({
           offices={otherRegion ? [] : mapOffices}
           territoryId={territoryId}
           focus={focus}
+          onCompassReady={setCompassCamera}
           layers={mapLayers}
           is3D={is3D}
           appearance={appearance}
@@ -1620,20 +1625,8 @@ export default function Atlas({
           <Minus size={19} />
         </IconButton>
         <span className="control-divider" />
-        <IconButton
-          label="Север сверху"
-          onClick={() =>
-            setFocus((f) => ({
-              coordinates: mapStatus.center || f?.coordinates || [51, 55.35],
-              zoom: mapStatus.zoom,
-              pitch: is3D ? (mapStatus.pitch ?? 50) : 0,
-              bearing: 0,
-              nonce: Date.now(),
-            }))
-          }
-        >
-          <Compass size={19} />
-        </IconButton>
+        <MapCompass camera={compassCamera} open={overlay === 'compass'} is3D={is3D}
+          disabled={!mapStatus.ready || !mapStatus.webgl} onOpenChange={setCompassOpen} />
         <IconButton
           label={is3D ? "Перейти в 2D" : "Перейти в 3D"}
           aria-pressed={is3D}
@@ -1644,6 +1637,7 @@ export default function Atlas({
         </IconButton>
         <IconButton
           label="Вернуться к Татарстану"
+          className="reset-territory-control"
           onClick={() => chooseTerritory("RU-TA")}
         >
           <LocateFixed size={19} />
@@ -1666,7 +1660,7 @@ export default function Atlas({
           <SlidersHorizontal size={13} />
         </button>
       </div>
-      {exploreOpen && <MapMenu layers={layers} perspective={perspective} onPerspective={setPerspective} onSources={()=>setShowSources(true)} pitch={Math.round(mapStatus.pitch??30)} onClose={()=>setExploreOpen(false)} onToggle={(key,value)=>{setLayers(l=>({...l,[key]:value}));setView('overview');setPanelOpen(false);}} onFocus={v=>{setLayers(l=>({...l,signals:v==='signals',banks:v==='banks',landmarks:v==='places'}));changeView(v);}} onAll={()=>{setLayers(l=>({...l,signals:true,banks:true,landmarks:true}));setView('overview');setSelection(null);setPanelOpen(false);setExploreOpen(false);}} onPitch={pitch=>{set3D(true);fly(mapStatus.center||[51,55.35],mapStatus.zoom,pitch,mapStatus.bearing??0);}} onTour={startTour}/>}
+      {exploreOpen && <MapMenu layers={layers} perspective={perspective} onPerspective={setPerspective} onSources={()=>setShowSources(true)} onClose={()=>setExploreOpen(false)} onToggle={(key,value)=>{setLayers(l=>({...l,[key]:value}));setView('overview');setPanelOpen(false);}} onFocus={v=>{setLayers(l=>({...l,signals:v==='signals',banks:v==='banks',landmarks:v==='places'}));changeView(v);}} onAll={()=>{setLayers(l=>({...l,signals:true,banks:true,landmarks:true}));setView('overview');setSelection(null);setPanelOpen(false);setExploreOpen(false);}} onTour={startTour}/>}
       <nav className="bottom-dock glass" aria-label="Главная навигация">
         <button
           aria-expanded={exploreOpen}

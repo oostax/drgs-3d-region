@@ -1804,10 +1804,7 @@ b {
     height: 37px;
     width: 37px;
   }
-  .map-controls > .icon-button:nth-of-type(3) {
-    display: none;
-  }
-  .map-controls > .icon-button:nth-of-type(5) {
+  .map-controls > .reset-territory-control {
     display: none;
   }
   .map-controls .control-divider {

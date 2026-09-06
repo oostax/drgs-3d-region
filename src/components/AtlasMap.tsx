@@ -34,6 +34,7 @@ import { spreadCoincidentMarkers, MARKER_SPREAD_ZOOM } from '../lib/map-marker-l
 import {addClientLayers,refreshClientLayers} from '../lib/map-client-layer';
 import {sberOfficeRole} from '../lib/sber-structure';
 import type {ClientMapPoint} from '../lib/client-map-types';
+import {createCompassCamera, type CompassCamera} from '../lib/map-compass';
 import {applyMapMode, naturalMapPitch} from '../lib/map-camera-mode';
 import { signalHasVerifiedMapLocation } from '../lib/signal-location';
 import { activeSignalHighlightIds } from '../lib/map-signal-selection';
@@ -58,6 +59,7 @@ export type AtlasMapProps = {
   onOfficeStack?: (ids: string[]) => void;
   onOffice: (id: string) => void; onLandmark: (id: string) => void;
   onStatus: (status: AtlasMapStatus) => void;
+  onCompassReady?: (camera: CompassCamera | null) => void;
   onRegion?: (id: string, name: string, coordinates: [number, number]) => void;
   onBuilding?: (building: AtlasMapBuilding) => void;
   appearance?: SceneAppearance;
@@ -336,6 +338,7 @@ export default function AtlasMap(props: AtlasMapProps) {
   const scenesRef = useRef<SignalSceneLayer | null>(null);
   const eventScenes = useMemo(() => makeEventScenes(props.signals, props.territories, Date.now(), props.selectedSignalId), [props.signals, props.territories, props.selectedSignalId]);
   const eventScenesRef = useRef(eventScenes); eventScenesRef.current = eventScenes;
+  const compassRef = useRef<CompassCamera | null>(null);
   const lastCamera = useRef<{ focusNonce: number | null; is3D: boolean; panelOpen: boolean } | null>(null);
   const lightingRef = useRef<LightingState | null>(null);
   if (!lightingRef.current) lightingRef.current = getSceneTime(props.appearance ?? DEFAULT_APPEARANCE);
@@ -506,6 +509,11 @@ export default function AtlasMap(props: AtlasMapProps) {
         clearMarkerGroups?.(); clearMarkerGroups = installMarkerGroups(map);
         gpuLayers = recreateMapGpuLayers(map, createGpuLayers); loaded.current = true;
         refreshData(map, latest.current); refreshVisibility(map, latest.current, !errors.current.has('landmarks')); applyMapLighting(map, lightingRef.current!, true);
+        if (!compassRef.current) {
+          compassRef.current = createCompassCamera(map, finishCameraMove);
+          latest.current.onCompassReady?.(compassRef.current);
+        }
+        compassRef.current.refresh();
         setReady(true); setPhase('ready'); report();
         performance.mark('atlas-map-ready');
       } catch (error) { console.warn('Atlas map layer error', error); setMapError(String(error)); setPhase('layers-error'); errors.current.add('layers'); report(); }
@@ -540,12 +548,14 @@ export default function AtlasMap(props: AtlasMapProps) {
       if (scope !== latest.current.territoryId) latest.current.onCameraTerritory?.(scope);
     };
     // Debounce the settled camera, never fly in response to its own scope change.
-    map.on('moveend', () => {
+    const finishCameraMove = () => {
+      if (compassRef.current?.interacting()) { reportCamera(); return; }
       map.triggerRepaint(); report();
       if (map.getZoom() >= MARKER_SPREAD_ZOOM || markerSpread.get(map)) refreshMarkerLayout(map);
       if (scopeTimer) clearTimeout(scopeTimer);
       scopeTimer = setTimeout(syncCameraScope, 180);
-    });
+    };
+    map.on('moveend', finishCameraMove);
     fetch('/data/tatarstan-boundaries.geojson', {signal:boundaryAbort.signal}).then(r => r.json()).then((data: FeatureCollection) => { boundaryData = data; syncCameraScope(); }).catch(() => {});
     map.on('error', (event) => { console.warn('Atlas map source error', event.error); setMapError(String(event.error)); errors.current.add('sourceId' in event && typeof event.sourceId === 'string' ? event.sourceId : 'basemap'); report(); });
     map.on('sourcedata', (event) => {
@@ -567,7 +577,7 @@ export default function AtlasMap(props: AtlasMapProps) {
       if (bounds) {
         const compact = bounds.width <= 760 || window.matchMedia('(pointer: coarse)').matches;
         detailsRef.current?.setMobile(compact);
-        if (loaded.current) applyMapMode(map, latest.current.is3D, latest.current.layers.buildings, compact);
+        if (loaded.current) { applyMapMode(map, latest.current.is3D, latest.current.layers.buildings, compact); compassRef.current?.refresh(); }
       }
       if (bounds && !map.isMoving()) {
         const compact = bounds.width <= 760;
@@ -584,6 +594,7 @@ export default function AtlasMap(props: AtlasMapProps) {
       if (cameraReportTimer !== null) clearTimeout(cameraReportTimer);
       window.removeEventListener('offline', onOffline); window.removeEventListener('online', onOnline);
       map.off('mousemove', onPointerMove);
+      compassRef.current?.dispose(); compassRef.current = null; latest.current.onCompassReady?.(null);
       map.remove(); mapRef.current = null; lifeRef.current = null; scenesRef.current = null; detailsRef.current = null; solarRef.current = null;
       if (process.env.NODE_ENV === 'development') {
         const diagnostics = window as Window & { __atlasMap?: LibreMap };
@@ -601,7 +612,7 @@ export default function AtlasMap(props: AtlasMapProps) {
   useEffect(()=>{const map=mapRef.current;if(!ready||!map?.getLayer('atlas-district-hover'))return;map.setFilter('atlas-district-hover',['==',['get','territoryId'],props.highlightedTerritoryId??'']);},[ready,props.highlightedTerritoryId]);
   useEffect(()=>{if(ready&&loaded.current&&mapRef.current)refreshClientLayers(mapRef.current,props.clients||[],Boolean(props.clientsVisible));},[ready,props.clients,props.clientsVisible]);
   useEffect(() => { if (ready && loaded.current && mapRef.current) refreshOrganization(mapRef.current, latest.current.focusedOrganization); }, [ready, props.focusedOrganization]);
-  useEffect(() => { if (ready && loaded.current && mapRef.current) {refreshVisibility(mapRef.current, latest.current, !errors.current.has('landmarks')); detailsRef.current?.refresh();} }, [ready, props.layers, props.is3D, props.bankFocus]);
+  useEffect(() => { if (ready && loaded.current && mapRef.current) {refreshVisibility(mapRef.current, latest.current, !errors.current.has('landmarks')); detailsRef.current?.refresh(); compassRef.current?.refresh();} }, [ready, props.layers, props.is3D, props.bankFocus]);
   useEffect(() => {
     const map = mapRef.current, focus = props.focus;
     if (!ready || !loaded.current || !map || !map.getLayer('atlas-region-line') || !containerRef.current) return;
