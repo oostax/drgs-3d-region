@@ -1,0 +1,53 @@
+name: Map mode browser regression
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: mkdir -p /tmp/atlas-map-browser
+      - run: npm ci
+      - name: Build actual application
+        run: npm run build 2>&1 | tee /tmp/atlas-map-browser/build.log
+      - name: Install isolated browser tooling
+        run: |
+          npm install --prefix /tmp/atlas-browser --no-package-lock playwright@1.57.0
+          /tmp/atlas-browser/node_modules/.bin/playwright install --with-deps chromium
+      - name: Test UI and WebGL mode cycles
+        env:
+          PLAYWRIGHT_MODULE: /tmp/atlas-browser/node_modules/playwright/index.mjs
+          ATLAS_BROWSER_OUTPUT: /tmp/atlas-map-browser
+        run: |
+          npm start > /tmp/atlas-map-browser/server.log 2>&1 &
+          SERVER=$!
+          trap 'kill "$SERVER" 2>/dev/null || true' EXIT
+          ready=false
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:3200/ > /dev/null; then ready=true; break; fi
+            sleep 1
+          done
+          if [ "$ready" != true ]; then cat /tmp/atlas-map-browser/server.log; exit 1; fi
+          node scripts/verify-map-modes.mjs 2>&1 | tee /tmp/atlas-map-browser/browser.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: map-mode-browser
+          path: /tmp/atlas-map-browser
+          retention-days: 7

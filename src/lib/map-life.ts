@@ -5,6 +5,7 @@ import { MercatorCoordinate, type CustomLayerInterface, type CustomRenderMethodI
 import type { Feature, Geometry, Position } from 'geojson';
 import type { BankOffice } from './types';
 import type { LightingState } from './solar';
+import { getBuildingLight } from './building-materials';
 import { createTransportActors, createTransportDetails } from './map-transport-details';
 import { roadGeometryProfile, roadLaneOffset, railwayKind, walkablePath } from './map-transport-profile';
 import { createSportsDetails } from './map-sports-details';
@@ -501,7 +502,7 @@ export class MapLifeLayer implements CustomLayerInterface {
         const [x, y] = this.fromWorld([item.from[0] + dx * fraction, item.from[1] + dy * fraction]);
         item.group.position.set(x, y, item.altitude); item.group.rotation.z = Math.atan2(dy, dx) + (item.id.startsWith('boat:') && Math.floor(distance / length) % 2 ? Math.PI : 0);
       }
-      const lighting = this.options.lighting(); if (lighting !== this.lastLighting) { this.sky.intensity = 0.55 + lighting.brightness * 1.6; this.sun.intensity = 0.15 + lighting.brightness * 2.6; this.sun.color.set(lighting.sunElevation < 12 ? '#ffbd83' : '#ffefd9'); const d = lighting.sunDirection; this.sun.position.set(d[0] * 150, d[1] * 150, Math.max(12, d[2] * 150)); this.streetDetails?.updateLighting(lighting); if (this.vegetation) updateVegetationLighting(this.vegetation, lighting.nightAmount); this.lastLighting = lighting; }
+      const lighting = this.options.lighting(); if (lighting !== this.lastLighting) { const light = getBuildingLight(lighting); this.sky.intensity = 0.55 + lighting.brightness * 1.6; this.sun.intensity = 0.15 + lighting.brightness * 2.6; this.sun.color.set(light.sunColor); const d = lighting.sunDirection; this.sun.position.set(d[0] * 150, d[1] * 150, Math.max(12, d[2] * 150)); this.streetDetails?.updateLighting(lighting); if (this.vegetation) updateVegetationLighting(this.vegetation, lighting.nightAmount); this.lastLighting = lighting; }
       const transform = this.renderTransform.makeTranslation(this.origin.x, this.origin.y, this.origin.z).multiply(this.renderScale.makeScale(this.scale, -this.scale, this.scale));
       this.camera.projectionMatrix.fromArray(args.defaultProjectionData.mainMatrix).multiply(transform); this.camera.projectionMatrixInverse.copy(this.camera.projectionMatrix).invert(); (this.projection ??= new THREE.Matrix4()).copy(this.camera.projectionMatrix);
       if (this.cloudMaterial) {
