@@ -2,7 +2,7 @@ name: Verify analytics candidate
 on:
   push:
     branches: [fix/map-appearance-0ebf9ae]
-    paths: [.github/workflows/apply-analytics-review.yml]
+    paths: [.github/workflows/apply-analytics-review.yml, .github/analytics-fixes.patch]
 permissions:
   contents: write
 concurrency:
