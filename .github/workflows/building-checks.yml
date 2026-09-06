@@ -1,0 +1,48 @@
+name: Building checks
+
+on:
+  push:
+    branches: [master, fix/building-elevation]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Tests
+        run: npm test 2>&1 | tee /tmp/building-tests.log
+      - name: Typecheck
+        if: success() || failure()
+        run: npm run typecheck 2>&1 | tee /tmp/building-typecheck.log
+      - name: Build
+        if: success() || failure()
+        run: npm run build 2>&1 | tee /tmp/building-build.log
+      - name: Prepare review snapshot
+        if: always()
+        run: |
+          mkdir -p /tmp/building-review
+          git archive HEAD src tests scripts AGENTS.md README.md package.json package-lock.json tsconfig.json .nvmrc | tar -x -C /tmp/building-review
+          if [ -d node_modules ]; then
+            cp -a node_modules /tmp/building-review/node_modules
+            rm -rf /tmp/building-review/node_modules/next /tmp/building-review/node_modules/@next
+          fi
+          cp /tmp/building-*.log /tmp/building-review/ 2>/dev/null || true
+          tar -czf /tmp/building-review.tar.gz -C /tmp/building-review .
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: building-review
+          path: /tmp/building-review.tar.gz
+          retention-days: 1
