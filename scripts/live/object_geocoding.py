@@ -106,6 +106,6 @@ def match_objects(candidates,text,territory_id,index):
     evidence=next((value for alias,value in obj.get('addressAliasEvidence',{}).items() if any(_fold(alias)==_fold(candidate) for candidate in candidates)),None)
     return {'status':'matched','precision':obj['precision'],'candidateCount':1,'objectId':obj['id'],
         'streetId':None,'streetName':obj.get('address') or obj['name'],'representativeCoordinate':obj['coordinates'],
-        'geometry':obj['geometry'],'bbox':obj['bbox'],'sourceUrl':obj['sourceUrl'],'sourceUrls':[obj['sourceUrl']]+([evidence['url']] if evidence else []),'addressAliasEvidence':evidence,
+        'geometry':obj.get('geometry'),'bbox':obj.get('bbox'),'sourceUrl':obj['sourceUrl'],'sourceUrls':[obj['sourceUrl']]+([evidence['url']] if evidence else []),'addressAliasEvidence':evidence,
         'checkedAt':index.get('checkedAt'),'method':'exact-address-or-unique-named-object',
         'note':'Адрес или название из публикации сопоставлены с конкретным объектом OSM. Маркер находится внутри его контура. Это привязка затронутого объекта, а не координата повреждения трубы или оборудования.'}
