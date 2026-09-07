@@ -461,7 +461,9 @@ def consume_geocode_jobs(connection: sqlite3.Connection, *, index_path: Path | N
                 continue
             data = json.loads(event['data_json'] or '{}')
             automatic_location=event['precision'] in {'building','site','street','settlement'} and data.get('locationVerificationMethod') in {'exact-normalized-street-name-and-territory','exact-normalized-street-name-and-kazan-territory','unique-short-street-name-and-territory','source-named-settlement-and-municipal-scope','source-named-street-objects','source-section-intersections','source-named-junction','langsearch-address-osm-verified-object','source-address-osm-verified-object','exact-address-or-unique-named-object'}
-            if bool(event["reviewed"]) or (not automatic_location and (event["precision"] != "territory" or event["longitude"] is not None or event["latitude"] is not None)):
+            grounded_location = bool(data.get('coordinateSourceUrl') and
+                                    (data.get('siteGeometry') or data.get('streetGeometryRef')))
+            if bool(event["reviewed"]) or (not automatic_location and grounded_location):
                 _finish_job(connection, job, {"status": "preserved", "method": "existing-reviewed-location-preserved",
                     "precision": event["precision"]})
                 totals["processed"] += 1; totals["preserved"] += 1
