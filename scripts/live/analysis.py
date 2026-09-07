@@ -63,6 +63,11 @@ def extract_address_mentions(text: str) -> list[dict[str, str]]:
             clause_start=max(text.rfind('\n',0,match.start()),text.rfind('. ',0,match.start()))+1
             if re.search(r'\b(?:соединяем|соединят|свяжут|образуют)\b[^.!?\n]{0,200}$',text[clause_start:match.start()],re.I) or re.match(r'(?i:соединяем|соединят)\s',match.group(0)):continue
             address=re.split(r"(?<!ул)(?<!пер)(?<!просп)(?<=[а-яё])\.\s",match.group(0))[0].rstrip("., ")
+            # A preposition followed by the inflected generic word "улица"
+            # is not a street name (e.g. "На улицах Карла Маркса...").
+            # STREET_SUFFIX can otherwise capture the prefix as "На улица".
+            if re.match(r"(?i)^(?:на|по)\s+улиц(?:а|е|ы|у|ой|ами|ах)?$", address):
+                continue
             if not re.search(r'[А-ЯЁӘӨҮҖҢҺA-Z]',address):continue
             tail=HOUSE_TAIL.match(text[match.start()+len(address):])
             if tail:address+=tail.group(0)
