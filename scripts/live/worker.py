@@ -344,6 +344,55 @@ def activity_kind(event: dict[str, Any], explicit: bool) -> str:
     return {"construction":"construction","fire":"fire","flood":"flood","weather":"emergency","culture":"place_event","education":"place_event","health":"place_event","landscape":"place_event","business":"place_event"}.get(topic,"generic")
 
 
+def normalize_due_event_states(connection: sqlite3.Connection, now: dt.datetime | None = None) -> int:
+    """Advance scheduled events once their explicitly stated start has passed.
+
+    The transition is deliberately one-way and conservative: a past schedule
+    can mean work has started, but it never proves completion. Completion still
+    requires source evidence such as «завершено» or an explicit status update.
+    """
+    now = now or utc_now()
+    moscow = dt.timezone(dt.timedelta(hours=3))
+    month_numbers = {'январ':1,'феврал':2,'март':3,'апрел':4,'ма':5,'июн':6,'июл':7,'август':8,'сентябр':9,'октябр':10,'ноябр':11,'декабр':12}
+    changed = 0
+    rows = connection.execute("SELECT * FROM events WHERE deleted=0 AND state='planned' AND event_time IS NOT NULL").fetchall()
+    for row in rows:
+        raw = str(row['event_time'] or '').strip()
+        try:
+            start = dt.datetime.fromisoformat(raw.replace('Z', '+00:00'))
+            if start.tzinfo is None: start = start.replace(tzinfo=dt.timezone(dt.timedelta(hours=3)))
+        except ValueError:
+            continue
+        data = json.loads(row['data_json'] or '{}')
+        if row['topic'] not in {'utilities', 'roads', 'construction', 'waste', 'landscape'}:
+            continue
+        text = ' '.join(str(data.get(key) or '') for key in ('title', 'summary', 'facts'))
+        if not re.search(r'отключ|ремонт|работ[аы]|ограничен|перекры|график|планов', text, re.I):
+            continue
+        effective_start = start
+        range_match = re.search(r'с\s+(\d{1,2})\s+по\s+\d{1,2}\s+([а-яё]+)(?:\s+(20\d{2}))?', text, re.I)
+        if range_match:
+            month = next((n for key, n in month_numbers.items() if range_match.group(2).casefold().startswith(key)), None)
+            year = int(range_match.group(3)) if range_match.group(3) else start.year
+            if month: effective_start = dt.datetime(year, month, int(range_match.group(1)), tzinfo=moscow)
+        if effective_start > now: continue
+        if re.search(r'отмен[её]н|заверш[её]н|выполнен|работы окончены|ликвидир', text, re.I):
+            continue
+        data['state'] = 'in_progress'
+        data['statusTransition'] = {'kind': 'schedule-started', 'at': now.isoformat(), 'sourceTime': raw,
+                                    'note': 'Плановый срок наступил; завершение работ источником не подтверждено.'}
+        revision = connection.execute("INSERT INTO revisions(event_id,operation,notify_eligible,created_at) VALUES(?,?,0,?)",
+                                      (row['id'], 'upsert', now.isoformat())).lastrowid
+        connection.execute("UPDATE events SET state='in_progress',activity_kind=?,last_meaningful_at=?,data_json=?,revision=?,updated_at=? WHERE id=?",
+                           ('utility_repair' if row['topic']=='utilities' else activity_kind({'topic':row['topic'],'state':'in_progress','title':row['title'],'summary':row['summary']}, False),
+                            now.isoformat(), json_text(data), revision, now.isoformat(), row['id']))
+        connection.execute("INSERT INTO event_history(event_id,state,at,label,data_json) VALUES(?,?,?,?,?)",
+                           (row['id'], 'in_progress', now.isoformat(), 'Плановый срок наступил; статус обновлён автоматически', json_text(data)))
+        changed += 1
+    if changed: connection.commit()
+    return changed
+
+
 def store_document(connection: sqlite3.Connection, source: sqlite3.Row, document: FeedDocument, analyzer: AnyModelAnalyzer,
         *, notify_new: bool = True, geocode_immediately: bool = False) -> dict[str, int]:
     content_hash = hash_document(document)
@@ -901,6 +950,7 @@ def run_loop(connection: sqlite3.Connection) -> None:
     while not STOP:
         heartbeat(connection,"running","Проверяем новые материалы; историческая очередь выполняется после новых источников.")
         result=consume_manual_refresh(connection) or process_due(connection)
+        normalize_due_event_states(connection)
         tg_count=0
         for _ in range(512):
             try: source_id,document,notify=telegram.queue.get_nowait()
