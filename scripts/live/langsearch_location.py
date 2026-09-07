@@ -123,6 +123,12 @@ def _request(url: str, *, payload: dict[str, Any] | None = None, api_key: str | 
         try:
             result = _uncached_request(url, payload=payload, api_key=api_key)
         except urllib.error.HTTPError as error:
+            # Nominatim rejects malformed/unsupported structured queries with
+            # 400. That is a no-match for this provider, not a broken job:
+            # callers can continue with the bounded map fallback and retry
+            # through LangSearch on the next pass.
+            if payload is None and error.code == 400 and urllib.parse.urlparse(url).hostname == 'nominatim.openstreetmap.org':
+                return []
             if payload is None and error.code in {429,502,503,504}:
                 raise SearchDeferred('Geocoding provider temporarily unavailable') from None
             raise
