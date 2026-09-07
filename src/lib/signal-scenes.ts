@@ -93,10 +93,10 @@ export function hasConfirmedSceneCoverage(signal: Pick<Signal, 'title' | 'summar
 
 export function shouldSuppressStreetScene(signal: Pick<Signal, 'title' | 'summary' | 'precision' | 'locationVerificationMethod' | 'live'>): boolean {
   if (signal.precision !== 'street' || hasConfirmedSceneCoverage(signal)) return false;
-  // A scheduled street event or an inferred lifecycle alone says nothing
-  // about the exact work zone. Explicit current-work evidence is the minimum
-  // needed before a whole linked street can receive a physical scene.
-  return signal.live?.state === 'planned' || (signal.live?.state === 'in_progress' && !signal.live.explicitActivity);
+  // A future schedule has no current scene. Once its start time has passed,
+  // a source-linked street may show a static thematic scene; animation still
+  // requires explicit current-work evidence in normalizeSceneLifecycle.
+  return signal.live?.state === 'planned';
 }
 
 export function sceneCoverageDescription(signal: Signal): string | null {
