@@ -165,7 +165,19 @@ def enrich_articles(connection, *, limit: int = 4, timeout: int = 10, source_ids
 
 
 def pending_article(connection, event_id):
-    """RSS snippets cannot support a terminal negative geolocation decision."""
+    """RSS snippets need enrichment only when the signal can produce a map fact.
+
+    Context-only records (for example region-wide statistics) have no address
+    to resolve; waiting for an HTML article would otherwise keep them queued
+    forever when the publisher exposes PDF/non-HTML documents.
+    """
+    event=connection.execute("SELECT data_json FROM events WHERE id=? AND deleted=0",(event_id,)).fetchone()
+    if event:
+        data=json.loads(event[0] or '{}')
+        usefulness=data.get('signalUsefulness') or {}
+        candidates=data.get('addressCandidates') or data.get('localityCandidates') or []
+        if usefulness.get('showOnMap') is False and not candidates:
+            return None
     rows=connection.execute("SELECT d.id,d.content_hash FROM documents d JOIN event_documents ed ON ed.document_id=d.id JOIN sources s ON s.id=d.source_id WHERE ed.event_id=? AND d.deleted_at IS NULL AND s.adapter='rss' AND s.fetch_allowed=1 AND s.display_allowed=1",(event_id,)).fetchall()
     for row in rows:
         checkpoint=connection.execute("SELECT value FROM checkpoints WHERE source_id='__articles__' AND key=?",(row['id'],)).fetchone()
