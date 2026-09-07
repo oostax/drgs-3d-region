@@ -976,6 +976,9 @@ def run_loop(connection: sqlite3.Connection) -> None:
         geocoding = consume_geocode_jobs(connection)
         if geocoding["processed"] or geocoding["failed"]:
             result = {**result, "geocoding": geocoding}
+        # Run after ingestion as well: a fresh publication can otherwise
+        # reintroduce planned status before the schedule normalizer sees it.
+        normalize_due_event_states(connection)
         heartbeat(connection,"idle",json_text(result),success=bool(result["successful"] or tg_count))
         # Five seconds bounds manual-refresh pickup latency while avoiding busy polling.
         for _ in range(5):
