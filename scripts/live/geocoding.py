@@ -176,6 +176,9 @@ def _connected_street_parts(matches: list[dict[str, Any]], *, same_locality: boo
         if geometry.get('type')=='LineString':lines.append(geometry['coordinates'])
         elif geometry.get('type')=='MultiLineString':lines.extend(geometry['coordinates'])
     if not lines:return matches
+    connected = [s for s in connected if s.get('bbox') and len(s.get('bbox')) == 4]
+    if not connected:
+        return matches
     return [{**matches[0], 'id':'+'.join(sorted(s['id'] for s in connected)),
         'geometry':{'type':'MultiLineString','coordinates':lines},
         'bbox':[min(s['bbox'][0] for s in connected),min(s['bbox'][1] for s in connected),max(s['bbox'][2] for s in connected),max(s['bbox'][3] for s in connected)],
@@ -661,7 +664,7 @@ def consume_geocode_jobs(connection: sqlite3.Connection, *, index_path: Path | N
                 data["siteGeometry"] = result.get("geometry")
                 data["siteBbox"] = result.get("bbox")
                 data["siteZoom"] = 17.5 if precision=='building' else 15
-                data["streetGeometryRef"] = {"streetId": result["streetId"], "bbox": result["bbox"],
+                data["streetGeometryRef"] = {"streetId": result.get("streetId"), "bbox": result.get("bbox"),
                     "sourceUrls": result["sourceUrls"], "indexCheckedAt": result["checkedAt"]}
                 if result.get("streetObjects"):
                     data["streetGeometryRefs"] = result["streetObjects"]
