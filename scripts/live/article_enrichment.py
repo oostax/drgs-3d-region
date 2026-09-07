@@ -175,8 +175,8 @@ def pending_article(connection, event_id):
     if event:
         data=json.loads(event[0] or '{}')
         usefulness=data.get('signalUsefulness') or {}
-        candidates=data.get('addressCandidates') or data.get('localityCandidates') or []
-        if usefulness.get('showOnMap') is False and not candidates:
+        address_candidates=data.get('addressCandidates') or []
+        if usefulness.get('showOnMap') is False and not address_candidates:
             return None
     rows=connection.execute("SELECT d.id,d.content_hash FROM documents d JOIN event_documents ed ON ed.document_id=d.id JOIN sources s ON s.id=d.source_id WHERE ed.event_id=? AND d.deleted_at IS NULL AND s.adapter='rss' AND s.fetch_allowed=1 AND s.display_allowed=1",(event_id,)).fetchall()
     for row in rows:
