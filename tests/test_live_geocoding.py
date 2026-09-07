@@ -172,6 +172,24 @@ class LiveGeocodingTests(unittest.TestCase):
             self.assertIsNone(row["longitude"])
             self.assertEqual(json.loads(row["data_json"])["locationVerificationMethod"], "territory-not-covered-by-local-street-index")
 
+    def test_no_location_in_source_is_distinguished_from_unsupported_candidate(self):
+        with tempfile.TemporaryDirectory() as directory:
+            db = self.db(directory)
+            source = self.source(db)
+            event = self.store(db, source, "placeholder", "Публичное объявление без локального адреса.")
+            data = json.loads(event["data_json"])
+            data["addressCandidates"] = []
+            data["localityCandidates"] = []
+            db.execute("UPDATE events SET data_json=? WHERE id=?", (json.dumps(data, ensure_ascii=False), event["id"]))
+            db.execute("DELETE FROM jobs WHERE kind='geocode'")
+            enqueue_geocode_job(db, event["id"], source["id"], [], "unit-no-location")
+            consume_geocode_jobs(db, index_path=self.index(directory))
+            located = db.execute("SELECT * FROM events WHERE id=?", (event["id"],)).fetchone()
+            result = json.loads(located["data_json"])
+            self.assertEqual(located["precision"], "territory")
+            self.assertEqual(result["locationVerificationMethod"], "no-location-in-source")
+            self.assertEqual(result["locationEvidence"]["method"], "no-location-in-source")
+
     def test_candidate_missing_from_source_text_is_not_geocoded(self):
         with tempfile.TemporaryDirectory() as directory:
             db = self.db(directory)

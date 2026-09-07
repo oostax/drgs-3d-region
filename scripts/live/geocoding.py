@@ -545,8 +545,12 @@ def consume_geocode_jobs(connection: sqlite3.Connection, *, index_path: Path | N
                 result['localityName']=locality['name'];result['localitySourceUrl']=locality['sourceUrl']
             result["unsupportedCandidates"] = unsupported
             if not supported:
-                result.update({"status": "unmatched", "method": "address-candidate-not-supported-by-source",
-                    "note": "Адресный фрагмент не найден в связанной публикации, поэтому он не используется для координат."})
+                if unsupported:
+                    result.update({"status": "unmatched", "method": "address-candidate-not-supported-by-source",
+                        "note": "Адресный фрагмент не найден в связанной публикации, поэтому он не используется для координат."})
+                else:
+                    result.update({"status": "unmatched", "method": "no-location-in-source",
+                        "note": "В связанной публикации нет локального объекта или адреса, пригодного для точной координаты; сигнал остаётся территориальным."})
 
             if index_path is None:
                 object_candidates = [canonical_house_candidate(value, result) for value in supported]
