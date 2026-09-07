@@ -23,10 +23,16 @@ def build(raw,places):
         while current and current['id'] not in scope:
             scope.append(current['id']);current=by_id.get(current.get('parentId'))
         street,house,name=tags.get('addr:street'),tags.get('addr:housenumber'),tags.get('name','')
+        address_aliases=[]
+        if house and '/' in house and tags.get('addr:place'):
+            address_aliases.append('дом '+house)
+        if tags.get('addr2:street') and tags.get('addr2:housenumber'):
+            if street and house:address_aliases.append(street+', '+house)
+            street,house=tags['addr2:street'],tags['addr2:housenumber']
         address=f'{street}, {house}' if street and house else name
         if not address:continue
         aliases=[name] if len(name)>10 and any(k in tags for k in ['amenity','leisure','tourism']) else []
-        objects.append(dict(id=f"osm-way-{item['id']}",osmId=item['id'],territoryId=owner['id'],scopeIds=scope,name=name or address,address=address,street=street,house=house,aliases=aliases,precision='building' if tags.get('building') else 'site',coordinates=[center.x,center.y],geometry=polygon.__geo_interface__ if polygon is not None else None,bbox=list(polygon.bounds) if polygon is not None else None,sourceUrl=f"https://www.openstreetmap.org/way/{item['id']}"))
+        objects.append(dict(id=f"osm-way-{item['id']}",osmId=item['id'],territoryId=owner['id'],scopeIds=scope,name=name or address,address=address,street=street,house=house,aliases=aliases,addressAliases=address_aliases,precision='building' if tags.get('building') else 'site',coordinates=[center.x,center.y],geometry=polygon.__geo_interface__ if polygon is not None else None,bbox=list(polygon.bounds) if polygon is not None else None,sourceUrl=f"https://www.openstreetmap.org/way/{item['id']}"))
     return dict(schemaVersion=1,regionId=next(p['id'] for p in places if p['kind']=='region'),partial=True,checkedAt=datetime.datetime.now(datetime.timezone.utc).isoformat(),sourceUrl='https://www.openstreetmap.org/copyright',objects=objects)
 
 if __name__=='__main__':

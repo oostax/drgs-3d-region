@@ -1,0 +1,37 @@
+{
+  "source": "https://www.kznvodokanal.ru/accident",
+  "collection": {
+    "sources": 1,
+    "successful": 1,
+    "failed": 0,
+    "documents": 3,
+    "versions": 3,
+    "events": 3
+  },
+  "elapsedSeconds": 1.81,
+  "events": [
+    {
+      "title": "Отключение водоснабжения: Приволжский, КРЫМСКАЯ (П.КУЮКИ) , 2",
+      "precision": "territory",
+      "address": null,
+      "longitude": null,
+      "latitude": null
+    },
+    {
+      "title": "Отключение водоснабжения: Вахитовский, МАЛАЯ КРАСНАЯ, 7",
+      "precision": "building",
+      "address": "Малая Красная улица, 7",
+      "longitude": 49.12806471655345,
+      "latitude": 55.79839135
+    },
+    {
+      "title": "Отключение водоснабжения: Кировский, КЛАРЫ ЦЕТКИН, 30",
+      "precision": "street",
+      "address": "улица Клары Цеткин",
+      "longitude": 49.0621698,
+      "latitude": 55.7991537
+    }
+  ],
+  "mappedImmediately": 2,
+  "externalGeolocationCallsAllowed": false
+}

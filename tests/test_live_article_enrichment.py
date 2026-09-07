@@ -68,12 +68,18 @@ class ArticleEnrichmentTests(unittest.TestCase):
             sync_registry(db,[source]);source=db.execute('select * from sources').fetchone()
             doc=FeedDocument('1','https://example.org/news/1','Ремонтируют водопровод','2026-09-04T10:00:00Z','Начали ремонт водопровода.')
             store_document(db,source,doc,AnyModelAnalyzer(),notify_new=False)
+            db.execute("UPDATE events SET precision='building'")
             full='На улице Кремлёвской, 10 ремонтируют водопровод. '+'Работы выполняет коммунальная служба. '*5
             result=FetchResult(doc.url,doc.url,200,'text/html',('<div class="single__content"><p>'+full+'</p></div>').encode(),None,None,'2026-09-05T00:00:00Z')
             with patch('article_enrichment.BoundedFetcher.get',return_value=result) as fetch:
                 self.assertEqual(enrich_articles(db,limit=1)['enriched'],1)
                 self.assertEqual(enrich_articles(db,limit=1)['selected'],0)
                 self.assertEqual(fetch.call_count,1)
+                saved=db.execute("SELECT value FROM checkpoints WHERE source_id='__articles__'").fetchone()[0]
+                old=json.loads(saved);old['version']='previous-parser'
+                db.execute("UPDATE checkpoints SET value=? WHERE source_id='__articles__'",(json.dumps(old),))
+                self.assertEqual(enrich_articles(db,limit=1)['selected'],1)
+                self.assertEqual(fetch.call_count,2)
             versions=db.execute('select count(*) from document_versions').fetchone()[0]
             store_document(db,source,doc,AnyModelAnalyzer(),notify_new=False)
             self.assertIn('Кремлёвской',db.execute('select body from documents').fetchone()[0])

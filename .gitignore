@@ -37,3 +37,4 @@ data/live/backups/
 tmp/
 
 public/maplibre/
+data/live/location-analysis-cache/

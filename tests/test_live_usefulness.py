@@ -13,6 +13,12 @@ class UsefulSignalTests(unittest.TestCase):
         doc=FeedDocument('1','https://example.org/news/1',title,'2026-09-04T07:15:24Z',body)
         return classify_usefulness(doc,{'address_candidates':[address] if address else []},source)
 
+    def test_source_stated_ignition_at_address_is_a_local_change(self):
+        result=self.assess('Пожар в многоэтажке Челнов попал на видео',
+            'В Набережных Челнах возгорание произошло в доме № 11 на проспекте Абсалямова. В квартире загорелись вещи.',
+            'проспекте Абсалямова')
+        self.assertTrue(result['showOnMap'])
+
     def test_editorial_noise_does_not_become_useful_from_money_repair_or_place(self):
         cases=[
           ('В Казани наградили лучших дорожников','Они ремонтируют дороги и строят мосты.','greeting_or_award'),

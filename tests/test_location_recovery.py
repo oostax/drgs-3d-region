@@ -116,3 +116,36 @@ class RecoveryDatabaseTests(LiveGeocodingTests):
             self.assertEqual(db.execute('SELECT id FROM events').fetchone()[0],event['id'])
 
 if __name__=='__main__':unittest.main()
+
+class SourceLocationRegressionTests(unittest.TestCase):
+    def test_house_before_street_and_complex_number_are_extracted(self):
+        from analysis import extract_addresses
+        self.assertEqual(extract_addresses('Пожар в доме № 11 на проспекте Абсалямова.'), ['проспекте Абсалямова, 11'])
+        self.assertEqual(extract_addresses('Пожар в доме 65/18.'), ['дом 65/18'])
+        self.assertEqual(extract_addresses('Площадь пожара 65/18 метров.'), [])
+
+    def test_inflected_two_word_village(self):
+        from region_config import matching_locality
+        village={'id':'v','name':'Большая Шильна','territoryId':'v','scopeIds':['v','district']}
+        self.assertEqual(matching_locality('В Большой Шильне остановили ремонт','district',[village]),village)
+
+    def test_other_city_exact_name_does_not_block_local_short_name(self):
+        index={'territoryId':'region','streets':[
+            {'id':'other','name':'проспект Абсалямова','kind':'avenue','territoryId':'other','coordinates':[49,55]},
+            {'id':'local','name':'проспект Абдурахмана Абсалямова','kind':'avenue','territoryId':'city','coordinates':[52,55]}]}
+        result=match_address_candidates(['проспекте Абсалямова'],'city',index)
+        self.assertEqual(result['streetId'],'local')
+
+    def test_recovery_extracts_address_omitted_by_analyzer(self):
+        helper=LiveGeocodingTests()
+        with tempfile.TemporaryDirectory() as directory:
+            db=helper.db(directory)
+            try:
+                event=helper.store(db,helper.source(db),'ул. Кремлёвская, д. 10')
+                db.execute("UPDATE jobs SET payload_json=json_set(payload_json,'$.addressCandidates',json('[]'))")
+                result=consume_geocode_jobs(db,index_path=helper.index(directory))
+                self.assertEqual(result['matched'],1)
+                located=db.execute('SELECT precision,data_json FROM events').fetchone()
+                self.assertEqual(located['precision'],'street')
+                self.assertTrue(json.loads(located['data_json'])['addressCandidates'])
+            finally:db.close()

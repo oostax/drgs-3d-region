@@ -111,10 +111,18 @@ def clip_between_intersections(main_geometry,start_geometry,end_geometry):
 
 def source_section(street:dict[str,Any],candidate:str,source_text:str,resolve:Callable[[str],dict[str,Any]]):
     matched=[]
-    for sentence in re.split(r'(?<!ул)(?<!пер)\.\s+|[\n!?]+',source_text):
-        folded=' '.join(sentence.casefold().split());anchor=folded.find(' '.join(candidate.casefold().split()))
+    from geocoding import normalize_street
+    name=normalize_street(candidate)[0]
+    # A source often places the boundaries in the immediately following sentence.
+    spans=list(re.finditer(r'.+?(?:(?<!ул)(?<!пер)\.(?=\s)|[\n!?]+|$)',source_text))
+    for i,span in enumerate(spans):
+        sentence=span.group();folded=' '.join(sentence.casefold().split())
+        anchor=folded.find(name)
         if anchor<0:continue
         bounds=BOUNDS.search(sentence)
+        if not bounds and i+1<len(spans) and re.match(r'\s*(?:[Нн]ачиная\s+)?от\s+',spans[i+1].group()):
+            sentence=source_text[span.start():spans[i+1].end()]
+            bounds=BOUNDS.search(sentence)
         if not bounds or anchor>=bounds.start():continue
         matched.append((sentence.strip(),bounds.group('start').strip(),bounds.group('end').rstrip('., ')))
     if not matched:return None

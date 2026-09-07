@@ -65,7 +65,11 @@ def facility_matches(text: str, facility: str) -> bool:
     """Kind AND identifying number/name must agree, never a generic word."""
     value = fold(text)
     kind = next((k for k in ('гимнази','школ','лице','сад','больниц','поликлиник','стадион','комплекс','центр','культур') if k in fold(facility)), None)
-    if not kind or not any(token.startswith(kind) for token in value.split()):
+    if not kind:
+        quoted=re.search(r'[«"]([^»"]+)[»"]',facility)
+        if quoted:return ' '+fold(quoted.group(1))+' ' in ' '+value+' '
+        return len(fold(facility).split())>=2 and ' '+fold(facility)+' ' in ' '+value+' '
+    if not any(token.startswith(kind) for token in value.split()):
         return False
     number = re.search(r'(?:№|n)\s*(\d+[а-яa-z]?)', facility, re.I)
     if number:
@@ -181,7 +185,12 @@ def _osm_match(address: str, locality: str, expected_scope: str, facility: str =
             if local['status'] == 'matched':
                 return {'coordinates':local['representativeCoordinate'],'geometry':local['geometry'],
                     'osmUrl':local['sourceUrl'],'displayName':local['streetName'],
-                    'verifiedAddress':local['streetName'],'precision':local['precision'],'osmId':local['objectId']}
+                    'verifiedAddress':local['streetName'],'precision':local['precision'],'osmId':local['objectId'], 'aliasEvidence':local.get('addressAliasEvidence')}
+    if address_parts and not facility:
+        from corner_addresses import verify_corner_address
+        corner = verify_corner_address(address, locality, _search)
+        if corner:
+            return corner
     direct_facility_search = False
     requested_house = re.search(r"\b(\d+[А-Яа-яA-Za-z]?(?:[/\-]\d+)?)\s*$", address)
     def exact_house(rows: Any) -> list[dict[str, Any]]:
@@ -281,7 +290,33 @@ def verify_source_address(address: str, locality: str, expected_scope: str):
     if _calls >= limit:
         raise SearchDeferred('Location lookup batch budget exhausted')
     _calls += 1
-    return _osm_match(address,locality,expected_scope)
+    result = _osm_match(address,locality,expected_scope)
+    if result:
+        remember_verified_address(address, locality, result)
+    return result
+
+
+def remember_verified_address(address, locality, result):
+    """Reuse geometries confirmed online for the next source ingestion."""
+    if result.get('precision') != 'building' or (result.get('geometry') or {}).get('type') != 'Polygon':
+        return
+    match = re.fullmatch(r'https://www.openstreetmap.org/way/(\d+)', result.get('osmUrl', ''))
+    from region_config import localities
+    from object_geocoding import split_address
+    places = [p for p in localities('RU-TA') if fold(p['name']) == fold(locality)]
+    canonical = result.get('verifiedAddress') or ''
+    parts = split_address(canonical)
+    if not match or len(places) != 1 or not parts:
+        return
+    place = places[0]
+    obj = {'id': 'osm-way-'+match[1], 'osmId': int(match[1]), 'territoryId': place['territoryId'],
+           'scopeIds': list(dict.fromkeys([place['territoryId'], *place.get('scopeIds', []), 'RU-TA'])),
+           'name': canonical, 'address': canonical, 'street': canonical.rsplit(',', 1)[0], 'house': parts[2],
+           'aliases': [], 'precision': 'building', 'coordinates': result['coordinates'],
+           'geometry': result['geometry'], 'sourceUrl': result['osmUrl']}
+    from corner_addresses import remember_alias
+    evidence = result.get('aliasEvidence') or {'url': result['osmUrl'], 'quote': canonical, 'method': 'exact-source-address-osm-verification'}
+    remember_alias(obj, address, evidence)
 
 
 def _search(query: str) -> dict[str, Any]:

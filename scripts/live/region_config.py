@@ -22,7 +22,7 @@ def locality_forms(name):
     elif name.endswith('ь'):forms.add(name[:-1]+'и')
     elif name.endswith('а'):forms.update({name[:-1]+'е',name[:-1]+'ы',name[:-1]+'и'})
     elif name.endswith('я'):forms.add(name[:-1]+'е')
-    elif name.endswith(('ск','ль','град','поль')):forms.update({name+'е',name+'а'})
+    elif name.endswith(tuple('бвгджзклмнпрстфхцчшщ')):forms.update({name+'е',name+'а'})
     if name.endswith('ый'):forms.update({name[:-2]+'ом',name[:-2]+'ого'})
     if name.endswith('ий'):forms.update({name[:-2]+'ем',name[:-2]+'его'})
     if name.endswith('о'):forms.add(name[:-1]+'е')
@@ -36,6 +36,8 @@ def locality_forms(name):
             elif word.endswith('ое'):variants.update({word[:-2]+'ом',word[:-2]+'ого'})
             elif word.endswith('ые'):variants.add(word[:-2]+'ых')
             elif word.endswith('ая'):variants.add(word[:-2]+'ой')
+            elif word.endswith('а'):variants.update({word[:-1]+'е',word[:-1]+'ы',word[:-1]+'и'})
+            elif word.endswith('я'):variants.add(word[:-1]+'е')
             elif word.endswith('ы'):variants.update({word[:-1]+'ах',word[:-1]})
             elif word.endswith('о'):variants.add(word[:-1]+'е')
             elif word.endswith(('н','р','к','д','г','л')):variants.update({word+'е',word+'а'})
@@ -147,3 +149,18 @@ def event_territory(event,document,source):
     place=matching_locality(document.title,source['territory_id'],localities(region_id))
     if place:return place['territoryId']
     return resolve_locality(text,event.get('locality_candidates',[]),source['territory_id'],region,places)
+
+
+def matching_district(text,region_id):
+    """Resolve a source-stated municipality across publisher scopes; ambiguity stays unresolved."""
+    value=fold(text)
+    if re.search(r'\bрайон(?:ах|ов|ы)\b',value):return None
+    found=[]
+    for territory in territories(region_id):
+        name=fold(territory['name'])
+        if 'район' not in name:continue
+        adjective=name.split()[0]
+        if not adjective.endswith(('ий','ый')):continue
+        stem=re.escape(adjective[:-2])
+        if re.search(r'\b'+stem+r'(?:ий|ый|ом|ого|ому)\s+(?:муниципальн\w*\s+)?район\w*\b',value):found.append(territory)
+    return found[0] if len(found)==1 else None

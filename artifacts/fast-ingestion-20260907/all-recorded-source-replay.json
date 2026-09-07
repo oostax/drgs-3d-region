@@ -1,0 +1,71 @@
+{
+  "mode": "replay-all-recorded-source-documents-into-empty-database",
+  "documents": 11,
+  "seconds": 1.17,
+  "events": [
+    {
+      "title": "Отключение водоснабжения: Кировский, КЛАРЫ ЦЕТКИН, 30",
+      "address": "улица Клары Цеткин, 30/23",
+      "precision": "building",
+      "longitude": 49.05166729001698,
+      "latitude": 55.79807865
+    },
+    {
+      "title": "Отключение водоснабжения: Авиастроительный, ЗЕЛИНСКОГО, 108",
+      "address": "улица Зелинского, 108",
+      "precision": "building",
+      "longitude": 49.029262623873166,
+      "latitude": 55.877012750000006
+    },
+    {
+      "title": "Отключение водоснабжения: Советский, АДЕЛЯ КУТУЯ, 70",
+      "address": "улица Аделя Кутуя, 70",
+      "precision": "building",
+      "longitude": 49.18198490706686,
+      "latitude": 55.7841329
+    },
+    {
+      "title": "Отключение водоснабжения: Советский, КОСМОНАВТОВ, 41-47",
+      "address": "улица Космонавтов",
+      "precision": "street",
+      "longitude": 49.1887125,
+      "latitude": 55.8007435
+    },
+    {
+      "title": "Отключение водоснабжения: Вахитовский, МАЛАЯ КРАСНАЯ, 7",
+      "address": "Малая Красная улица, 7",
+      "precision": "building",
+      "longitude": 49.12806471655345,
+      "latitude": 55.79839135
+    },
+    {
+      "title": "Отключение водоснабжения: Ново-Савиновский, ЯМАШЕВА ПРОСПЕКТ, 28",
+      "address": "проспект Ямашева, 28",
+      "precision": "building",
+      "longitude": 49.09544985263713,
+      "latitude": 55.82772165
+    },
+    {
+      "title": "Отключение водоснабжения: Приволжский, КРЫМСКАЯ (П.КУЮКИ) , 2",
+      "address": null,
+      "precision": "territory",
+      "longitude": null,
+      "latitude": null
+    },
+    {
+      "title": "Отключение водоснабжения: Авиастроительный, ЗЕЛИНСКОГО, 102",
+      "address": "улица Зелинского, 102",
+      "precision": "building",
+      "longitude": 49.02921970202706,
+      "latitude": 55.8764229
+    },
+    {
+      "title": "Отключение водоснабжения: Приволжский, пр-кт ПОБЕДЫ, 15 к1",
+      "address": null,
+      "precision": "territory",
+      "longitude": null,
+      "latitude": null
+    }
+  ],
+  "networkGeolocationAllowed": false
+}

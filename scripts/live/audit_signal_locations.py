@@ -41,11 +41,31 @@ def audit(path: Path) -> dict:
     precisions: Counter[str] = Counter()
     mapped_precisions: Counter[str] = Counter()
     exceptions: list[dict] = []
+    all_counts: Counter[str] = Counter()
+    all_precisions: Counter[str] = Counter()
+    resolution_counts: Counter[str] = Counter()
+    inventory=[]
+    quality_counts=Counter()
+    from location_quality import VERSION as QUALITY_VERSION
     rows = connection.execute(
         "SELECT id,title,address,longitude,latitude,precision,data_json FROM events WHERE deleted=0 ORDER BY published_at DESC"
     )
     for row in rows:
         data = json.loads(row["data_json"] or "{}")
+        resolution=(data.get('locationResolution') or {}).get('status','not_required_or_pending')
+        resolution_counts[resolution]+=1
+        evidence=data.get('locationEvidence') or {}
+        quality_counts['current_rules' if evidence.get('qualityVersion')==QUALITY_VERSION else 'needs_current_rules_review']+=1
+        if evidence.get('coverage')=='partial':quality_counts['partially_located_multi_address']+=1
+        if evidence.get('eventGeometryConfirmed'):quality_counts['source_bounded_geometry']+=1
+        if data.get('rejectedContactAddresses'):quality_counts['contact_address_rejected']+=1
+        if (data.get('locationSourceQuality') or {}).get('status')=='awaiting_full_article':quality_counts['awaiting_full_article']+=1
+        inventory.append({'id':row['id'],'title':row['title'],'precision':row['precision'],'address':row['address'],
+            'decision':classify(row,data),'resolutionStatus':resolution,
+            'addressCandidates':data.get('addressCandidates',[]),'locationEvidence':data.get('locationEvidence'),
+            'locationResolution':data.get('locationResolution')})
+        all_counts[classify(row,data)] += 1
+        all_precisions[row["precision"]] += 1
         if (data.get("signalUsefulness") or {}).get("showOnMap") is not True:
             continue
         decision = classify(row, data)
@@ -56,8 +76,14 @@ def audit(path: Path) -> dict:
         if decision != "verified_map_location":
             exceptions.append({"id": row["id"], "title": row["title"], "decision": decision})
     jobs = dict(connection.execute("SELECT status,count(*) FROM jobs WHERE kind='geocode' GROUP BY status").fetchall())
+    from article_enrichment import ARTICLE_VERSION
+    article_counts=Counter()
+    for row in connection.execute("SELECT d.content_hash,c.value FROM documents d JOIN sources s ON s.id=d.source_id LEFT JOIN checkpoints c ON c.source_id='__articles__' AND c.key=d.id WHERE d.deleted_at IS NULL AND s.adapter='rss' AND s.fetch_allowed=1 AND s.display_allowed=1 AND EXISTS(SELECT 1 FROM event_documents ed JOIN events e ON e.id=ed.event_id WHERE ed.document_id=d.id AND e.deleted=0)"):
+        checkpoint=json.loads(row['value'] or '{}')
+        complete=checkpoint.get('version')==ARTICLE_VERSION and checkpoint.get('complete') and checkpoint.get('enrichedHash')==row['content_hash']
+        article_counts['full_article_checked' if complete else 'full_article_pending']+=1
     connection.close()
-    return {"database": str(path), "counts": dict(counts), 'mapEligiblePrecision':dict(precisions),
+    return {"database": str(path), "totalEvents":sum(all_counts.values()), "qualityReview":dict(quality_counts), "articleCoverage":dict(article_counts), "allEventDecisions":dict(all_counts), "allEventPrecision":dict(all_precisions), "resolutionStatus":dict(resolution_counts),"inventory":inventory, "counts": dict(counts), 'mapEligiblePrecision':dict(precisions),
         'mappedPrecision':dict(mapped_precisions),
         'geocodeJobs':jobs, "exceptions": exceptions}
 
@@ -70,6 +96,7 @@ def main() -> None:
     result = audit(args.db)
     if not args.exceptions:
         result.pop("exceptions")
+        result.pop("inventory")
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 

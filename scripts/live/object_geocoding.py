@@ -65,6 +65,9 @@ def _load_object_index(path:str,revision:int,supplement:str,supplement_revision:
     houses={}
     for item in raw['objects']:
         if item.get('house'):houses.setdefault(house_key(item['house']),[]).append(item)
+    raw['_addressAliases']={}
+    for item in raw['objects']:
+        for alias in item.get('addressAliases',[]):raw['_addressAliases'].setdefault(_fold(alias),[]).append(item)
     raw['_houses']=houses
     raw['_named']=[item for item in raw['objects'] if item.get('aliases')]
     return raw
@@ -84,6 +87,11 @@ def match_objects(candidates,text,territory_id,index):
                 possible.append(obj)
         if len(possible)>1:ambiguous=True
         elif possible:found[possible[0]['id']]=possible[0]
+    # Alternate postal/complex addresses remain scoped to one municipality.
+    for candidate in candidates:
+        matches=[obj for obj in index.get('_addressAliases',{}).get(_fold(candidate),[]) if territory_id in obj.get('scopeIds',[obj['territoryId']])]
+        if len(matches)>1:ambiguous=True
+        elif matches:found[matches[0]['id']]=matches[0]
     # Named facilities are matched only by an unambiguous full name/curated alias.
     # "school", "hospital", or the publisher's address never supply a location.
     if not found and not ambiguous:
@@ -95,8 +103,9 @@ def match_objects(candidates,text,territory_id,index):
     if len(found)!=1 or ambiguous:
         return {'status':'ambiguous' if found or ambiguous else 'unmatched','objects':list(found.values())}
     obj=hydrate_object(next(iter(found.values())))
+    evidence=next((value for alias,value in obj.get('addressAliasEvidence',{}).items() if any(_fold(alias)==_fold(candidate) for candidate in candidates)),None)
     return {'status':'matched','precision':obj['precision'],'candidateCount':1,'objectId':obj['id'],
         'streetId':None,'streetName':obj.get('address') or obj['name'],'representativeCoordinate':obj['coordinates'],
-        'geometry':obj['geometry'],'bbox':obj['bbox'],'sourceUrl':obj['sourceUrl'],'sourceUrls':[obj['sourceUrl']],
+        'geometry':obj['geometry'],'bbox':obj['bbox'],'sourceUrl':obj['sourceUrl'],'sourceUrls':[obj['sourceUrl']]+([evidence['url']] if evidence else []),'addressAliasEvidence':evidence,
         'checkedAt':index.get('checkedAt'),'method':'exact-address-or-unique-named-object',
         'note':'Адрес или название из публикации сопоставлены с конкретным объектом OSM. Маркер находится внутри его контура. Это привязка затронутого объекта, а не координата повреждения трубы или оборудования.'}

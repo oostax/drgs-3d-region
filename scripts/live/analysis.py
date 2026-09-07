@@ -46,9 +46,9 @@ AI_SOURCE_POLICIES = {
     'rosstat-news': 'local_only',
 }
 NAME_TOKEN = r"[А-ЯЁӘӨҮҖҢҺA-Z0-9][А-ЯЁа-яёӘәӨөҮүҖҗҢңҺһA-Za-z0-9.\-]*"
-STREET_NAME = NAME_TOKEN + r"(?:\s+" + NAME_TOKEN + r"){0,3}"
-STREET_KIND = r"(?:ул(?:ица|ице|ицы|ицу)?\.?|проспект(?:е|а|ом)?|пр-т\.?|пер(?:еулок|еулке|еулка)?\.?|проезд(?:е|а)?|бульвар(?:е|а)?|шоссе|тракт(?:е|а)?|набережн(?:ая|ой|ую))"
-STREET_ADDRESS = re.compile(r"(?<![\w])(?i:" + STREET_KIND + r")\s*(?=" + NAME_TOKEN + r")" + STREET_NAME)
+STREET_NAME = NAME_TOKEN + r"(?:[ \t]+" + NAME_TOKEN + r"){0,3}"
+STREET_KIND = r"(?:ул(?:ица|ице|ицы|ицу)?\.?|проспект(?:е|а|ом)?|пр-(?:к)?т\.?|пер(?:еулок|еулке|еулка)?\.?|проезд(?:е|а)?|бульвар(?:е|а)?|шоссе|тракт(?:е|а)?|набережн(?:ая|ой|ую))"
+STREET_ADDRESS = re.compile(r"(?<![\w])(?i:" + STREET_KIND + r")[ \t]*(?=" + NAME_TOKEN + r")" + STREET_NAME)
 STREET_SUFFIX = re.compile(r"(?<![\w])" + STREET_NAME + r"\s+(?i:улиц[аеыу]|проспект(?:е|а|ом)?|переул(?:ок|ке|ка)|проезд(?:е|а)?|бульвар(?:е|а)?|шоссе|тракт(?:е|а)?|набережн(?:ая|ой|ую)|урамы)")
 HOUSE_TAIL = re.compile(r'\s*,\s*(?:д(?:ом)?\.?\s*)?\d+[А-Яа-яA-Za-z]?(?:[/\-]\d+[А-Яа-яA-Za-z]?)?(?:\s*(?:к|корп(?:ус)?|стр(?:оение)?)\.?\s*\d+[А-Яа-яA-Za-z]?)?',re.I)
 ADDRESS = re.compile(r"(?<![\w])" + STREET_NAME + r",\s*(?:д(?:ом)?[.]?\s*)?\d+[А-Яа-яA-Za-z]?(?:\s*(?:к|корп(?:ус)?)[.]?\s*\d+)?")
@@ -67,6 +67,10 @@ def extract_address_mentions(text: str) -> list[dict[str, str]]:
             tail=HOUSE_TAIL.match(text[match.start()+len(address):])
             if tail:address+=tail.group(0)
             start,end=match.start(),match.start()+len(address)
+            # Russian reports commonly put the house before the street.
+            before=re.search(r'\bдом(?:е|а)?\s*(?:№\s*)?(\d+[А-Яа-яA-Za-z]?(?:[/\-]\d+)?(?:\s*корп(?:ус)?\.?\s*\d+)?)\s+(?:на|по)\s*$',text[max(0,start-90):start],re.I)
+            if before and not tail:
+                address+=', '+before.group(1)
             # Parentheses often bind one street list to one named settlement.
             left=max(text.rfind('\n',0,start),text.rfind(';',0,start),text.rfind(')',0,start))+1
             stops=[p for p in (text.find('\n',end),text.find(';',end),text.find(')',end)) if p>=0]
@@ -105,6 +109,11 @@ def extract_address_mentions(text: str) -> list[dict[str, str]]:
         expanded=[{'address':street+', '+number.strip(),'context':context,'origin':'inherited-house-list'} for number in re.split(r'\s*[,;]\s*',listing.group(1))]
         mentions=[m for m in mentions if re.sub(r'^улиц[аеыу]', 'улица',m['address'].casefold()) not in names]
         mentions.extend(expanded)
+    # Chelny complex/house numbers are source evidence, not ordinary street numbers.
+    for match in re.finditer(r'\bдом(?:е|а)?\s*(?:№\s*)?(\d{1,3}/\d{1,3}[А-Яа-я]?)\b',text,re.I):
+        left=text.rfind('\n',0,match.start())+1
+        right=text.find('\n',match.end())
+        mentions.append({'address':'дом '+match.group(1),'context':text[left:right if right>=0 else len(text)][:1500], 'origin':'complex-house'})
     return list({(m['address'],m['context']):m for m in mentions}.values())[:40]
 
 def extract_addresses(text: str) -> list[str]:

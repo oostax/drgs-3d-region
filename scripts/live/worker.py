@@ -345,7 +345,7 @@ def activity_kind(event: dict[str, Any], explicit: bool) -> str:
 
 
 def store_document(connection: sqlite3.Connection, source: sqlite3.Row, document: FeedDocument, analyzer: AnyModelAnalyzer,
-        *, notify_new: bool = True) -> dict[str, int]:
+        *, notify_new: bool = True, geocode_immediately: bool = False) -> dict[str, int]:
     content_hash = hash_document(document)
     document_id = stable_id("doc_", source["id"] + "|" + document.external_id)
     now = iso_now()
@@ -454,7 +454,7 @@ def store_document(connection: sqlite3.Connection, source: sqlite3.Row, document
             )
             connection.execute("INSERT INTO event_documents(event_id,document_id,relation,similarity) VALUES(?,?,?,?) "
                 "ON CONFLICT(event_id,document_id) DO NOTHING", (event_id, document_id, "primary" if not existing else "republication", 1.0 if not existing else .88))
-            enqueue_geocode_job(connection, event_id, source["id"], data["addressCandidates"], content_hash)
+            enqueue_geocode_job(connection, event_id, source["id"], data["addressCandidates"], content_hash,priority=100)
             for index, evidence in enumerate(event.get("evidence", [])):
                 evidence_id = stable_id("evd_", f"{event_id}|{document_id}|{index}|{evidence.get('quote','')}")
                 connection.execute("INSERT OR IGNORE INTO event_evidence(id,event_id,document_id,source_id,label,url,published_at,observed_at,event_time,quote,source_kind,supports) "
@@ -468,6 +468,9 @@ def store_document(connection: sqlite3.Connection, source: sqlite3.Row, document
             revision = connection.execute("INSERT INTO revisions(event_id,operation,notify_eligible,created_at) VALUES(?,?,?,?)", (event_id, "upsert", notify_eligible, now)).lastrowid
             connection.execute("UPDATE events SET revision=? WHERE id=?", (revision,event_id))
             event_count += 1
+    if geocode_immediately:
+        from geocoding import geocode_fresh_events
+        geocode_fresh_events(connection,document_id=document_id)
     return {"documents": 1, "versions": int(bool(version_added)), "events": event_count}
 
 
@@ -521,7 +524,7 @@ def process_due(connection: sqlite3.Connection, *, force: bool = False, source_i
                     continue
                 try:
                     stored = store_document(connection, source, document, analyzer,
-                        notify_new=bool(notify_new and source["last_success_at"]))
+                        notify_new=bool(notify_new and source["last_success_at"]),geocode_immediately=True)
                 except Exception as exc:
                     connection.execute("UPDATE documents SET analysis_status='error',analysis_error=? WHERE source_id=? AND external_id=?",
                         (f"{type(exc).__name__}: {exc}"[:1000],source["id"],document.external_id))
@@ -758,6 +761,8 @@ def process_analysis_queue(connection: sqlite3.Connection, analyzer: Any | None 
             if error is not None:
                 raise error
             changed = _replace_document_analysis(connection, current, source, document, events)
+            from geocoding import geocode_fresh_events
+            geocode_fresh_events(connection,document_id=current["id"])
         except Exception as exc:
             if getattr(exc,'code',None) in (401,403,429,503):
                 # 401/403/429 and transient provider outages should not consume a
@@ -902,18 +907,22 @@ def run_loop(connection: sqlite3.Connection) -> None:
             except queue.Empty: break
             source=connection.execute('SELECT * FROM sources WHERE id=?',(source_id,)).fetchone()
             if source and source['fetch_allowed']:
-                store_document(connection,source,document,AnyModelAnalyzer(),notify_new=notify);tg_count+=1
+                store_document(connection,source,document,AnyModelAnalyzer(),notify_new=notify,geocode_immediately=True);tg_count+=1
                 connection.execute("UPDATE sources SET status='active',last_success_at=?,latest_publication_at=MAX(COALESCE(latest_publication_at,''),?),error=NULL WHERE id=?",(iso_now(),document.published_at or '',source_id));connection.commit()
         for source_id,check in list(telegram.health.items()):
             if telegram_checks.get(source_id)==check['checked_at']:continue
             telegram_checks[source_id]=check['checked_at']
             connection.execute("UPDATE sources SET last_attempt_at=?,last_success_at=CASE WHEN ? IS NULL THEN ? ELSE last_success_at END,error=?,consecutive_failures=CASE WHEN ? IS NULL THEN 0 ELSE consecutive_failures+1 END,updated_at=? WHERE id=?",(check['checked_at'],check['error'],check['checked_at'],check['error'],check['error'],check['checked_at'],source_id))
         connection.commit()
+        from geocoding import geocode_fresh_events
+        geocode_fresh_events(connection)
         from article_enrichment import enrich_articles
         result={**result,"articles":enrich_articles(connection,limit=4),"analysis":process_analysis_queue(connection),"telegram":{"state":telegram.status,"received":tg_count,"checkedSources":len(telegram.health),"error":telegram.error}}
         backfill = consume_backfill(connection)
         if backfill:
             result = {**result, "backfill": backfill}
+        from location_resolution import enqueue_location_sweep
+        enqueue_location_sweep(connection)
         geocoding = consume_geocode_jobs(connection)
         if geocoding["processed"] or geocoding["failed"]:
             result = {**result, "geocoding": geocoding}

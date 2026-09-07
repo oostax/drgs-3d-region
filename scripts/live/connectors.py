@@ -117,6 +117,11 @@ class BoundedFetcher:
             return self._hosts.setdefault(host, threading.BoundedSemaphore(self._per_host_limit))
 
     def get(self, url: str, *, etag: str | None = None, last_modified: str | None = None) -> FetchResult:
+        # Public RSS links may contain Cyrillic/Tatar characters in their path.
+        parts=urllib.parse.urlsplit(url)
+        url=urllib.parse.urlunsplit((parts.scheme,parts.netloc.encode('idna').decode('ascii'),
+            urllib.parse.quote(parts.path,safe="/%:@!$&'()*+,;=-._~"),
+            urllib.parse.quote(parts.query,safe="%=&?/:@!$'()*+,;~-._"),''))
         headers = {"User-Agent": "SberAtlasPublicSignals/1.0 (+local-pilot)", "Accept-Encoding": "identity"}
         if etag:
             headers["If-None-Match"] = etag
