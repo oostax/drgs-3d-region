@@ -492,7 +492,9 @@ def store_document(connection: sqlite3.Connection, source: sqlite3.Row, document
                 "INSERT INTO events(id,region_id,territory_id,canonical_key,title,summary,category,topic,state,severity,confidence,source_kind,event_time,"
                 "published_at,last_evidence_at,last_meaningful_at,address,longitude,latitude,precision,location_confidence,activity_kind,explicit_activity,notify_eligible,data_json,updated_at) "
                 "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET title=excluded.title,summary=excluded.summary,"
-                "state=CASE WHEN events.state IN ('resolved','cancelled') AND excluded.state NOT IN ('resolved','cancelled') THEN events.state ELSE excluded.state END,"
+                "state=CASE WHEN events.state IN ('resolved','cancelled') AND excluded.state NOT IN ('resolved','cancelled') THEN events.state "
+                "WHEN events.state='in_progress' AND excluded.state='planned' AND json_extract(events.data_json,'$.statusTransition.kind')='schedule-started' THEN events.state "
+                "ELSE excluded.state END,"
                 "severity=excluded.severity,category=excluded.category,topic=excluded.topic,activity_kind=excluded.activity_kind,explicit_activity=excluded.explicit_activity,last_evidence_at=excluded.last_evidence_at,last_meaningful_at=excluded.last_meaningful_at,"
                 "notify_eligible=excluded.notify_eligible,data_json=excluded.data_json,updated_at=excluded.updated_at",
                 (event_id, source["region_id"], territory_id, canonical_key, event["title"], event.get("summary", ""), event.get("topic", "other"),
