@@ -52,6 +52,7 @@ STREET_ADDRESS = re.compile(r"(?<![\w])(?i:" + STREET_KIND + r")[ \t]*(?=" + NAM
 STREET_SUFFIX = re.compile(r"(?<![\w])" + STREET_NAME + r"\s+(?i:улиц[аеыу]|проспект(?:е|а|ом)?|переул(?:ок|ке|ка)|проезд(?:е|а)?|бульвар(?:е|а)?|шоссе|тракт(?:е|а)?|набережн(?:ая|ой|ую)|урамы)")
 HOUSE_TAIL = re.compile(r'\s*,\s*(?:д(?:ом)?\.?\s*)?\d+[А-Яа-яA-Za-z]?(?:[/\-]\d+[А-Яа-яA-Za-z]?)?(?:\s*(?:к|корп(?:ус)?|стр(?:оение)?)\.?\s*\d+[А-Яа-яA-Za-z]?)?',re.I)
 ADDRESS = re.compile(r"(?<![\w])" + STREET_NAME + r",\s*(?:д(?:ом)?[.]?\s*)?\d+[А-Яа-яA-Za-z]?(?:\s*(?:к|корп(?:ус)?)[.]?\s*\d+)?")
+STREET_LIST = re.compile(r"(?i)\bулиц(?:ах|ами)\s+(" + STREET_NAME + r"?)\s+и\s+(" + STREET_NAME + r"?)")
 
 def extract_address_mentions(text: str) -> list[dict[str, str]]:
     """Keep verbatim locations and their local paragraph, including street lists."""
@@ -114,6 +115,17 @@ def extract_address_mentions(text: str) -> list[dict[str, str]]:
         expanded=[{'address':street+', '+number.strip(),'context':context,'origin':'inherited-house-list'} for number in re.split(r'\s*[,;]\s*',listing.group(1))]
         mentions=[m for m in mentions if re.sub(r'^улиц[аеыу]', 'улица',m['address'].casefold()) not in names]
         mentions.extend(expanded)
+    # Plural constructions such as “на улицах Карла Маркса и Дзержинского”
+    # name several streets after the generic word; keep them independently.
+    for match in STREET_LIST.finditer(text):
+        dot=text.find('.',match.end())
+        clause_start=max(text.rfind('\n',0,match.start()),text.rfind('. ',0,match.start()))+1
+        context=text[clause_start:dot if dot>=0 else len(text)].strip()[:1500]
+        existing={m['address'] for m in mentions}
+        for name in match.groups():
+            value=('улица '+name).strip(' ,.')
+            if value not in existing:
+                mentions.append({'address':value,'context':context});existing.add(value)
     # Chelny complex/house numbers are source evidence, not ordinary street numbers.
     for match in re.finditer(r'\bдом(?:е|а)?\s*(?:№\s*)?(\d{1,3}/\d{1,3}[А-Яа-я]?)\b',text,re.I):
         left=text.rfind('\n',0,match.start())+1
