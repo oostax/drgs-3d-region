@@ -167,7 +167,16 @@ def resolve_unmatched(connection, event, data, index) -> tuple[dict | None, str 
     source=rows[0];text=source['title']+'\n'+(source['body'] or '')
     # Each event in a split publication is interpreted in its own source paragraph.
     if data.get('site_group_key') and isinstance(data.get('location_context'),str) and data['location_context'] in text:text=data['location_context']
-    interpretation=interpret_location(text,event['title'])
+    try:
+        interpretation=interpret_location(text,event['title'])
+    except ValueError as exc:
+        # A malformed model response is not an event failure. Keep the
+        # territory fallback and record the reason; retrying the same invalid
+        # JSON only pollutes the queue and cannot produce a safe coordinate.
+        data['locationResolution']={'version':VERSION,'status':'invalid_model_response',
+            'reason':str(exc)[:240],'sourceUrl':source['canonical_url'],
+            'checkedAt':dt.datetime.now(dt.timezone.utc).isoformat()}
+        return None,None
     data['locationResolution']={**interpretation,'sourceUrl':source['canonical_url'],'checkedAt':dt.datetime.now(dt.timezone.utc).isoformat()}
     if interpretation['status']!='located':return None,None
     clue=interpretation['locations'][0]

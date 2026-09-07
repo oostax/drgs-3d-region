@@ -476,6 +476,10 @@ def consume_geocode_jobs(connection: sqlite3.Connection, *, index_path: Path | N
                     raise SearchDeferred('Full source article pending before location analysis')
             data['locationSourceQuality']={'status':'source_ready','checkedAt':iso_now()}
             candidates = [value for value in payload.get("addressCandidates", []) if isinstance(value, str)]
+            # Do not let a generic preposition fragment (from older parser
+            # versions) trigger location reasoning or provider lookups.
+            candidates = [value for value in candidates
+                          if not re.fullmatch(r"(?i)(?:на|по)\s+улиц(?:а|е|ы|у|ой|ами|ах)?", value.strip())]
             # Re-read evidence for old and new jobs: model output may omit an address.
             # Split site events retain their own context, never borrow sibling addresses.
             from analysis import extract_addresses

@@ -50,6 +50,12 @@ class TelegramService:
                 elif message.message:await self.emit(source,_document(source,message),False)
         self.known[source['id']]={str(i) for i in sorted((int(i) for i in known),reverse=True)[:1000]}
     async def run(self):
+        # Telethon logs expected transport reconnects at ERROR even though the
+        # service catches them and retries. Keep application errors in the
+        # worker heartbeat while preventing transient socket resets from
+        # flooding launchd's stderr log.
+        import logging
+        logging.getLogger('telethon').setLevel(logging.CRITICAL)
         from telethon import events,utils
         from telethon.errors import FloodWaitError
         while not self.stop_event.is_set():
